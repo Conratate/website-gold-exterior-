@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f7faff;
+    --foreground: #11151b;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Poppins", "Inter", system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-glow hover:bg-brand-700 hover:-translate-y-0.5 focus-visible:ring-brand-400;
+  }
+
+  .btn-gold {
+    @apply btn bg-gold-400 text-charcoal-900 shadow-gold hover:bg-gold-300 hover:-translate-y-0.5 focus-visible:ring-gold-300;
+  }
+
+  .btn-ghost {
+    @apply btn border border-white/30 text-white hover:bg-white/10 focus-visible:ring-white/60;
+  }
+
+  .btn-outline {
+    @apply btn border border-brand-600 text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-300;
+  }
+
+  .card {
+    @apply rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-glow;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-700;
+  }
+
+  .eyebrow-gold {
+    @apply inline-flex items-center gap-2 rounded-full bg-gold-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-700;
+  }
+
+  .section {
+    @apply py-20 sm:py-24;
+  }
+
+  .input {
+    @apply block w-full rounded-xl border border-charcoal-200 bg-white px-4 py-3 text-charcoal-900 placeholder:text-charcoal-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100;
+  }
+
+  .label {
+    @apply mb-2 block text-sm font-semibold text-charcoal-800;
+  }
+}
+
+/* Reusable wave divider */
+.wave-divider {
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 141, 245, 0.08) 100%);
+}
