@@ -5,7 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, pool cleaning, junk removal, holiday lights installation, and gutter cleaning by Gold Exterior.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing by Gold Exterior.",
 };
 
 export default function ServicesPage() {
@@ -18,7 +18,7 @@ export default function ServicesPage() {
         <div className="container-x relative py-20 sm:py-28">
           <span className="eyebrow-gold">Our Services</span>
           <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-tight sm:text-5xl">
-            Five professional services. One easy phone call.
+            Six professional services. One easy phone call.
           </h1>
           <p className="mt-5 max-w-2xl text-brand-100">
             Click any service to jump straight to the details — or skip ahead

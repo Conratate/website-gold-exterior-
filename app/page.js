@@ -19,9 +19,9 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
-              Pressure washing, pool cleaning, junk removal, holiday lights and
-              gutter cleaning — all from one trusted, insured local team. Get a
-              real quote in under two minutes.
+              Pressure washing, commercial cleaning, graffiti removal, holiday
+              lights, gutter cleaning and car detailing — all from one trusted,
+              insured local team. Get a real quote in under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -64,18 +64,18 @@ export default function HomePage() {
                 <div className="mt-6 space-y-4">
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <div className="text-xs text-brand-200">Service</div>
-                    <div className="mt-1 font-semibold">Pool Cleaning · Large In-ground</div>
+                    <div className="mt-1 font-semibold">Pressure Washing · Driveway (2-Car)</div>
                   </div>
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <div className="text-xs text-brand-200">Add-on</div>
-                    <div className="mt-1 font-semibold">Junk Removal · Single Item</div>
+                    <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
                   </div>
                   <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-5">
                     <div className="text-xs uppercase tracking-widest text-gold-200">
                       Estimated price
                     </div>
                     <div className="mt-1 font-display text-3xl font-extrabold text-white">
-                      $350 – $575
+                      $699
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
                       Final quote confirmed after photo review.
@@ -98,7 +98,7 @@ export default function HomePage() {
             <div className="max-w-2xl">
               <span className="eyebrow">What we do</span>
               <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
-                Five services. One team you can trust.
+                Six services. One team you can trust.
               </h2>
               <p className="mt-4 text-charcoal-600">
                 Whether you need a one-time deep clean or a recurring service,

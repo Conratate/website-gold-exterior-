@@ -9,11 +9,11 @@ export const metadata = {
     template: "%s · Gold Exterior",
   },
   description:
-    "Pressure washing, pool cleaning, junk removal, holiday lights, and gutter cleaning. Professional, insured exterior property services with instant online quotes.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Professional, insured exterior property services with instant online quotes.",
   openGraph: {
     title: "Gold Exterior — Premium Exterior Property Services",
     description:
-      "Pressure washing, pool cleaning, junk removal, holiday lights, and gutter cleaning. Get an instant online quote.",
+      "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Get an instant online quote.",
     url: "https://goldexterior.com",
     siteName: "Gold Exterior",
     type: "website",
@@ -21,7 +21,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#1857d4",
+  themeColor: "#11244f",
   width: "device-width",
   initialScale: 1,
 };

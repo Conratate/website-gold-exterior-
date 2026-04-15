@@ -43,7 +43,7 @@ export default function AboutPage() {
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
               need a Rolodex of contractors to keep the outside of their home
-              looking great. One trusted local team. Five premium services.
+              looking great. One trusted local team. Six premium services.
               Zero compromise.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -99,7 +99,7 @@ export default function AboutPage() {
               right way, and standing behind it.
             </p>
             <p>
-              Today, we offer five tightly focused exterior services so we can
+              Today, we offer six tightly focused exterior services so we can
               be excellent at all of them — not average at twenty. (And no, we
               don't do interior cleaning. We'll happily refer you to a local
               pro who does.)

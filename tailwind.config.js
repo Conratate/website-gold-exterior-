@@ -8,17 +8,17 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: "#eff7ff",
-          100: "#dbedff",
-          200: "#bedffe",
-          300: "#91cafd",
-          400: "#5dadfa",
-          500: "#388df5",
-          600: "#206fea",
-          700: "#1857d4",
-          800: "#1a48ab",
-          900: "#1c3f87",
-          950: "#152852",
+          50: "#eef3fb",
+          100: "#d6e1f4",
+          200: "#a9beea",
+          300: "#7596d8",
+          400: "#476fc1",
+          500: "#2a52a4",
+          600: "#1c3f87",
+          700: "#162f68",
+          800: "#11244f",
+          900: "#0c1a3a",
+          950: "#060f24",
         },
         gold: {
           50: "#fdfbe9",
@@ -52,12 +52,12 @@ module.exports = {
       },
       backgroundImage: {
         "hero-gradient":
-          "linear-gradient(135deg, rgba(21,40,82,0.92) 0%, rgba(24,87,212,0.85) 60%, rgba(56,141,245,0.78) 100%)",
+          "linear-gradient(135deg, rgba(6,15,36,0.95) 0%, rgba(12,26,58,0.92) 50%, rgba(22,47,104,0.88) 100%)",
         "wave-pattern":
-          "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(242,196,36,0.12) 0, transparent 45%)",
+          "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(242,196,36,0.10) 0, transparent 45%)",
       },
       boxShadow: {
-        glow: "0 20px 60px -20px rgba(32, 111, 234, 0.55)",
+        glow: "0 20px 60px -20px rgba(17, 36, 79, 0.55)",
         gold: "0 12px 35px -10px rgba(226, 170, 20, 0.55)",
       },
     },

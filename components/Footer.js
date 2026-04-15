@@ -23,10 +23,11 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-sm">
             <li><Link className="hover:text-white" href="/services#pressure-washing">Pressure Washing</Link></li>
-            <li><Link className="hover:text-white" href="/services#pool-cleaning">Pool Cleaning</Link></li>
-            <li><Link className="hover:text-white" href="/services#junk-removal">Junk Removal</Link></li>
+            <li><Link className="hover:text-white" href="/services#commercial-cleaning">Commercial Cleaning</Link></li>
+            <li><Link className="hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
             <li><Link className="hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
             <li><Link className="hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
+            <li><Link className="hover:text-white" href="/services#car-detailing">Car Detailing</Link></li>
           </ul>
         </div>
 
