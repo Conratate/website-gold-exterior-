@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney, formatRange } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
 
 const STEPS = [
@@ -230,7 +230,7 @@ export default function QuoteForm() {
             Your estimate
           </div>
           <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
-            {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
+            {formatRange(estimate.low, estimate.high)}
           </div>
           <p className="mt-2 text-xs text-charcoal-500">
             Final pricing confirmed after our team reviews your photo and address.
@@ -335,6 +335,43 @@ export default function QuoteForm() {
                 );
               })}
             </div>
+            <div className="mt-6">
+              <p className="mb-2 text-sm font-semibold text-charcoal-800">
+                Add a photo of the job{" "}
+                <span className="font-normal text-charcoal-500">
+                  (optional — helps us nail the price)
+                </span>
+              </p>
+              <label className="flex cursor-pointer items-center gap-4 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-4 transition hover:border-brand-400">
+                {photoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photoPreview}
+                    alt="Job preview"
+                    className="h-16 w-16 flex-none rounded-xl border border-brand-200 object-cover"
+                  />
+                ) : (
+                  <div className="grid h-14 w-14 flex-none place-items-center rounded-xl bg-brand-100 text-brand-700">
+                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </div>
+                )}
+                <div>
+                  <div className="text-sm font-semibold text-charcoal-800">
+                    {photoPreview ? "Photo added — tap to replace" : "Tap to upload a photo"}
+                  </div>
+                  <div className="mt-0.5 text-xs text-charcoal-500">
+                    JPG, PNG or HEIC · 8 MB max
+                  </div>
+                </div>
+                <input type="file" accept="image/*" onChange={handlePhoto} className="sr-only" />
+              </label>
+              {errors.photo && (
+                <p className="mt-2 text-sm font-medium text-red-600">{errors.photo}</p>
+              )}
+            </div>
+
             {errors.services && (
               <p className="mt-3 text-sm font-medium text-red-600">{errors.services}</p>
             )}
@@ -397,31 +434,25 @@ export default function QuoteForm() {
                               {q.options.map((o) => {
                                 const active = cur === o.value;
                                 return (
-                                  <label
+                                  <button
                                     key={o.value}
-                                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                                    type="button"
+                                    onClick={() => setAnswer(svc.id, q.id, o.value)}
+                                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition text-left ${
                                       active
                                         ? "border-brand-500 bg-brand-50 text-brand-800"
                                         : "border-charcoal-200 bg-white text-charcoal-700 hover:border-brand-300"
                                     }`}
                                   >
-                                    <input
-                                      type="radio"
-                                      name={`${svc.id}-${q.id}`}
-                                      value={o.value}
-                                      checked={active}
-                                      onChange={() => setAnswer(svc.id, q.id, o.value)}
-                                      className="sr-only"
-                                    />
                                     <span
-                                      className={`grid h-5 w-5 place-items-center rounded-full border ${
+                                      className={`grid h-5 w-5 flex-none place-items-center rounded-full border ${
                                         active ? "border-brand-600 bg-brand-600" : "border-charcoal-300"
                                       }`}
                                     >
                                       {active && <span className="h-2 w-2 rounded-full bg-white" />}
                                     </span>
                                     {o.label}
-                                  </label>
+                                  </button>
                                 );
                               })}
                             </div>
@@ -711,10 +742,8 @@ export default function QuoteForm() {
               <div className="text-xs font-semibold uppercase tracking-widest text-brand-200">
                 Estimated price
               </div>
-              <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
-                {estimate.low > 0
-                  ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
-                  : "—"}
+              <div className="mt-2 break-words font-display text-2xl font-extrabold leading-tight sm:text-3xl">
+                {estimate.low > 0 ? formatRange(estimate.low, estimate.high) : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
                 Live estimate based on your selections. Final pricing confirmed
@@ -731,10 +760,10 @@ export default function QuoteForm() {
             ) : (
               <ul className="divide-y divide-charcoal-100">
                 {estimate.breakdown.map((b) => (
-                  <li key={b.service} className="flex items-center justify-between py-3 text-sm">
-                    <span className="text-charcoal-700">{b.service}</span>
-                    <span className="font-semibold text-charcoal-900">
-                      {formatMoney(b.low)} – {formatMoney(b.high)}
+                  <li key={b.service} className="flex flex-col gap-0.5 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+                    <span className="min-w-0 text-charcoal-700">{b.service}</span>
+                    <span className="flex-none font-semibold text-charcoal-900">
+                      {formatRange(b.low, b.high)}
                     </span>
                   </li>
                 ))}
