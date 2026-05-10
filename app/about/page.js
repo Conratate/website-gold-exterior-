@@ -25,7 +25,7 @@ const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
   { y: "Year 1", t: "Expanded into pool care and gutter cleaning" },
   { y: "Year 2", t: "Launched holiday lighting service" },
-  { y: "Today", t: "500+ five-star jobs across the region" },
+  { y: "Today", t: "Proudly growing across the Bay Area" },
 ];
 
 export default function AboutPage() {
@@ -60,9 +60,9 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { v: "5★", l: "Customer rating" },
-                { v: "500+", l: "Jobs completed" },
+                { v: "100%", l: "Satisfaction guarantee" },
                 { v: "100%", l: "Insured & bonded" },
-                { v: "5", l: "Premium services" },
+                { v: "6", l: "Premium services" },
               ].map((s) => (
                 <div
                   key={s.l}

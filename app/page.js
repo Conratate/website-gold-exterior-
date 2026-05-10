@@ -45,8 +45,8 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">5-star jobs</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">500+</dd>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Bay Area</dt>
+                <dd className="mt-1 font-display text-2xl font-bold text-white">Local</dd>
               </div>
             </dl>
           </div>
