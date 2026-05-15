@@ -115,10 +115,10 @@ function escapeHtml(s) {
 export async function POST(request) {
   try {
     const apiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.QUOTE_TO_EMAIL;
+    const toEmail = process.env.QUOTE_TO_EMAIL || "goldexterior0@gmail.com";
     const fromEmail = process.env.QUOTE_FROM_EMAIL;
 
-    if (!apiKey || !toEmail || !fromEmail) {
+    if (!apiKey || !fromEmail) {
       return Response.json(
         {
           ok: false,
