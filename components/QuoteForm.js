@@ -182,7 +182,15 @@ export default function QuoteForm() {
         services: selectedServices.map((s) => ({
           id: s.id,
           name: s.name,
-          answers: answers[s.id] || {},
+          answers: Object.fromEntries(
+            s.questions.map((q) => {
+              const val = answers[s.id]?.[q.id];
+              const label = Array.isArray(val)
+                ? val.map((v) => q.options.find((o) => o.value === v)?.label ?? v).join(", ")
+                : (q.options.find((o) => o.value === val)?.label ?? val ?? "—");
+              return [q.label, label];
+            })
+          ),
         })),
         contact,
         estimate,
