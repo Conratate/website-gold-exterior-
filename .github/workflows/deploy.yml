@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Netlify
 
 on:
   push:
@@ -11,14 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build
+        run: npm run build
 
-      - name: Build project
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --dir=.next --prod
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
