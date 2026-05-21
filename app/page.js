@@ -21,7 +21,7 @@ export default function HomePage() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
               lights, gutter cleaning and car detailing — all from one trusted,
-              insured local team. Get a real quote in under two minutes.
+              local team. Get a real quote in under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -35,18 +35,14 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/15 pt-8">
-              <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Insured</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">100%</dd>
-              </div>
+            <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">
               <div>
                 <dt className="text-xs uppercase tracking-widest text-brand-200">Avg. response</dt>
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">5-star jobs</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">500+</dd>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Rating</dt>
+                <dd className="mt-1 font-display text-2xl font-bold text-white">5★</dd>
               </div>
             </dl>
           </div>
@@ -166,7 +162,7 @@ export default function HomePage() {
                 },
                 {
                   t: "One trusted team for everything",
-                  d: "Bundle services and let one insured crew handle it all — no scheduling chaos.",
+                  d: "Bundle services and let one trusted crew handle it all — no scheduling chaos.",
                 },
                 {
                   t: "Guaranteed satisfaction",
@@ -191,7 +187,6 @@ export default function HomePage() {
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { v: "100%", l: "Insured & bonded" },
                 { v: "5★", l: "Average rating" },
                 { v: "48hr", l: "Typical lead time" },
                 { v: "1", l: "Trusted local team" },

@@ -25,7 +25,7 @@ const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
   { y: "Year 1", t: "Expanded into pool care and gutter cleaning" },
   { y: "Year 2", t: "Launched holiday lighting service" },
-  { y: "Today", t: "500+ five-star jobs across the region" },
+  { y: "Today", t: "Serving homeowners across the region" },
 ];
 
 export default function AboutPage() {
@@ -38,7 +38,7 @@ export default function AboutPage() {
           <div>
             <span className="eyebrow-gold">About Us</span>
             <h1 className="mt-5 font-display text-4xl font-extrabold leading-tight sm:text-5xl">
-              Local, insured, and obsessed with doing it right.
+              Local and obsessed with doing it right.
             </h1>
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
@@ -60,8 +60,6 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { v: "5★", l: "Customer rating" },
-                { v: "500+", l: "Jobs completed" },
-                { v: "100%", l: "Insured & bonded" },
                 { v: "5", l: "Premium services" },
               ].map((s) => (
                 <div

@@ -9,7 +9,7 @@ export const metadata = {
     template: "%s · Gold Exterior",
   },
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Professional, insured exterior property services with instant online quotes.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Professional exterior property services with instant online quotes.",
   openGraph: {
     title: "Gold Exterior — Premium Exterior Property Services",
     description:
