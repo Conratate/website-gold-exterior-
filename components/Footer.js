@@ -47,7 +47,7 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="container-x flex flex-col items-start justify-between gap-3 py-6 text-xs text-charcoal-400 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Gold Exterior. All rights reserved.</p>
-          <p>Licensed & insured · goldexterior.com</p>
+          <p>goldexterior.com</p>
         </div>
       </div>
     </footer>
