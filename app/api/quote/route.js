@@ -1,10 +1,9 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { formatMoney } from "@/lib/services";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Build a clean HTML email summarizing the quote request.
 function buildEmail(payload) {
   const { services = [], contact = {}, estimate = {} } = payload || {};
 
@@ -114,16 +113,16 @@ function escapeHtml(s) {
 
 export async function POST(request) {
   try {
-    const apiKey = process.env.RESEND_API_KEY;
+    const gmailUser = process.env.GMAIL_USER;
+    const gmailPass = process.env.GMAIL_APP_PASSWORD;
     const toEmail = process.env.QUOTE_TO_EMAIL || "goldexterior0@gmail.com";
-    const fromEmail = process.env.QUOTE_FROM_EMAIL;
 
-    if (!apiKey || !fromEmail) {
+    if (!gmailUser || !gmailPass) {
       return Response.json(
         {
           ok: false,
           error:
-            "Email service is not configured. Set RESEND_API_KEY, QUOTE_TO_EMAIL, and QUOTE_FROM_EMAIL.",
+            "Email service is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.",
         },
         { status: 500 }
       );
@@ -141,7 +140,6 @@ export async function POST(request) {
       return Response.json({ ok: false, error: "Invalid payload." }, { status: 400 });
     }
 
-    // Light server-side validation
     const { contact = {}, services = [] } = payload;
     if (!contact.name || !contact.email || !contact.phone || !contact.address) {
       return Response.json(
@@ -156,46 +154,43 @@ export async function POST(request) {
       );
     }
 
-    // Optional photo attachment
-    const attachments = [];
-    const photo = formData.get("photo");
-    if (photo && typeof photo === "object" && "arrayBuffer" in photo) {
-      const buf = Buffer.from(await photo.arrayBuffer());
-      const filename = photo.name || "job-photo";
-      // Cap attachment size at 10 MB to be safe.
-      if (buf.length <= 10 * 1024 * 1024) {
-        attachments.push({ filename, content: buf });
-      }
-    }
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: gmailUser,
+        pass: gmailPass,
+      },
+    });
 
-    const resend = new Resend(apiKey);
-    const html = buildEmail(payload);
     const subject = `New Gold Exterior quote — ${contact.name} (${services
       .map((s) => s.name)
       .join(", ")})`;
+    const html = buildEmail(payload);
 
-    const { error } = await resend.emails.send({
-      from: fromEmail,
-      to: [toEmail],
+    const mailOptions = {
+      from: `"Gold Exterior Quotes" <${gmailUser}>`,
+      to: toEmail,
       replyTo: contact.email,
       subject,
       html,
-      attachments,
-    });
+    };
 
-    if (error) {
-      console.error("Resend error", error);
-      return Response.json(
-        { ok: false, error: "Failed to send email. Please try again." },
-        { status: 500 }
-      );
+    // Optional photo attachment
+    const photo = formData.get("photo");
+    if (photo && typeof photo === "object" && "arrayBuffer" in photo) {
+      const buf = Buffer.from(await photo.arrayBuffer());
+      if (buf.length <= 10 * 1024 * 1024) {
+        mailOptions.attachments = [{ filename: photo.name || "job-photo", content: buf }];
+      }
     }
+
+    await transporter.sendMail(mailOptions);
 
     return Response.json({ ok: true });
   } catch (err) {
     console.error("Quote API error", err);
     return Response.json(
-      { ok: false, error: "Unexpected server error." },
+      { ok: false, error: "Failed to send email. Please try again." },
       { status: 500 }
     );
   }
