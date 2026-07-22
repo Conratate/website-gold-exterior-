@@ -23,8 +23,8 @@ const VALUES = [
 
 const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
-  { y: "Year 1", t: "Expanded into pool care and gutter cleaning" },
-  { y: "Year 2", t: "Launched holiday lighting service" },
+  { y: "Year 1", t: "Expanded into commercial cleaning and gutter care" },
+  { y: "Year 2", t: "Launched holiday lighting and car detailing" },
   { y: "Today", t: "Serving homeowners across the region" },
 ];
 
