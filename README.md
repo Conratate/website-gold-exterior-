@@ -9,7 +9,7 @@ Resend-powered quote intake API.
 - **Home, Services, About Us, Get a Quote** — clean, mobile-first layout with a
   professional blue/gold/charcoal palette.
 - **Six service pages** (anchored sections on `/services`):
-  - Pressure Washing (driveways, sidewalks, fences)
+  - Pressure Washing (driveways, sidewalks)
   - Commercial Cleaning (per-sq-ft volume pricing)
   - Graffiti Removal
   - Holiday Lights Installation
