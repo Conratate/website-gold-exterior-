@@ -3,6 +3,8 @@ import { formatMoney } from "@/lib/services";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Give the SMTP handshake room to complete on serverless (Hobby allows up to 60s).
+export const maxDuration = 60;
 
 function buildEmail(payload) {
   const { services = [], contact = {}, estimate = {} } = payload || {};
@@ -114,7 +116,9 @@ function escapeHtml(s) {
 export async function POST(request) {
   try {
     const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
+    // App passwords are shown as "abcd efgh ijkl mnop" — strip any spaces the
+    // user may have pasted, since SMTP auth fails if they're left in.
+    const gmailPass = (process.env.GMAIL_APP_PASSWORD || "").replace(/\s+/g, "");
     const toEmail = process.env.QUOTE_TO_EMAIL || "goldexterior0@gmail.com";
 
     if (!gmailUser || !gmailPass) {
@@ -155,11 +159,18 @@ export async function POST(request) {
     }
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: gmailUser,
         pass: gmailPass,
       },
+      // Fail fast with a readable error instead of hanging until the function
+      // times out, which would surface as a generic error to the customer.
+      connectionTimeout: 20000,
+      greetingTimeout: 15000,
+      socketTimeout: 20000,
     });
 
     const subject = `New Gold Exterior quote — ${contact.name} (${services
@@ -189,8 +200,10 @@ export async function POST(request) {
     return Response.json({ ok: true });
   } catch (err) {
     console.error("Quote API error", err);
+    // Surface a short reason so failures are diagnosable from the client.
+    const reason = err && err.message ? String(err.message).slice(0, 160) : "unknown";
     return Response.json(
-      { ok: false, error: "Failed to send email. Please try again." },
+      { ok: false, error: `Failed to send email (${reason})` },
       { status: 500 }
     );
   }
