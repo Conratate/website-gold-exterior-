@@ -28,6 +28,7 @@ export default function QuoteForm() {
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState("");
   const [errors, setErrors] = useState({});
+  const [compressing, setCompressing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
 
@@ -88,19 +89,19 @@ export default function QuoteForm() {
     });
   }
 
-  function handlePhoto(e) {
+  async function handlePhoto(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) {
       setPhoto(null);
       setPhotoPreview("");
       return;
     }
-    if (file.size > 8 * 1024 * 1024) {
-      setErrors((er) => ({ ...er, photo: "File must be 8MB or smaller." }));
-      return;
-    }
     if (!file.type.startsWith("image/")) {
       setErrors((er) => ({ ...er, photo: "Please upload an image file." }));
+      return;
+    }
+    if (file.size > 25 * 1024 * 1024) {
+      setErrors((er) => ({ ...er, photo: "File must be 25MB or smaller." }));
       return;
     }
     setErrors((er) => {
@@ -108,10 +109,22 @@ export default function QuoteForm() {
       delete n.photo;
       return n;
     });
-    setPhoto(file);
-    const reader = new FileReader();
-    reader.onload = (ev) => setPhotoPreview(ev.target.result);
-    reader.readAsDataURL(file);
+
+    setCompressing(true);
+    try {
+      const { file: shrunk, dataUrl } = await shrinkImage(file);
+      setPhoto(shrunk);
+      setPhotoPreview(dataUrl);
+    } catch {
+      setErrors((er) => ({
+        ...er,
+        photo: "We couldn't read that image. Try a different photo.",
+      }));
+      setPhoto(null);
+      setPhotoPreview("");
+    } finally {
+      setCompressing(false);
+    }
   }
 
   function validateStep(targetStep) {
@@ -194,7 +207,13 @@ export default function QuoteForm() {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.ok) {
-        throw new Error(data.error || "Something went wrong sending your quote.");
+        // A non-JSON response means the request never reached our handler
+        // (e.g. rejected upstream for size); include the status so the cause
+        // isn't hidden behind a generic message.
+        throw new Error(
+          data.error ||
+            `Something went wrong sending your quote. (error ${res.status})`
+        );
       }
 
       setSubmitState({
@@ -548,7 +567,11 @@ export default function QuoteForm() {
             </p>
 
             <label className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-10 text-center transition hover:border-brand-400">
-              {photoPreview ? (
+              {compressing ? (
+                <div className="py-6 font-semibold text-brand-700">
+                  Optimizing your photo…
+                </div>
+              ) : photoPreview ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={photoPreview}
@@ -566,7 +589,7 @@ export default function QuoteForm() {
                     Tap to upload an image
                   </div>
                   <div className="text-xs text-charcoal-500">
-                    JPG, PNG or HEIC · 8 MB max
+                    JPG, PNG or HEIC · we'll resize it for you
                   </div>
                 </>
               )}
@@ -763,4 +786,49 @@ function Field({ label, error, children, className = "" }) {
       {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
     </div>
   );
+}
+
+// Phone photos are routinely 3–10 MB, which exceeds the request body limit on
+// serverless hosts and makes the upload fail before it reaches our API. Draw
+// the image to a canvas at a sane size and re-encode it as JPEG so the request
+// stays small and fast without a visible quality drop for estimating work.
+const MAX_EDGE = 1600;
+const JPEG_QUALITY = 0.75;
+
+function shrinkImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("read-failed"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("decode-failed"));
+      img.onload = () => {
+        const scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("no-canvas"));
+        ctx.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error("encode-failed"));
+            const name = (file.name || "job-photo").replace(/\.[^.]+$/, "") + ".jpg";
+            resolve({
+              file: new File([blob], name, { type: "image/jpeg" }),
+              dataUrl: canvas.toDataURL("image/jpeg", JPEG_QUALITY),
+            });
+          },
+          "image/jpeg",
+          JPEG_QUALITY
+        );
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }

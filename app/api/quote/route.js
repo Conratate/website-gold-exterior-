@@ -186,12 +186,15 @@ export async function POST(request) {
       html,
     };
 
-    // Optional photo attachment
+    // Optional photo attachment. An oversized photo should never cost us the
+    // lead — send the quote without it rather than failing the whole request.
     const photo = formData.get("photo");
     if (photo && typeof photo === "object" && "arrayBuffer" in photo) {
       const buf = Buffer.from(await photo.arrayBuffer());
-      if (buf.length <= 10 * 1024 * 1024) {
+      if (buf.length <= 3 * 1024 * 1024) {
         mailOptions.attachments = [{ filename: photo.name || "job-photo", content: buf }];
+      } else {
+        console.warn("Photo too large to attach:", buf.length);
       }
     }
 
