@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
+import {
+  SERVICES,
+  calculateTotal,
+  formatMoney,
+  BUNDLE_DISCOUNT_THRESHOLD,
+  BUNDLE_DISCOUNT_RATE,
+} from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
 
 const STEPS = [
@@ -134,8 +140,12 @@ export default function QuoteForm() {
     }
     if (targetStep >= 2) {
       for (const svc of selectedServices) {
+        const svcAnswers = answers[svc.id] || {};
         for (const q of svc.questions) {
-          const val = answers[svc.id] && answers[svc.id][q.id];
+          // Conditional questions (e.g. boat length only applies once
+          // "vehicle" is answered "boat") don't block progress while hidden.
+          if (q.showIf && !q.showIf(svcAnswers)) continue;
+          const val = svcAnswers[q.id];
           if (q.type === "checkbox") {
             if (!val || val.length === 0) {
               er[`${svc.id}.${q.id}`] = "Please choose at least one option.";
@@ -192,11 +202,18 @@ export default function QuoteForm() {
     try {
       const fd = new FormData();
       const payload = {
-        services: selectedServices.map((s) => ({
-          id: s.id,
-          name: s.name,
-          answers: answers[s.id] || {},
-        })),
+        services: selectedServices.map((s) => {
+          const svcAnswers = answers[s.id] || {};
+          // Drop stale values from a since-changed conditional branch (e.g.
+          // boat length left over after switching back to car) so the
+          // internal quote email only reflects the customer's final answers.
+          const visible = {};
+          for (const q of s.questions) {
+            if (q.showIf && !q.showIf(svcAnswers)) continue;
+            if (svcAnswers[q.id] !== undefined) visible[q.id] = svcAnswers[q.id];
+          }
+          return { id: s.id, name: s.name, answers: visible };
+        }),
         contact,
         estimate,
       };
@@ -245,12 +262,24 @@ export default function QuoteForm() {
         </h2>
         <p className="mt-3 text-charcoal-600">{submitState.message}</p>
         <div className="mt-6 rounded-2xl bg-brand-50 p-5 text-left">
-          <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
-            Your estimate
+          <div className="flex items-center justify-between">
+            <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+              Your estimate
+            </div>
+            {estimate.discountApplied && (
+              <span className="rounded-full bg-gold-400 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-charcoal-900">
+                Bundle discount applied
+              </span>
+            )}
           </div>
           <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
             {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
           </div>
+          {estimate.discountApplied && (
+            <p className="mt-1 text-xs font-semibold text-brand-700">
+              Includes {Math.round(estimate.discountRate * 100)}% off for bundling your services.
+            </p>
+          )}
           <p className="mt-2 text-xs text-charcoal-500">
             Final pricing confirmed after our team reviews your photo and address.
           </p>
@@ -390,6 +419,9 @@ export default function QuoteForm() {
 
                   <div className="mt-5 space-y-5">
                     {svc.questions.map((q) => {
+                      // Conditional follow-up questions (e.g. boat length only
+                      // once "vehicle" is set to boat) stay hidden until relevant.
+                      if (q.showIf && !q.showIf(answers[svc.id] || {})) return null;
                       const errKey = `${svc.id}.${q.id}`;
                       const cur = answers[svc.id] && answers[svc.id][q.id];
                       return (
@@ -635,7 +667,12 @@ export default function QuoteForm() {
                         <div className="text-xs text-charcoal-500">
                           {s.questions
                             .map((q) => {
-                              const v = answers[s.id] && answers[s.id][q.id];
+                              const svcAnswers = answers[s.id] || {};
+                              // Skip stale answers left over from a since-changed
+                              // conditional branch (e.g. boat length after
+                              // switching back to car).
+                              if (q.showIf && !q.showIf(svcAnswers)) return null;
+                              const v = svcAnswers[q.id];
                               if (!v) return null;
                               const txt = Array.isArray(v)
                                 ? v
@@ -731,8 +768,15 @@ export default function QuoteForm() {
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative">
-              <div className="text-xs font-semibold uppercase tracking-widest text-brand-200">
-                Estimated price
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-xs font-semibold uppercase tracking-widest text-brand-200">
+                  Estimated price
+                </div>
+                {estimate.discountApplied && (
+                  <span className="rounded-full bg-gold-400 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                    {Math.round(estimate.discountRate * 100)}% bundle discount
+                  </span>
+                )}
               </div>
               <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
                 {estimate.low > 0
@@ -740,8 +784,11 @@ export default function QuoteForm() {
                   : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
-                Live estimate based on your selections. Final pricing confirmed
-                after our team reviews your photo & address.
+                {estimate.discountApplied
+                  ? "Live estimate — bundle discount already applied. Final pricing confirmed after our team reviews your photo & address."
+                  : estimate.high > 0
+                    ? `Bundle $${BUNDLE_DISCOUNT_THRESHOLD}+ in services and save ${Math.round(BUNDLE_DISCOUNT_RATE * 100)}% automatically.`
+                    : "Live estimate based on your selections. Final pricing confirmed after our team reviews your photo & address."}
               </p>
             </div>
           </div>

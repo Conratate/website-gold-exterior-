@@ -81,7 +81,9 @@ function buildEmail(payload) {
                 ${serviceRows || '<div style="font-size:13px;color:#5e6a7a;">No services selected.</div>'}
 
                 <div style="margin-top:24px;padding:16px;background:#fdfbe9;border:1px solid #f9eb8d;border-radius:12px;">
-                  <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#9b5d10;font-weight:700;">Auto-calculated estimate</div>
+                  <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#9b5d10;font-weight:700;">Auto-calculated estimate${
+                    estimate.discountApplied ? " (bundle discount applied)" : ""
+                  }</div>
                   <div style="margin-top:6px;font-size:22px;font-weight:800;color:#11151b;">${escapeHtml(
                     totalLine
                   )}</div>

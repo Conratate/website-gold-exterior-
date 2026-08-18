@@ -27,7 +27,7 @@ export default function Footer() {
             <li><Link className="hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
             <li><Link className="hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
             <li><Link className="hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
-            <li><Link className="hover:text-white" href="/services#car-detailing">Car Detailing</Link></li>
+            <li><Link className="hover:text-white" href="/services#detailing">Detailing</Link></li>
           </ul>
         </div>
 

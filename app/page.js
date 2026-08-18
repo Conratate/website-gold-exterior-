@@ -20,7 +20,7 @@ export default function HomePage() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
-              lights, gutter cleaning and car detailing — all from one trusted,
+              lights, gutter cleaning, and car & boat detailing — all from one
               local team. Get a real quote in under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -33,6 +33,13 @@ export default function HomePage() {
               <Link href="/services" className="btn-ghost">
                 Explore Services
               </Link>
+            </div>
+
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-300/30 bg-gold-400/10 px-4 py-2 text-sm font-medium text-gold-100">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+              </svg>
+              Bundle services on one quote and save automatically.
             </div>
 
             <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">

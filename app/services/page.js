@@ -5,7 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing by Gold Exterior.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and detailing (car & boat) by Gold Exterior.",
 };
 
 export default function ServicesPage() {
