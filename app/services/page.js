@@ -12,25 +12,25 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-charcoal-950 text-white">
+      <section id="top" className="relative overflow-hidden scroll-mt-16 bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
-        <div className="container-x relative py-20 sm:py-28">
+        <div className="container-x relative py-14 sm:py-20 lg:py-28">
           <span className="eyebrow-gold">Our Services</span>
-          <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="mt-5 max-w-3xl font-display text-[2rem] font-extrabold leading-[1.15] sm:text-4xl lg:text-5xl">
             Six professional services. One easy phone call.
           </h1>
-          <p className="mt-5 max-w-2xl text-brand-100">
+          <p className="mt-4 max-w-2xl text-brand-100 sm:mt-5">
             Click any service to jump straight to the details — or skip ahead
             and build your own custom quote.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-2 sm:mt-8 sm:gap-3">
             {SERVICES.map((s) => (
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-gold-300 hover:text-gold-200"
+                className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:border-gold-300 hover:text-gold-200 sm:px-4 sm:text-sm"
               >
                 <ServiceIcon name={s.icon} className="h-4 w-4" />
                 {s.name}
@@ -42,19 +42,19 @@ export default function ServicesPage() {
 
       {/* Services */}
       <section className="section">
-        <div className="container-x space-y-24">
+        <div className="container-x space-y-16 sm:space-y-20 lg:space-y-24">
           {SERVICES.map((service, i) => (
             <article
               key={service.id}
               id={service.id}
-              className="scroll-mt-28 grid items-start gap-12 lg:grid-cols-[1.1fr_1fr]"
+              className="scroll-mt-24 grid items-start gap-8 sm:gap-12 lg:grid-cols-[1.1fr_1fr]"
             >
               <div className={i % 2 === 1 ? "lg:order-2" : ""}>
                 <span className="eyebrow">Service</span>
-                <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+                <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
                   {service.name}
                 </h2>
-                <p className="mt-3 text-lg text-brand-700">{service.tagline}</p>
+                <p className="mt-3 text-base text-brand-700 sm:text-lg">{service.tagline}</p>
                 <p className="mt-5 text-charcoal-600">{service.blurb}</p>
 
                 {service.sub && (
@@ -93,8 +93,8 @@ export default function ServicesPage() {
                     <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
                       Sizing guide
                     </h3>
-                    <div className="mt-3 overflow-x-auto rounded-2xl border border-charcoal-100">
-                      <table className="w-full min-w-[420px] border-collapse bg-white text-left text-sm">
+                    <div className="mt-3 -mx-5 overflow-x-auto px-5 sm:mx-0 sm:rounded-2xl sm:border sm:border-charcoal-100 sm:px-0">
+                      <table className="w-full min-w-[420px] border-collapse overflow-hidden rounded-2xl border border-charcoal-100 bg-white text-left text-sm sm:rounded-none sm:border-0">
                         <thead>
                           <tr className="border-b border-charcoal-100 bg-charcoal-50/70">
                             <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
@@ -126,6 +126,9 @@ export default function ServicesPage() {
                         </tbody>
                       </table>
                     </div>
+                    <p className="mt-2 text-xs text-charcoal-500 sm:hidden">
+                      Swipe the table sideways to see every column.
+                    </p>
                     <p className="mt-2 text-xs text-charcoal-500">
                       Not sure which tier you're in? The quote builder has a
                       built-in size helper — enter rough measurements and we'll
@@ -134,20 +137,20 @@ export default function ServicesPage() {
                   </div>
                 )}
 
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href={`/quote?service=${service.id}`} className="btn-primary">
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Link href={`/quote?service=${service.id}`} className="btn-primary w-full sm:w-auto">
                     Quote this service
                   </Link>
-                  <Link href="/services" className="btn-outline">
-                    All services
+                  <Link href="#top" className="btn-outline w-full sm:w-auto">
+                    Back to all services
                   </Link>
                 </div>
               </div>
 
               <div className={i % 2 === 1 ? "lg:order-1" : ""}>
                 <div className="relative">
-                  <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/60 via-brand-100 to-gold-100 blur-2xl" />
-                  <div className="relative overflow-hidden rounded-3xl border border-brand-100 bg-white p-8 shadow-glow">
+                  <div className="absolute -inset-3 rounded-3xl bg-gradient-to-br from-brand-200/60 via-brand-100 to-gold-100 blur-2xl sm:-inset-4" />
+                  <div className="relative overflow-hidden rounded-3xl border border-brand-100 bg-white p-6 shadow-glow sm:p-8">
                     <div className="flex items-center gap-4">
                       <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-600 text-white shadow-glow">
                         <ServiceIcon name={service.icon} className="h-7 w-7" />
@@ -198,10 +201,10 @@ export default function ServicesPage() {
       {/* CTA */}
       <section className="section pt-0">
         <div className="container-x">
-          <div className="rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-10 sm:p-14">
+          <div className="rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-6 sm:p-10 lg:p-14">
             <div className="grid items-center gap-6 lg:grid-cols-[2fr_1fr]">
               <div>
-                <h2 className="font-display text-3xl font-extrabold text-charcoal-900 sm:text-4xl">
+                <h2 className="font-display text-[1.75rem] font-extrabold leading-tight text-charcoal-900 sm:text-3xl lg:text-4xl">
                   Don't see what you need?
                 </h2>
                 <p className="mt-3 max-w-2xl text-charcoal-600">
@@ -210,8 +213,8 @@ export default function ServicesPage() {
                   cleaning.)
                 </p>
               </div>
-              <div className="flex justify-start lg:justify-end">
-                <Link href="/quote" className="btn-primary">
+              <div className="flex lg:justify-end">
+                <Link href="/quote" className="btn-primary w-full sm:w-auto">
                   Start a Quote
                 </Link>
               </div>

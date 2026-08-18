@@ -5,13 +5,13 @@ import Footer from "@/components/Footer";
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
   title: {
-    default: "Gold Exterior — Premium Exterior Property Services",
+    default: "Gold Exterior — The Gold Standard for Quality",
     template: "%s · Gold Exterior",
   },
   description:
     "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing. Professional exterior property services with instant online quotes.",
   openGraph: {
-    title: "Gold Exterior — Premium Exterior Property Services",
+    title: "Gold Exterior — The Gold Standard for Quality",
     description:
       "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing. Get an instant online quote.",
     url: "https://goldexterior.com",
@@ -24,6 +24,7 @@ export const viewport = {
   themeColor: "#11244f",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }) {

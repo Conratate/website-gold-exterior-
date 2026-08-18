@@ -252,17 +252,17 @@ export default function QuoteForm() {
   // ───────────────────────── Success state
   if (submitState.status === "success") {
     return (
-      <div className="mx-auto max-w-2xl rounded-3xl border border-brand-100 bg-white p-10 text-center shadow-glow">
+      <div className="mx-auto max-w-2xl rounded-3xl border border-brand-100 bg-white p-6 text-center shadow-glow sm:p-10">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gold-400 text-charcoal-900 shadow-gold">
           <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="mt-6 font-display text-3xl font-extrabold text-charcoal-900">
+        <h2 className="mt-6 font-display text-2xl font-extrabold text-charcoal-900 sm:text-3xl">
           Quote request received
         </h2>
         <p className="mt-3 text-charcoal-600">{submitState.message}</p>
-        <div className="mt-6 rounded-2xl bg-brand-50 p-5 text-left">
+        <div className="mt-6 rounded-2xl bg-brand-50 p-4 text-left sm:p-5">
           <div className="flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
               Your estimate
@@ -273,7 +273,7 @@ export default function QuoteForm() {
               </span>
             )}
           </div>
-          <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
+          <div className="mt-1 font-display text-2xl font-extrabold text-charcoal-900 sm:text-3xl">
             {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
           </div>
           {estimate.discountApplied && (
@@ -290,49 +290,58 @@ export default function QuoteForm() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+    <div
+      className={`grid gap-6 sm:gap-8 lg:grid-cols-[1.6fr_1fr] lg:pb-0 ${
+        estimate.high > 0 ? "pb-24" : ""
+      }`}
+    >
       {/* Form column */}
-      <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10">
+      <div className="rounded-3xl border border-charcoal-100 bg-white p-5 shadow-sm sm:p-8 lg:p-10">
         {/* Progress */}
-        <ol className="mb-8 grid grid-cols-5 gap-2 text-[11px] font-semibold uppercase tracking-wider">
-          {STEPS.map((s, i) => {
-            const done = i < step;
-            const active = i === step;
-            return (
-              <li key={s.id} className="flex flex-col items-center text-center">
-                <div
-                  className={`grid h-9 w-9 place-items-center rounded-full border transition ${
-                    active
-                      ? "border-brand-600 bg-brand-600 text-white"
-                      : done
-                        ? "border-gold-400 bg-gold-400 text-charcoal-900"
-                        : "border-charcoal-200 bg-white text-charcoal-400"
-                  }`}
-                >
-                  {done ? (
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    i + 1
-                  )}
-                </div>
-                <span
-                  className={`mt-2 hidden sm:block ${
-                    active ? "text-brand-700" : done ? "text-charcoal-700" : "text-charcoal-400"
-                  }`}
-                >
-                  {s.label}
-                </span>
-              </li>
-            );
-          })}
-        </ol>
+        <div className="mb-7 sm:mb-8">
+          <ol className="grid grid-cols-5 gap-1.5 text-[11px] font-semibold uppercase tracking-wider sm:gap-2">
+            {STEPS.map((s, i) => {
+              const done = i < step;
+              const active = i === step;
+              return (
+                <li key={s.id} className="flex flex-col items-center text-center">
+                  <div
+                    className={`grid h-8 w-8 place-items-center rounded-full border text-xs transition sm:h-9 sm:w-9 sm:text-[11px] ${
+                      active
+                        ? "border-brand-600 bg-brand-600 text-white"
+                        : done
+                          ? "border-gold-400 bg-gold-400 text-charcoal-900"
+                          : "border-charcoal-200 bg-white text-charcoal-400"
+                    }`}
+                  >
+                    {done ? (
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                  <span
+                    className={`mt-2 hidden sm:block ${
+                      active ? "text-brand-700" : done ? "text-charcoal-700" : "text-charcoal-400"
+                    }`}
+                  >
+                    {s.label}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-3 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700 sm:hidden">
+            Step {step + 1} of {STEPS.length} · {STEPS[step].label}
+          </p>
+        </div>
 
         {/* STEP 1: Services */}
         {step === 0 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-xl font-bold text-charcoal-900 sm:text-2xl">
               What services do you need?
             </h2>
             <p className="mt-2 text-sm text-charcoal-600">
@@ -344,7 +353,7 @@ export default function QuoteForm() {
                 return (
                   <label
                     key={svc.id}
-                    className={`flex cursor-pointer items-start gap-4 rounded-2xl border p-4 transition ${
+                    className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-3.5 transition sm:gap-4 sm:p-4 ${
                       checked
                         ? "border-brand-500 bg-brand-50 shadow-glow"
                         : "border-charcoal-200 hover:border-brand-300 hover:bg-brand-50/40"
@@ -357,17 +366,17 @@ export default function QuoteForm() {
                       onChange={() => toggleService(svc.id)}
                     />
                     <div
-                      className={`grid h-11 w-11 flex-none place-items-center rounded-xl ${
+                      className={`grid h-10 w-10 flex-none place-items-center rounded-xl sm:h-11 sm:w-11 ${
                         checked ? "bg-brand-600 text-white" : "bg-brand-50 text-brand-700"
                       }`}
                     >
                       <ServiceIcon name={svc.icon} className="h-5 w-5" />
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <div className="font-semibold text-charcoal-900">{svc.name}</div>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="font-semibold leading-snug text-charcoal-900">{svc.name}</div>
                         <div
-                          className={`grid h-5 w-5 place-items-center rounded-full border ${
+                          className={`grid h-5 w-5 flex-none place-items-center rounded-full border ${
                             checked
                               ? "border-brand-600 bg-brand-600 text-white"
                               : "border-charcoal-300 bg-white text-transparent"
@@ -393,7 +402,7 @@ export default function QuoteForm() {
         {/* STEP 2: Details per service */}
         {step === 1 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-xl font-bold text-charcoal-900 sm:text-2xl">
               A few quick questions
             </h2>
             <p className="mt-2 text-sm text-charcoal-600">
@@ -401,9 +410,9 @@ export default function QuoteForm() {
               we'll confirm before the job.
             </p>
 
-            <div className="mt-6 space-y-8">
+            <div className="mt-6 space-y-6 sm:space-y-8">
               {selectedServices.map((svc) => (
-                <div key={svc.id} className="rounded-2xl border border-charcoal-100 bg-charcoal-50/60 p-6">
+                <div key={svc.id} className="rounded-2xl border border-charcoal-100 bg-charcoal-50/60 p-4 sm:p-6">
                   <div className="flex items-center gap-3">
                     <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-600 text-white">
                       <ServiceIcon name={svc.icon} className="h-5 w-5" />
@@ -568,7 +577,7 @@ export default function QuoteForm() {
         {/* STEP 3: Contact */}
         {step === 2 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-xl font-bold text-charcoal-900 sm:text-2xl">
               Where should we send your quote?
             </h2>
             <p className="mt-2 text-sm text-charcoal-600">
@@ -626,7 +635,7 @@ export default function QuoteForm() {
         {/* STEP 4: Photo */}
         {step === 3 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-xl font-bold text-charcoal-900 sm:text-2xl">
               Add a photo of the job
             </h2>
             <p className="mt-2 text-sm text-charcoal-600">
@@ -634,7 +643,7 @@ export default function QuoteForm() {
               but highly recommended.
             </p>
 
-            <label className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-10 text-center transition hover:border-brand-400">
+            <label className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-6 text-center transition hover:border-brand-400 sm:p-10">
               {compressing ? (
                 <div className="py-6 font-semibold text-brand-700">
                   Optimizing your photo…
@@ -682,7 +691,7 @@ export default function QuoteForm() {
         {/* STEP 5: Review */}
         {step === 4 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-xl font-bold text-charcoal-900 sm:text-2xl">
               Review your request
             </h2>
             <p className="mt-2 text-sm text-charcoal-600">
@@ -690,7 +699,7 @@ export default function QuoteForm() {
             </p>
 
             <div className="mt-6 space-y-5">
-              <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
+              <div className="rounded-2xl border border-charcoal-100 bg-white p-4 sm:p-5">
                 <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
                   Services
                 </div>
@@ -729,7 +738,7 @@ export default function QuoteForm() {
                 </ul>
               </div>
 
-              <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
+              <div className="rounded-2xl border border-charcoal-100 bg-white p-4 sm:p-5">
                 <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
                   Contact
                 </div>
@@ -745,7 +754,7 @@ export default function QuoteForm() {
               </div>
 
               {photoPreview && (
-                <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
+                <div className="rounded-2xl border border-charcoal-100 bg-white p-4 sm:p-5">
                   <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
                     Photo
                   </div>
@@ -768,17 +777,17 @@ export default function QuoteForm() {
         )}
 
         {/* Footer / nav buttons */}
-        <div className="mt-10 flex items-center justify-between gap-3 border-t border-charcoal-100 pt-6">
+        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-charcoal-100 pt-6 sm:mt-10 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
             onClick={back}
             disabled={step === 0}
-            className="btn border border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn w-full border border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             Back
           </button>
           {step < STEPS.length - 1 ? (
-            <button type="button" onClick={next} className="btn-primary">
+            <button type="button" onClick={next} className="btn-primary w-full sm:w-auto">
               Continue
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M13 6l6 6-6 6" />
@@ -789,7 +798,7 @@ export default function QuoteForm() {
               type="button"
               onClick={submit}
               disabled={submitting}
-              className="btn-gold disabled:opacity-60"
+              className="btn-gold w-full disabled:opacity-60 sm:w-auto"
             >
               {submitting ? "Sending…" : "Send My Quote Request"}
             </button>
@@ -800,7 +809,7 @@ export default function QuoteForm() {
       {/* Live estimate sidebar */}
       <aside className="lg:sticky lg:top-24 self-start">
         <div className="overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-glow">
-          <div className="relative bg-charcoal-950 p-6 text-white">
+          <div className="relative bg-charcoal-950 p-5 text-white sm:p-6">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative">
@@ -814,7 +823,7 @@ export default function QuoteForm() {
                   </span>
                 )}
               </div>
-              <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
+              <div className="mt-2 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
                 {estimate.low > 0
                   ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
                   : "—"}
@@ -829,7 +838,7 @@ export default function QuoteForm() {
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-5 sm:p-6">
             {estimate.breakdown.length === 0 ? (
               <p className="text-sm text-charcoal-500">
                 Pick a service to see your estimate update in real time.
@@ -837,9 +846,9 @@ export default function QuoteForm() {
             ) : (
               <ul className="divide-y divide-charcoal-100">
                 {estimate.breakdown.map((b) => (
-                  <li key={b.service} className="flex items-center justify-between py-3 text-sm">
-                    <span className="text-charcoal-700">{b.service}</span>
-                    <span className="font-semibold text-charcoal-900">
+                  <li key={b.service} className="flex items-center justify-between gap-3 py-3 text-sm">
+                    <span className="min-w-0 text-charcoal-700">{b.service}</span>
+                    <span className="flex-none font-semibold tabular-nums text-charcoal-900">
                       {formatMoney(b.low)} – {formatMoney(b.high)}
                     </span>
                   </li>
@@ -871,6 +880,32 @@ export default function QuoteForm() {
           </div>
         </div>
       </aside>
+
+      {/* On phones the sidebar lands below the form, so the running total rides
+          along the bottom of the screen while the customer answers. */}
+      {estimate.high > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-charcoal-200 bg-white/95 backdrop-blur pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_-15px_rgba(17,36,79,0.45)] lg:hidden">
+          <div className="container-x flex items-center justify-between gap-3 py-3">
+            <div className="min-w-0">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-charcoal-500">
+                Live estimate
+              </div>
+              <div className="truncate font-display text-lg font-extrabold leading-tight text-charcoal-900">
+                {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
+              </div>
+            </div>
+            {estimate.discountApplied ? (
+              <span className="flex-none rounded-full bg-gold-400 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                −{Math.round(estimate.discountRate * 100)}% applied
+              </span>
+            ) : (
+              <span className="flex-none text-[11px] text-charcoal-500">
+                Confirmed after review
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -977,7 +1012,7 @@ function SizeHelper({ config, options, onApply }) {
       {open && (
         <div className="mt-3 rounded-xl border border-brand-200 bg-brand-50/60 p-4">
           <p className="text-xs text-charcoal-600">{config.prompt}</p>
-          <div className="mt-3 flex flex-wrap items-end gap-3">
+          <div className="mt-3 flex flex-wrap items-end gap-2 sm:gap-3">
             {isArea ? (
               <>
                 <div>
@@ -988,7 +1023,7 @@ function SizeHelper({ config, options, onApply }) {
                     type="number"
                     min="0"
                     inputMode="numeric"
-                    className="input mt-1 w-28"
+                    className="input mt-1 w-24 sm:w-28"
                     value={dimA}
                     onChange={(e) => setDimA(e.target.value)}
                   />
@@ -1002,7 +1037,7 @@ function SizeHelper({ config, options, onApply }) {
                     type="number"
                     min="0"
                     inputMode="numeric"
-                    className="input mt-1 w-28"
+                    className="input mt-1 w-24 sm:w-28"
                     value={dimB}
                     onChange={(e) => setDimB(e.target.value)}
                   />
@@ -1017,7 +1052,7 @@ function SizeHelper({ config, options, onApply }) {
                   type="number"
                   min="0"
                   inputMode="numeric"
-                  className="input mt-1 w-32"
+                  className="input mt-1 w-28 sm:w-32"
                   value={dimA}
                   onChange={(e) => setDimA(e.target.value)}
                 />

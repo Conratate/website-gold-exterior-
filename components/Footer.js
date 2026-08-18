@@ -4,15 +4,18 @@ import Logo from "./Logo";
 export default function Footer() {
   return (
     <footer className="mt-20 border-t border-charcoal-100 bg-charcoal-950 text-charcoal-200">
-      <div className="container-x grid gap-12 py-16 md:grid-cols-4">
-        <div className="md:col-span-2">
+      <div className="container-x grid gap-10 py-12 sm:grid-cols-2 sm:gap-12 md:grid-cols-4 md:py-16">
+        <div className="sm:col-span-2">
           <Logo className="text-white [&_span:last-child]:text-white" />
+          <p className="mt-3 text-sm font-semibold uppercase tracking-[0.16em] text-gold-300">
+            The gold standard for quality
+          </p>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-charcoal-300">
             Gold Exterior is a full-service exterior property care company. We
             handle the dirty work outside your home so you can enjoy what's
             inside it.
           </p>
-          <Link href="/quote" className="btn-gold mt-6">
+          <Link href="/quote" className="btn-gold mt-6 w-full sm:w-auto">
             Get a Free Quote
           </Link>
         </div>

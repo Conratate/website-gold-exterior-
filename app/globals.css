@@ -10,6 +10,9 @@
 
   html {
     scroll-behavior: smooth;
+    /* Guard against any single element forcing a sideways scroll on narrow
+       phones — the page should only ever scroll vertically. */
+    overflow-x: hidden;
   }
 
   body {
@@ -22,6 +25,9 @@
   h1, h2, h3, h4 {
     font-family: "Poppins", "Inter", system-ui, sans-serif;
     letter-spacing: -0.01em;
+    /* Long headlines break into even lines instead of leaving one orphan
+       word on its own row, which is what phone widths tend to produce. */
+    text-wrap: balance;
   }
 }
 
@@ -31,15 +37,15 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-6 py-3 text-center text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
   }
 
   .btn-primary {
-    @apply btn bg-brand-600 text-white shadow-glow hover:bg-brand-700 hover:-translate-y-0.5 focus-visible:ring-brand-400;
+    @apply btn bg-brand-600 text-white shadow-glow hover:bg-brand-700 focus-visible:ring-brand-400;
   }
 
   .btn-gold {
-    @apply btn bg-gold-400 text-charcoal-900 shadow-gold hover:bg-gold-300 hover:-translate-y-0.5 focus-visible:ring-gold-300;
+    @apply btn bg-gold-400 text-charcoal-900 shadow-gold hover:bg-gold-300 focus-visible:ring-gold-300;
   }
 
   .btn-ghost {
@@ -51,7 +57,7 @@
   }
 
   .card {
-    @apply rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-glow;
+    @apply rounded-2xl border border-charcoal-100 bg-white p-5 shadow-sm transition-all duration-200 sm:p-6;
   }
 
   .eyebrow {
@@ -59,19 +65,33 @@
   }
 
   .eyebrow-gold {
-    @apply inline-flex items-center gap-2 rounded-full bg-gold-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-gold-700;
+    @apply inline-flex items-center gap-2 rounded-full bg-gold-100 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-700 sm:text-xs sm:tracking-[0.18em];
   }
 
   .section {
-    @apply py-20 sm:py-24;
+    @apply py-14 sm:py-20 lg:py-24;
   }
 
   .input {
-    @apply block w-full rounded-xl border border-charcoal-200 bg-white px-4 py-3 text-charcoal-900 placeholder:text-charcoal-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100;
+    @apply block w-full rounded-xl border border-charcoal-200 bg-white px-4 py-3 text-base text-charcoal-900 placeholder:text-charcoal-400 shadow-sm transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100;
   }
 
   .label {
     @apply mb-2 block text-sm font-semibold text-charcoal-800;
+  }
+}
+
+/* Lift-on-hover reads as a stuck "pressed" state on touch screens, where a tap
+   leaves the hover style applied. Restrict the motion to pointers that can
+   actually hover; phones and tablets keep the colour change alone. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover,
+  .btn-gold:hover {
+    @apply -translate-y-0.5;
+  }
+
+  .card:hover {
+    @apply -translate-y-1 shadow-glow;
   }
 }
 

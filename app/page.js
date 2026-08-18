@@ -16,40 +16,40 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
-        <div className="container-x relative grid items-center gap-12 py-24 sm:py-32 lg:grid-cols-2">
+        <div className="container-x relative grid items-center gap-10 py-16 sm:gap-12 sm:py-24 lg:grid-cols-2 lg:py-32">
           <div>
-            <span className="eyebrow-gold">Premium Exterior Services</span>
-            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
+            <span className="eyebrow-gold">The Gold Standard for Quality</span>
+            <h1 className="mt-5 font-display text-[2rem] font-extrabold leading-[1.12] sm:mt-6 sm:text-5xl sm:leading-[1.08] lg:text-6xl">
               The outside of your home,{" "}
               <span className="bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent">
                 done right.
               </span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-brand-50/90 sm:mt-6 sm:text-lg">
               Pressure washing, commercial cleaning, graffiti removal, holiday
               lights, gutter cleaning, and car & boat detailing — all from one
               local team. Get a real quote in under two minutes.
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link href="/quote" className="btn-gold">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/quote" className="btn-gold w-full sm:w-auto">
                 Get an Instant Quote
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </Link>
-              <Link href="/services" className="btn-ghost">
+              <Link href="/services" className="btn-ghost w-full sm:w-auto">
                 Explore Services
               </Link>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-300/30 bg-gold-400/10 px-4 py-2 text-sm font-medium text-gold-100">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="mt-5 flex items-start gap-2 rounded-2xl border border-gold-300/30 bg-gold-400/10 px-4 py-2.5 text-sm font-medium text-gold-100 sm:inline-flex sm:items-center sm:rounded-full">
+              <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 flex-none text-gold-300 sm:mt-0" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
               </svg>
               Bundle services on one quote and save automatically.
             </div>
 
-            <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">
+            <dl className="mt-10 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-7 sm:mt-12 sm:pt-8">
               <div>
                 <dt className="text-xs uppercase tracking-widest text-brand-200">Avg. response</dt>
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
@@ -62,16 +62,16 @@ export default function HomePage() {
           </div>
 
           <div className="relative">
-            <div className="relative mx-auto aspect-square w-full max-w-lg">
-              <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-gold-400/30 via-brand-500/20 to-transparent blur-2xl" />
-              <div className="relative h-full w-full rounded-[2rem] border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-md shadow-glow">
+            <div className="relative mx-auto w-full max-w-lg">
+              <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-gold-400/30 via-brand-500/20 to-transparent blur-2xl sm:-inset-6" />
+              <div className="relative w-full rounded-[1.75rem] border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-5 backdrop-blur-md shadow-glow sm:rounded-[2rem] sm:p-8">
                 <div className="flex items-center justify-between">
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-100">
                     Estimate Calculator
                   </span>
                   <span className="text-xs text-brand-200">Live preview</span>
                 </div>
-                <div className="mt-6 space-y-4">
+                <div className="mt-5 space-y-3 sm:mt-6 sm:space-y-4">
                   <div className="rounded-xl border border-white/10 bg-white/5 p-4">
                     <div className="text-xs text-brand-200">Service</div>
                     <div className="mt-1 font-semibold">Pressure Washing · Driveway (2-Car)</div>
@@ -80,7 +80,7 @@ export default function HomePage() {
                     <div className="text-xs text-brand-200">Add-on</div>
                     <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
                   </div>
-                  <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-5">
+                  <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-4 sm:p-5">
                     <div className="flex items-center justify-between gap-2">
                       <div className="text-xs uppercase tracking-widest text-gold-200">
                         Estimated price
@@ -91,7 +91,7 @@ export default function HomePage() {
                         </span>
                       )}
                     </div>
-                    <div className="mt-1 font-display text-3xl font-extrabold text-white">
+                    <div className="mt-1 font-display text-[1.75rem] font-extrabold leading-tight text-white sm:text-3xl">
                       {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
@@ -116,7 +116,7 @@ export default function HomePage() {
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <span className="eyebrow">What we do</span>
-              <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+              <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
                 Six services. One team you can trust.
               </h2>
               <p className="mt-4 text-charcoal-600">
@@ -130,7 +130,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {SERVICES.map((service) => (
               <Link key={service.id} href={`/services#${service.id}`} className="card group">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700 transition group-hover:bg-brand-600 group-hover:text-white">
@@ -165,10 +165,10 @@ export default function HomePage() {
 
       {/* Why us */}
       <section className="section bg-brand-50/60">
-        <div className="container-x grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="container-x grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="eyebrow">Why Gold Exterior</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+            <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
               Premium isn't a price tag — it's a process.
             </h2>
             <p className="mt-4 text-charcoal-600">
@@ -227,12 +227,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-x">
-          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-8 py-16 text-white sm:px-16">
+          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative grid gap-8 lg:grid-cols-[2fr_1fr] lg:items-center">
               <div>
-                <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+                <h2 className="font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
                   Ready for your free, no-obligation quote?
                 </h2>
                 <p className="mt-3 max-w-xl text-brand-100">
@@ -240,8 +240,8 @@ export default function HomePage() {
                   pricing in your inbox before the day is out.
                 </p>
               </div>
-              <div className="flex justify-start lg:justify-end">
-                <Link href="/quote" className="btn-gold">
+              <div className="flex lg:justify-end">
+                <Link href="/quote" className="btn-gold w-full sm:w-auto">
                   Start My Quote
                 </Link>
               </div>

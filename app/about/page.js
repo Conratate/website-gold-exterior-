@@ -23,7 +23,7 @@ const VALUES = [
 
 const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
-  { y: "Year 1", t: "Expanded into pool care and gutter cleaning" },
+  { y: "Year 1", t: "Expanded into gutter cleaning and detailing" },
   { y: "Year 2", t: "Launched holiday lighting service" },
   { y: "Today", t: "Serving homeowners across the region" },
 ];
@@ -34,23 +34,23 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
-        <div className="container-x relative grid items-center gap-12 py-24 sm:py-28 lg:grid-cols-2">
+        <div className="container-x relative grid items-center gap-10 py-16 sm:gap-12 sm:py-24 lg:grid-cols-2 lg:py-28">
           <div>
             <span className="eyebrow-gold">About Us</span>
-            <h1 className="mt-5 font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+            <h1 className="mt-5 font-display text-[2rem] font-extrabold leading-[1.15] sm:text-4xl lg:text-5xl">
               Local and obsessed with doing it right.
             </h1>
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
               need a Rolodex of contractors to keep the outside of their home
-              looking great. One trusted local team. Six premium services.
-              Zero compromise.
+              looking great. One trusted local team. Six premium services. The
+              gold standard for quality, every time.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/quote" className="btn-gold">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link href="/quote" className="btn-gold w-full sm:w-auto">
                 Get an Instant Quote
               </Link>
-              <Link href="/services" className="btn-ghost">
+              <Link href="/services" className="btn-ghost w-full sm:w-auto">
                 See Our Services
               </Link>
             </div>
@@ -78,10 +78,10 @@ export default function AboutPage() {
       </section>
 
       <section className="section">
-        <div className="container-x grid gap-12 lg:grid-cols-[1fr_1.2fr]">
+        <div className="container-x grid gap-8 sm:gap-12 lg:grid-cols-[1fr_1.2fr]">
           <div>
             <span className="eyebrow">Our story</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+            <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
               Built on the work, not the marketing.
             </h2>
           </div>
@@ -92,9 +92,9 @@ export default function AboutPage() {
               homeowners tired of unreliable contractors.
             </p>
             <p>
-              We built our reputation one driveway, one pool, one gutter at a
-              time — by showing up when we said we would, doing the work the
-              right way, and standing behind it.
+              We built our reputation one driveway, one storefront, one gutter
+              at a time — by showing up when we said we would, doing the work
+              the right way, and standing behind it.
             </p>
             <p>
               Today, we offer six tightly focused exterior services so we can
@@ -110,11 +110,11 @@ export default function AboutPage() {
         <div className="container-x">
           <div className="max-w-2xl">
             <span className="eyebrow">What we stand for</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+            <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
               Three values. No exceptions.
             </h2>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:gap-6 md:mt-12 md:grid-cols-3">
             {VALUES.map((v) => (
               <div key={v.t} className="card">
                 <div className="grid h-12 w-12 place-items-center rounded-xl bg-gold-400 text-charcoal-900 shadow-gold">
@@ -134,11 +134,11 @@ export default function AboutPage() {
         <div className="container-x">
           <div className="max-w-2xl">
             <span className="eyebrow">Where we are</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+            <h2 className="mt-4 font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
               Growing the right way.
             </h2>
           </div>
-          <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-6 md:mt-12 lg:grid-cols-4">
             {TIMELINE.map((m) => (
               <li
                 key={m.y}
@@ -158,12 +158,12 @@ export default function AboutPage() {
 
       <section className="section pt-0">
         <div className="container-x">
-          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-8 py-16 text-white sm:px-16">
+          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative grid gap-8 lg:grid-cols-[2fr_1fr] lg:items-center">
               <div>
-                <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+                <h2 className="font-display text-[1.75rem] font-extrabold leading-tight sm:text-3xl lg:text-4xl">
                   Let's make your home look its best.
                 </h2>
                 <p className="mt-3 max-w-xl text-brand-100">
@@ -171,8 +171,8 @@ export default function AboutPage() {
                   back the same day.
                 </p>
               </div>
-              <div className="flex justify-start lg:justify-end">
-                <Link href="/quote" className="btn-gold">
+              <div className="flex lg:justify-end">
+                <Link href="/quote" className="btn-gold w-full sm:w-auto">
                   Get My Free Quote
                 </Link>
               </div>
