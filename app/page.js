@@ -1,6 +1,13 @@
 import Link from "next/link";
-import { SERVICES } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+
+// The hero preview mirrors a real quote so the advertised figure can never
+// drift out of sync with the pricing engine.
+const PREVIEW = calculateTotal({
+  "pressure-washing": { surface: "driveway", size: "small" },
+  "gutter-cleaning": { stories: "two" },
+});
 
 export default function HomePage() {
   return (
@@ -74,14 +81,23 @@ export default function HomePage() {
                     <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
                   </div>
                   <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-5">
-                    <div className="text-xs uppercase tracking-widest text-gold-200">
-                      Estimated price
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs uppercase tracking-widest text-gold-200">
+                        Estimated price
+                      </div>
+                      {PREVIEW.discountApplied && (
+                        <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                          −{Math.round(PREVIEW.discountRate * 100)}%
+                        </span>
+                      )}
                     </div>
                     <div className="mt-1 font-display text-3xl font-extrabold text-white">
-                      $699
+                      {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
-                      Final quote confirmed after photo review.
+                      {PREVIEW.discountApplied
+                        ? `${PREVIEW.discountLabel} applied. Final quote confirmed after photo review.`
+                        : "Final quote confirmed after photo review."}
                     </div>
                   </div>
                   <Link href="/quote" className="btn-gold w-full">

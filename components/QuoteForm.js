@@ -268,7 +268,7 @@ export default function QuoteForm() {
             </div>
             {estimate.discountApplied && (
               <span className="rounded-full bg-gold-400 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-charcoal-900">
-                Bundle discount applied
+                {estimate.discountLabel} applied
               </span>
             )}
           </div>
@@ -277,7 +277,7 @@ export default function QuoteForm() {
           </div>
           {estimate.discountApplied && (
             <p className="mt-1 text-xs font-semibold text-brand-700">
-              Includes {Math.round(estimate.discountRate * 100)}% off for bundling your services.
+              Includes {Math.round(estimate.discountRate * 100)}% off — {estimate.discountLabel.toLowerCase()}.
             </p>
           )}
           <p className="mt-2 text-xs text-charcoal-500">
@@ -800,7 +800,7 @@ export default function QuoteForm() {
                 </div>
                 {estimate.discountApplied && (
                   <span className="rounded-full bg-gold-400 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
-                    {Math.round(estimate.discountRate * 100)}% bundle discount
+                    {Math.round(estimate.discountRate * 100)}% {estimate.discountLabel}
                   </span>
                 )}
               </div>
@@ -811,7 +811,7 @@ export default function QuoteForm() {
               </div>
               <p className="mt-2 text-xs text-brand-100">
                 {estimate.discountApplied
-                  ? "Live estimate — bundle discount already applied. Final pricing confirmed after our team reviews your photo & address."
+                  ? `Live estimate — ${estimate.discountLabel.toLowerCase()} already applied. Final pricing confirmed after our team reviews your photo & address.`
                   : estimate.high > 0
                     ? `Bundle $${BUNDLE_DISCOUNT_THRESHOLD}+ in services and save ${Math.round(BUNDLE_DISCOUNT_RATE * 100)}% automatically.`
                     : "Live estimate based on your selections. Final pricing confirmed after our team reviews your photo & address."}
