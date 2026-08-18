@@ -21,13 +21,13 @@ export default function Footer() {
           <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
             Services
           </h4>
-          <ul className="space-y-2 text-sm">
-            <li><Link className="hover:text-white" href="/services#pressure-washing">Pressure Washing</Link></li>
-            <li><Link className="hover:text-white" href="/services#commercial-cleaning">Commercial Cleaning</Link></li>
-            <li><Link className="hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
-            <li><Link className="hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
-            <li><Link className="hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
-            <li><Link className="hover:text-white" href="/services#detailing">Detailing</Link></li>
+          <ul className="text-sm">
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#pressure-washing">Pressure Washing</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#commercial-cleaning">Commercial Cleaning</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#detailing">Detailing</Link></li>
           </ul>
         </div>
 
@@ -35,11 +35,11 @@ export default function Footer() {
           <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
             Company
           </h4>
-          <ul className="space-y-2 text-sm">
-            <li><Link className="hover:text-white" href="/">Home</Link></li>
-            <li><Link className="hover:text-white" href="/services">Services</Link></li>
-            <li><Link className="hover:text-white" href="/about">About Us</Link></li>
-            <li><Link className="hover:text-white" href="/quote">Get a Quote</Link></li>
+          <ul className="text-sm">
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/">Home</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services">Services</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/about">About Us</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/quote">Get a Quote</Link></li>
           </ul>
         </div>
       </div>

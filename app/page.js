@@ -16,10 +16,10 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
-        <div className="container-x relative grid items-center gap-12 py-24 sm:py-32 lg:grid-cols-2">
+        <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:py-32 lg:grid-cols-2">
           <div>
             <span className="eyebrow-gold">Premium Exterior Services</span>
-            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
+            <h1 className="heading-xl mt-6 font-display font-extrabold">
               The outside of your home,{" "}
               <span className="bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent">
                 done right.
@@ -116,7 +116,7 @@ export default function HomePage() {
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <span className="eyebrow">What we do</span>
-              <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+              <h2 className="heading-lg mt-4 font-display font-extrabold">
                 Six services. One team you can trust.
               </h2>
               <p className="mt-4 text-charcoal-600">
@@ -168,7 +168,7 @@ export default function HomePage() {
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="eyebrow">Why Gold Exterior</span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
               Premium isn't a price tag — it's a process.
             </h2>
             <p className="mt-4 text-charcoal-600">
@@ -227,12 +227,12 @@ export default function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-x">
-          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-8 py-16 text-white sm:px-16">
+          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative grid gap-8 lg:grid-cols-[2fr_1fr] lg:items-center">
               <div>
-                <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+                <h2 className="heading-lg font-display font-extrabold">
                   Ready for your free, no-obligation quote?
                 </h2>
                 <p className="mt-3 max-w-xl text-brand-100">

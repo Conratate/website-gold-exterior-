@@ -290,7 +290,7 @@ export default function QuoteForm() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+    <div className="grid gap-8 pb-24 lg:grid-cols-[1.6fr_1fr] lg:pb-0">
       {/* Form column */}
       <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10">
         {/* Progress */}
@@ -798,7 +798,7 @@ export default function QuoteForm() {
       </div>
 
       {/* Live estimate sidebar */}
-      <aside className="lg:sticky lg:top-24 self-start">
+      <aside className="hidden self-start lg:sticky lg:top-24 lg:block">
         <div className="overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-glow">
           <div className="relative bg-charcoal-950 p-6 text-white">
             <div className="absolute inset-0 bg-hero-gradient" />
@@ -871,6 +871,8 @@ export default function QuoteForm() {
           </div>
         </div>
       </aside>
+
+      <MobileEstimateBar estimate={estimate} />
     </div>
   );
 }
@@ -1087,7 +1089,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
                   : "border-transparent bg-charcoal-50"
               }`}
             >
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-1 xs:flex-row xs:items-center xs:justify-between xs:gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <span
@@ -1113,7 +1115,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
                 </div>
                 <div
                   className={`flex-none text-sm tabular-nums ${
-                    active ? "font-bold text-charcoal-900" : "text-charcoal-500"
+                    active ? "font-bold text-charcoal-900" : "text-charcoal-600"
                   }`}
                 >
                   {r.low === r.high
@@ -1139,6 +1141,92 @@ function PriceLadder({ service, question, answers, current, hints }) {
         price in person before any work starts — if your job turns out to sit
         in a different tier, we tell you before we begin, never after.
       </p>
+    </div>
+  );
+}
+
+
+// On a phone the estimate sidebar stacks below the whole form, so the live
+// price — the reason the calculator is worth using — is invisible while
+// answering. This pins it to the bottom of the screen instead.
+function MobileEstimateBar({ estimate }) {
+  const [open, setOpen] = useState(false);
+  const has = estimate.high > 0;
+
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
+      {open && has && (
+        <div className="mx-3 mb-1 rounded-2xl border border-charcoal-200 bg-white p-4 shadow-2xl">
+          <ul className="divide-y divide-charcoal-100">
+            {estimate.breakdown
+              .filter((b) => b.high > 0)
+              .map((b) => (
+                <li
+                  key={b.service}
+                  className="flex items-center justify-between gap-3 py-2 text-sm"
+                >
+                  <span className="min-w-0 text-charcoal-700">{b.service}</span>
+                  <span className="flex-none font-semibold tabular-nums text-charcoal-900">
+                    {formatMoney(b.low)} – {formatMoney(b.high)}
+                  </span>
+                </li>
+              ))}
+          </ul>
+          {estimate.discountApplied && (
+            <p className="mt-2 text-xs font-semibold text-brand-700">
+              {estimate.discountLabel} of {Math.round(estimate.discountRate * 100)}% already applied.
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className="border-t border-charcoal-200 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(17,21,27,0.08)] backdrop-blur-md">
+        <button
+          type="button"
+          onClick={() => has && setOpen((v) => !v)}
+          className="flex w-full items-center justify-between gap-3 text-left"
+          aria-expanded={open}
+        >
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-charcoal-500">
+                Estimated price
+              </span>
+              {estimate.discountApplied && (
+                <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                  −{Math.round(estimate.discountRate * 100)}%
+                </span>
+              )}
+            </div>
+            <div className="font-display text-xl font-extrabold tabular-nums text-charcoal-900">
+              {has ? (
+                `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+              ) : (
+                <span className="text-base font-semibold text-charcoal-400">
+                  Pick a service to start
+                </span>
+              )}
+            </div>
+          </div>
+
+          {has && (
+            <span className="flex-none text-xs font-semibold text-brand-700">
+              {open ? "Hide" : "Details"}
+              <svg
+                viewBox="0 0 24 24"
+                className={`ml-1 inline h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

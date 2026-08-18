@@ -5,6 +5,16 @@ module.exports = {
     "./components/**/*.{js,jsx}",
   ],
   theme: {
+    screens: {
+      // Narrow phones (SE, older Androids) need one step below Tailwind's
+      // default 640px to stop price rows from cramping.
+      xs: "400px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
     extend: {
       colors: {
         brand: {
