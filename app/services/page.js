@@ -15,9 +15,9 @@ export default function ServicesPage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
-        <div className="container-x relative py-20 sm:py-28">
+        <div className="container-x relative py-14 sm:py-20 lg:py-24">
           <span className="eyebrow-gold">Our Services</span>
-          <h1 className="mt-5 max-w-3xl font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+          <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">
             Six professional services. One easy phone call.
           </h1>
           <p className="mt-5 max-w-2xl text-brand-100">
@@ -30,7 +30,7 @@ export default function ServicesPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:border-gold-300 hover:text-gold-200"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition hover:border-gold-300 hover:text-gold-200"
               >
                 <ServiceIcon name={s.icon} className="h-4 w-4" />
                 {s.name}
@@ -51,7 +51,7 @@ export default function ServicesPage() {
             >
               <div className={i % 2 === 1 ? "lg:order-2" : ""}>
                 <span className="eyebrow">Service</span>
-                <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl">
+                <h2 className="heading-lg mt-4 font-display font-extrabold">
                   {service.name}
                 </h2>
                 <p className="mt-3 text-lg text-brand-700">{service.tagline}</p>
@@ -93,7 +93,7 @@ export default function ServicesPage() {
                     <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
                       Sizing guide
                     </h3>
-                    <div className="mt-3 overflow-x-auto rounded-2xl border border-charcoal-100">
+                    <div className="scroll-x mt-3 rounded-2xl border border-charcoal-100">
                       <table className="w-full min-w-[420px] border-collapse bg-white text-left text-sm">
                         <thead>
                           <tr className="border-b border-charcoal-100 bg-charcoal-50/70">
@@ -201,7 +201,7 @@ export default function ServicesPage() {
           <div className="rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-10 sm:p-14">
             <div className="grid items-center gap-6 lg:grid-cols-[2fr_1fr]">
               <div>
-                <h2 className="font-display text-3xl font-extrabold text-charcoal-900 sm:text-4xl">
+                <h2 className="heading-lg font-display font-extrabold text-charcoal-900">
                   Don't see what you need?
                 </h2>
                 <p className="mt-3 max-w-2xl text-charcoal-600">
