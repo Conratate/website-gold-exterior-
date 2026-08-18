@@ -443,40 +443,66 @@ export default function QuoteForm() {
                             </select>
                           )}
 
-                          {q.type === "radio" && (
-                            <div className="grid gap-2 sm:grid-cols-2">
-                              {q.options.map((o) => {
-                                const active = cur === o.value;
-                                return (
-                                  <label
-                                    key={o.value}
-                                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
-                                      active
-                                        ? "border-brand-500 bg-brand-50 text-brand-800"
-                                        : "border-charcoal-200 bg-white text-charcoal-700 hover:border-brand-300"
-                                    }`}
-                                  >
-                                    <input
-                                      type="radio"
-                                      name={`${svc.id}-${q.id}`}
-                                      value={o.value}
-                                      checked={active}
-                                      onChange={() => setAnswer(svc.id, q.id, o.value)}
-                                      className="sr-only"
-                                    />
-                                    <span
-                                      className={`grid h-5 w-5 place-items-center rounded-full border ${
-                                        active ? "border-brand-600 bg-brand-600" : "border-charcoal-300"
-                                      }`}
-                                    >
-                                      {active && <span className="h-2 w-2 rounded-full bg-white" />}
-                                    </span>
-                                    {o.label}
-                                  </label>
-                                );
-                              })}
-                            </div>
-                          )}
+                          {q.type === "radio" && (() => {
+                            const hints = q.optionHints
+                              ? q.optionHints(answers[svc.id] || {})
+                              : null;
+                            const sizerConfig = q.sizer
+                              ? q.sizer(answers[svc.id] || {})
+                              : null;
+                            return (
+                              <>
+                                <div className="grid gap-2 sm:grid-cols-2">
+                                  {q.options.map((o) => {
+                                    const active = cur === o.value;
+                                    const hint = hints && hints[o.value];
+                                    return (
+                                      <label
+                                        key={o.value}
+                                        className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
+                                          active
+                                            ? "border-brand-500 bg-brand-50 text-brand-800"
+                                            : "border-charcoal-200 bg-white text-charcoal-700 hover:border-brand-300"
+                                        }`}
+                                      >
+                                        <input
+                                          type="radio"
+                                          name={`${svc.id}-${q.id}`}
+                                          value={o.value}
+                                          checked={active}
+                                          onChange={() => setAnswer(svc.id, q.id, o.value)}
+                                          className="sr-only"
+                                        />
+                                        <span
+                                          className={`mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full border ${
+                                            active ? "border-brand-600 bg-brand-600" : "border-charcoal-300"
+                                          }`}
+                                        >
+                                          {active && <span className="h-2 w-2 rounded-full bg-white" />}
+                                        </span>
+                                        <span>
+                                          {o.label}
+                                          {hint && (
+                                            <span className="mt-0.5 block text-xs font-normal text-charcoal-500">
+                                              {hint}
+                                            </span>
+                                          )}
+                                        </span>
+                                      </label>
+                                    );
+                                  })}
+                                </div>
+                                {sizerConfig && (
+                                  <SizeHelper
+                                    key={`${svc.id}-${q.id}-${JSON.stringify(sizerConfig.tiers.map((t) => t.max))}`}
+                                    config={sizerConfig}
+                                    options={q.options}
+                                    onApply={(value) => setAnswer(svc.id, q.id, value)}
+                                  />
+                                )}
+                              </>
+                            );
+                          })()}
 
                           {q.type === "checkbox" && (
                             <div className="grid gap-2 sm:grid-cols-2">
@@ -878,4 +904,123 @@ function shrinkImage(file) {
     };
     reader.readAsDataURL(file);
   });
+}
+
+// Inline tier finder: the customer enters rough measurements and we place
+// them in the right size tier — no separate page, no lost quote progress.
+function SizeHelper({ config, options, onApply }) {
+  const [open, setOpen] = useState(false);
+  const [dimA, setDimA] = useState("");
+  const [dimB, setDimB] = useState("");
+
+  const isArea = config.mode === "area";
+  const a = parseFloat(dimA) || 0;
+  const b = parseFloat(dimB) || 0;
+  const total = isArea ? a * b : a;
+
+  const tier = total > 0 ? config.tiers.find((t) => total <= t.max) : null;
+  const tierLabel = tier
+    ? options.find((o) => o.value === tier.value)?.label || tier.value
+    : null;
+  const unit = isArea ? "sq ft" : "linear ft";
+
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+      >
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 3L3 21" />
+          <path d="M21 3v6M21 3h-6" />
+          <path d="M3 21v-6M3 21h6" />
+        </svg>
+        Not sure which size? Measure it
+        <svg
+          viewBox="0 0 24 24"
+          className={`h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="mt-3 rounded-xl border border-brand-200 bg-brand-50/60 p-4">
+          <p className="text-xs text-charcoal-600">{config.prompt}</p>
+          <div className="mt-3 flex flex-wrap items-end gap-3">
+            {isArea ? (
+              <>
+                <div>
+                  <label className="block text-xs font-semibold text-charcoal-600">
+                    Length (ft)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    inputMode="numeric"
+                    className="input mt-1 w-28"
+                    value={dimA}
+                    onChange={(e) => setDimA(e.target.value)}
+                  />
+                </div>
+                <div className="pb-2 text-sm font-semibold text-charcoal-400">×</div>
+                <div>
+                  <label className="block text-xs font-semibold text-charcoal-600">
+                    Width (ft)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    inputMode="numeric"
+                    className="input mt-1 w-28"
+                    value={dimB}
+                    onChange={(e) => setDimB(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : (
+              <div>
+                <label className="block text-xs font-semibold text-charcoal-600">
+                  Total length (ft)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  inputMode="numeric"
+                  className="input mt-1 w-32"
+                  value={dimA}
+                  onChange={(e) => setDimA(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+
+          {tier && (
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-200 bg-white px-4 py-3">
+              <div className="text-sm text-charcoal-700">
+                ≈ {Math.round(total).toLocaleString()} {unit} — that&apos;s a{" "}
+                <span className="font-bold text-charcoal-900">{tierLabel}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onApply(tier.value);
+                  setOpen(false);
+                }}
+                className="rounded-full bg-brand-600 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-brand-700"
+              >
+                Use {tierLabel}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

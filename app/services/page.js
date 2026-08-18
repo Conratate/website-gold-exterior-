@@ -88,6 +88,52 @@ export default function ServicesPage() {
                   ))}
                 </ul>
 
+                {service.sizingGuide && (
+                  <div className="mt-8">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+                      Sizing guide
+                    </h3>
+                    <div className="mt-3 overflow-x-auto rounded-2xl border border-charcoal-100">
+                      <table className="w-full min-w-[420px] border-collapse bg-white text-left text-sm">
+                        <thead>
+                          <tr className="border-b border-charcoal-100 bg-charcoal-50/70">
+                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                              Tier
+                            </th>
+                            {service.sizingGuide.columns.map((c) => (
+                              <th
+                                key={c}
+                                className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-500"
+                              >
+                                {c}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {service.sizingGuide.rows.map((row) => (
+                            <tr key={row.tier} className="border-b border-charcoal-100 last:border-0">
+                              <td className="px-4 py-3 font-semibold text-charcoal-900">
+                                {row.tier}
+                              </td>
+                              {row.cells.map((cell, ci) => (
+                                <td key={ci} className="px-4 py-3 text-charcoal-600">
+                                  {cell}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="mt-2 text-xs text-charcoal-500">
+                      Not sure which tier you're in? The quote builder has a
+                      built-in size helper — enter rough measurements and we'll
+                      place you automatically.
+                    </p>
+                  </div>
+                )}
+
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link href={`/quote?service=${service.id}`} className="btn-primary">
                     Quote this service
