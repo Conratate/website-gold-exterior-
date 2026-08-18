@@ -62,25 +62,43 @@ export default function HomePage() {
           </div>
 
           <div className="relative">
-            <div className="relative mx-auto aspect-square w-full max-w-lg">
+            {/* Height is content-driven — forcing a square crops the card on a
+                phone, where the same content needs more room than its width. */}
+            <div className="relative mx-auto w-full max-w-lg">
               <div className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-gold-400/30 via-brand-500/20 to-transparent blur-2xl" />
-              <div className="relative h-full w-full rounded-[2rem] border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-md shadow-glow">
-                <div className="flex items-center justify-between">
+              <div className="relative w-full rounded-[2rem] border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-5 backdrop-blur-md shadow-glow sm:p-8">
+                <div className="flex items-center justify-between gap-2">
                   <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-100">
                     Estimate Calculator
                   </span>
                   <span className="text-xs text-brand-200">Live preview</span>
                 </div>
-                <div className="mt-6 space-y-4">
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs text-brand-200">Service</div>
+                <div className="mt-5 space-y-3 sm:mt-6 sm:space-y-4">
+                  <Link
+                    href="/quote?service=pressure-washing"
+                    className="group block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-gold-300/50 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs text-brand-200">Service</div>
+                      <span className="text-xs font-semibold text-gold-200 opacity-0 transition group-hover:opacity-100">
+                        Quote this →
+                      </span>
+                    </div>
                     <div className="mt-1 font-semibold">Pressure Washing · Driveway (2-Car)</div>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <div className="text-xs text-brand-200">Add-on</div>
+                  </Link>
+                  <Link
+                    href="/quote?service=gutter-cleaning"
+                    className="group block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-gold-300/50 hover:bg-white/10"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs text-brand-200">Add-on</div>
+                      <span className="text-xs font-semibold text-gold-200 opacity-0 transition group-hover:opacity-100">
+                        Quote this →
+                      </span>
+                    </div>
                     <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
-                  </div>
-                  <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-5">
+                  </Link>
+                  <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-4 sm:p-5">
                     <div className="flex items-center justify-between gap-2">
                       <div className="text-xs uppercase tracking-widest text-gold-200">
                         Estimated price
@@ -91,7 +109,7 @@ export default function HomePage() {
                         </span>
                       )}
                     </div>
-                    <div className="mt-1 font-display text-3xl font-extrabold text-white">
+                    <div className="mt-1 font-display text-2xl font-extrabold text-white sm:text-3xl">
                       {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
