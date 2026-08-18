@@ -500,6 +500,15 @@ export default function QuoteForm() {
                                     onApply={(value) => setAnswer(svc.id, q.id, value)}
                                   />
                                 )}
+                                {q.ladder && cur && (
+                                  <PriceLadder
+                                    service={svc}
+                                    question={q}
+                                    answers={answers[svc.id] || {}}
+                                    current={cur}
+                                    hints={hints}
+                                  />
+                                )}
                               </>
                             );
                           })()}
@@ -1021,6 +1030,100 @@ function SizeHelper({ config, options, onApply }) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+
+// Shows every tier on one scale with the customer's job marked, so the
+// estimate arrives with context instead of as a bare number. Prices are
+// derived from the service's own price function, never duplicated, so the
+// ladder cannot drift out of sync with actual pricing.
+function PriceLadder({ service, question, answers, current, hints }) {
+  const rows = question.options
+    .map((o) => {
+      const [low, high] = service.price({ ...answers, [question.id]: o.value });
+      return { ...o, low, high, hint: hints && hints[o.value] };
+    })
+    .filter((r) => r.high > 0);
+
+  if (rows.length < 2) return null;
+
+  const ceiling = Math.max(...rows.map((r) => r.high));
+
+  return (
+    <div className="mt-4 rounded-xl border border-charcoal-200 bg-white p-4">
+      <div className="flex items-baseline justify-between gap-2">
+        <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+          Where your job lands
+        </h4>
+        <span className="text-[11px] text-charcoal-400">Low to high</span>
+      </div>
+
+      <ul className="mt-3 space-y-1.5">
+        {rows.map((r) => {
+          const active = r.value === current;
+          return (
+            <li
+              key={r.value}
+              className={`rounded-lg border px-3 py-2 transition ${
+                active
+                  ? "border-gold-400 bg-gold-400/10"
+                  : "border-transparent bg-charcoal-50"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-sm ${
+                        active
+                          ? "font-bold text-charcoal-900"
+                          : "font-medium text-charcoal-600"
+                      }`}
+                    >
+                      {r.label}
+                    </span>
+                    {active && (
+                      <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                        You&apos;re here
+                      </span>
+                    )}
+                  </div>
+                  {r.hint && (
+                    <div className="mt-0.5 truncate text-xs text-charcoal-500">
+                      {r.hint}
+                    </div>
+                  )}
+                </div>
+                <div
+                  className={`flex-none text-sm tabular-nums ${
+                    active ? "font-bold text-charcoal-900" : "text-charcoal-500"
+                  }`}
+                >
+                  {r.low === r.high
+                    ? formatMoney(r.low)
+                    : `${formatMoney(r.low)} – ${formatMoney(r.high)}`}
+                </div>
+              </div>
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-charcoal-200/70">
+                <div
+                  className={`h-full rounded-full ${
+                    active ? "bg-gold-400" : "bg-charcoal-300"
+                  }`}
+                  style={{ width: `${Math.max(6, (r.high / ceiling) * 100)}%` }}
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p className="mt-3 text-xs text-charcoal-500">
+        Use this to check you picked the right band. We confirm the final
+        price in person before any work starts — if your job turns out to sit
+        in a different tier, we tell you before we begin, never after.
+      </p>
     </div>
   );
 }
