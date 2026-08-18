@@ -7,6 +7,7 @@ import {
   formatMoney,
   BUNDLE_DISCOUNT_THRESHOLD,
   BUNDLE_DISCOUNT_RATE,
+  ROUTING_MINIMUM,
 } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
 
@@ -844,6 +845,20 @@ export default function QuoteForm() {
                   </li>
                 ))}
               </ul>
+            )}
+
+            {estimate.high > 0 && estimate.high < ROUTING_MINIMUM && (
+              <div className="mt-5 rounded-xl border border-gold-300/60 bg-gold-50 p-4 text-xs text-charcoal-700">
+                <div className="font-semibold text-charcoal-900">
+                  We&apos;ll pair this with nearby work
+                </div>
+                <p className="mt-1">
+                  Jobs this size get scheduled alongside other work in your
+                  area, so we&apos;ll offer you the next nearby slot rather than
+                  a dedicated trip. Add another service and we come out on your
+                  schedule instead.
+                </p>
+              </div>
             )}
 
             <div className="mt-5 rounded-xl bg-brand-50 p-4 text-xs text-brand-800">
