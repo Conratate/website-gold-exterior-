@@ -60,7 +60,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { v: "5★", l: "Customer rating" },
-                { v: "5", l: "Premium services" },
+                { v: "6", l: "Premium services" },
               ].map((s) => (
                 <div
                   key={s.l}
