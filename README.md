@@ -65,7 +65,7 @@ production):
 | `GMAIL_USER`         | The Gmail address that sends quote and review emails.                                            |
 | `GMAIL_APP_PASSWORD` | A Gmail **App Password**, not your account password. Spaces are stripped, so paste it as shown.   |
 | `QUOTE_TO_EMAIL`     | Where quote requests and review submissions land. Defaults to `goldexterior0@gmail.com`.          |
-| `REVIEW_CODE`        | The code a customer needs to submit a review. See [Reviews](#reviews). Defaults to `GOLD-SHINE-2026` — change it. |
+| `REVIEW_CODE`        | **Required for reviews.** The code a customer needs to submit one. No default — unset means the form accepts nothing. See [Reviews](#reviews). |
 
 ## Setting up Gmail sending (one-time)
 
@@ -89,18 +89,25 @@ site on its own.**
 
 ### How a customer submits one
 
-They need the **review code** — the value of `REVIEW_CODE`, or
-`GOLD-SHINE-2026` if that variable isn't set. Hand it out when a job wraps: say
-it at the final walkthrough, print it on the invoice, put it in the follow-up
-email. It's checked on the server and never sent to the browser, so it can't be
-read out of the page source.
+They need the **review code** — whatever you set `REVIEW_CODE` to. Hand it out
+when a job wraps: say it at the final walkthrough, print it on the invoice, put
+it in the follow-up email. It's checked on the server and never sent to the
+browser, so it can't be read out of the page source.
 
 The check is forgiving about how it's typed — case, spaces, dashes and dots are
-all ignored, so `gold shine 2026` and `GOLD-SHINE-2026` are the same answer.
-Six wrong guesses from one address gets that address a 15-minute timeout.
+all ignored, so `two words 2026` and `TWO-WORDS-2026` are the same answer. Pick
+a phrase people can remember without writing down. Six wrong guesses from one
+address earns that address a 15-minute timeout.
+
+**There is no default code, and none should ever be committed here.** This
+repository is public, so a code in the source would be a published password
+rather than a gate. With `REVIEW_CODE` unset the form fails closed — it accepts
+nothing and tells the visitor reviews aren't open yet, while logging a loud
+warning server-side. That's the intended behaviour for a misconfiguration.
 
 **Rotate the code by changing `REVIEW_CODE` in your host's environment
-variables and redeploying.** Old codes stop working immediately.
+variables and redeploying.** Old codes stop working as soon as the new
+deployment is live — handy at the turn of the year if your code carries one.
 
 ### How a review gets published
 

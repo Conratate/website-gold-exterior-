@@ -11,14 +11,20 @@ export const maxDuration = 60;
 // here, on the server, and never sent to the browser — the page has no idea
 // what the right answer is, so no amount of poking at the form reveals it.
 //
-// Set REVIEW_CODE in the hosting environment to rotate it. The fallback exists
-// so the form works on a fresh deploy; change it the moment you have a real
-// customer to hand it to.
+// It lives only in REVIEW_CODE, set in the hosting environment. There is
+// deliberately no default in this file: this repository is public, so any code
+// committed here would be a published password rather than a gate. With the
+// variable unset the form accepts nothing at all — failing closed is the only
+// safe way to be misconfigured.
+//
+// Rotating it is a change to that one variable plus a redeploy. Old codes stop
+// working the moment the new deployment goes live.
 // ─────────────────────────────────────────────────────────────────────────────
-const FALLBACK_REVIEW_CODE = "GOLD-SHINE-2026";
 
-// Customers get the code verbally or on an invoice, so "gold shine 2026",
-// "GoldShine2026" and "GOLD-SHINE-2026" all have to be the same answer.
+// Customers get the code verbally at a walkthrough or read it off an invoice,
+// so how they type it can't matter: case, spaces, dashes and dots are all
+// stripped before comparing. "two words 2026", "TwoWords2026" and
+// "TWO-WORDS-2026" are one and the same answer.
 function normalizeCode(value) {
   return String(value || "")
     .toUpperCase()
@@ -194,6 +200,19 @@ function buildEmail({ review, submitter, snippet }) {
 
 export async function POST(request) {
   try {
+    const expected = normalizeCode(process.env.REVIEW_CODE);
+    if (!expected) {
+      console.error(
+        "REVIEW_CODE is not set — the review form is refusing every submission. " +
+          "Set it in your hosting environment and redeploy."
+      );
+      return fail(
+        "Reviews aren't switched on yet — sorry about that. Please try again in a day or two; your words are worth having.",
+        "",
+        503
+      );
+    }
+
     const key = clientKey(request);
     if (isThrottled(key)) {
       return fail(
@@ -214,9 +233,8 @@ export async function POST(request) {
       return fail("Invalid payload.");
     }
 
-    // The code is checked before anything else so a stranger learns nothing
-    // about which other fields we want.
-    const expected = normalizeCode(process.env.REVIEW_CODE || FALLBACK_REVIEW_CODE);
+    // The code is checked before any other field so a stranger learns nothing
+    // about what else we want.
     const supplied = normalizeCode(payload.code);
     if (!supplied) return fail("Enter the review code we gave you.", "code");
     if (supplied !== expected) {
