@@ -1,12 +1,14 @@
 import Link from "next/link";
 import ReviewForm from "@/components/ReviewForm";
 import Stars from "@/components/Stars";
+import Transformation from "@/components/Transformation";
 import { BUSINESS } from "@/lib/location";
 import {
   MAX_RATING,
   REVIEWS,
   formatReviewDate,
   reviewStats,
+  transformations,
 } from "@/lib/reviews";
 
 export const metadata = {
@@ -16,6 +18,7 @@ export const metadata = {
 };
 
 const stats = reviewStats();
+const TRANSFORMATIONS = transformations();
 
 export default function ReviewsPage() {
   return (
@@ -87,6 +90,9 @@ export default function ReviewsPage() {
               <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {REVIEWS.map((review) => (
                   <li key={review.id} className="card flex flex-col">
+                    {review.photos?.before && review.photos?.after && (
+                      <Transformation photos={review.photos} className="mb-5" />
+                    )}
                     <Stars rating={review.rating} />
                     {review.headline && (
                       <h3 className="mt-4 font-display text-lg font-bold text-charcoal-900">
@@ -115,6 +121,42 @@ export default function ReviewsPage() {
           )}
         </div>
       </section>
+
+      {TRANSFORMATIONS.length > 0 && (
+        <section className="section bg-brand-50/60 pt-0">
+          <div className="container-x">
+            <div className="max-w-2xl">
+              <span className="eyebrow">Transformations</span>
+              <h2 className="heading-lg mt-4 font-display font-extrabold">
+                The same driveway, an afternoon apart.
+              </h2>
+              <p className="mt-4 text-charcoal-600">
+                Every pair below belongs to a review on this page — real jobs,
+                photographed as we found them and as we left them.
+              </p>
+            </div>
+
+            <ul className="mt-12 grid gap-x-8 gap-y-10 md:grid-cols-2">
+              {TRANSFORMATIONS.map((review) => (
+                <li key={`t-${review.id}`}>
+                  <Transformation photos={review.photos} />
+                  <div className="mt-4 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="font-semibold text-charcoal-900">
+                        {review.name}
+                      </div>
+                      <div className="mt-0.5 text-xs text-charcoal-500">
+                        {[review.city, review.service].filter(Boolean).join(" · ")}
+                      </div>
+                    </div>
+                    <Stars rating={review.rating} size="h-4 w-4" />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <section className="section" id="leave-a-review">
         <div className="container-x">

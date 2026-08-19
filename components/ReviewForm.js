@@ -28,6 +28,13 @@ const BODY_MIN = 20;
 const BODY_MAX = 1500;
 
 export default function ReviewForm() {
+  // Three stages: the button, the code gate, then the review itself. The long
+  // form stays out of sight until someone actually has a code — and the code is
+  // checked before they write a word, so nobody fills this in only to be turned
+  // away at the end.
+  const [stage, setStage] = useState("closed"); // closed | code | form
+  const [checking, setChecking] = useState(false);
+
   const [form, setForm] = useState(initialForm);
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState("");
@@ -42,8 +49,47 @@ export default function ReviewForm() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const fromLink = new URLSearchParams(window.location.search).get("code");
-    if (fromLink) setForm((f) => (f.code ? f : { ...f, code: fromLink }));
+    if (fromLink) {
+      setForm((f) => (f.code ? f : { ...f, code: fromLink }));
+      // They came from their email, so skip straight past the button.
+      setStage("code");
+    }
   }, []);
+
+  // Check the code before showing the form. The submit re-checks and burns it,
+  // so a tampered "yes" here gets nobody anything.
+  async function checkCode(e) {
+    e.preventDefault();
+    if (!form.code.trim()) {
+      setError({ message: "Enter the code from your email.", field: "code" });
+      return;
+    }
+    setChecking(true);
+    setError({ message: "", field: "" });
+    try {
+      const res = await fetch("/api/review/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: form.code.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        setError({
+          message: data.error || `Couldn't check that code. (${res.status})`,
+          field: "code",
+        });
+        return;
+      }
+      setStage("form");
+    } catch {
+      setError({
+        message: "Couldn't reach us to check that code. Try again.",
+        field: "code",
+      });
+    } finally {
+      setChecking(false);
+    }
+  }
 
   function set(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -172,32 +218,135 @@ export default function ReviewForm() {
   const bodyLeft = BODY_MAX - form.body.length;
   const errFor = (field) => (error.field === field ? error.message : "");
 
+  // ── Stage 1: the button ────────────────────────────────────────────────
+  if (stage === "closed") {
+    return (
+      <div className="mx-auto max-w-2xl rounded-3xl border border-charcoal-100 bg-white p-8 text-center shadow-sm sm:p-10">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-700">
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="5" width="16" height="15" rx="3" />
+            <path d="M9 3v4M15 3v4M9 12h6M9 16h3" />
+          </svg>
+        </div>
+        <h3 className="mt-5 font-display text-2xl font-extrabold text-charcoal-900">
+          Worked with us?
+        </h3>
+        <p className="mx-auto mt-3 max-w-md text-charcoal-600">
+          We&apos;d love to hear how it went. You&apos;ll need the code we
+          emailed you after your job — it takes about a minute.
+        </p>
+        <button
+          type="button"
+          onClick={() => setStage("code")}
+          className="btn-gold mt-7 w-full sm:w-auto sm:px-10"
+        >
+          Add a Review
+        </button>
+        <p className="mt-5 text-xs text-charcoal-500">
+          Only customers can post here. That&apos;s the point.
+        </p>
+      </div>
+    );
+  }
+
+  // ── Stage 2: the code ──────────────────────────────────────────────────
+  if (stage === "code") {
+    return (
+      <form onSubmit={checkCode} noValidate className="mx-auto max-w-lg">
+        <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-9">
+          <div className="text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-gold-100 text-gold-700">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="10" width="16" height="10" rx="2.5" />
+                <path d="M8 10V7a4 4 0 118 0v3" />
+              </svg>
+            </div>
+            <h3 className="mt-5 font-display text-2xl font-extrabold text-charcoal-900">
+              Enter your review code
+            </h3>
+            <p className="mx-auto mt-3 max-w-sm text-sm text-charcoal-600">
+              We emailed it to you when your job wrapped. It&apos;s yours alone
+              and it works once.
+            </p>
+          </div>
+
+          <div className="mt-7">
+            <label className="sr-only" htmlFor="review-code">
+              Your review code
+            </label>
+            <input
+              id="review-code"
+              className="input text-center font-mono text-lg tracking-widest"
+              value={form.code}
+              onChange={(e) => set("code", e.target.value)}
+              placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              autoFocus
+              aria-invalid={Boolean(errFor("code"))}
+            />
+            <FieldError message={errFor("code")} />
+          </div>
+
+          <button
+            type="submit"
+            disabled={checking}
+            className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {checking ? "Checking…" : "Continue"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setStage("closed");
+              setError({ message: "", field: "" });
+            }}
+            className="mt-4 w-full text-sm font-semibold text-charcoal-500 hover:text-charcoal-800"
+          >
+            Back
+          </button>
+
+          <p className="mt-6 border-t border-charcoal-100 pt-5 text-center text-xs leading-relaxed text-charcoal-500">
+            Following the link in that email fills this in for you. Can&apos;t
+            find it? Reply to any email from us and we&apos;ll send a fresh one.
+          </p>
+        </div>
+      </form>
+    );
+  }
+
+
   return (
     <form onSubmit={submit} noValidate className="mx-auto max-w-2xl">
       <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10">
-        {/* Code gate */}
-        <div className="rounded-2xl border border-gold-200 bg-gold-50 p-5">
-          <label className="label" htmlFor="review-code">
-            Your review code
-          </label>
-          <input
-            id="review-code"
-            className="input font-mono tracking-wider"
-            value={form.code}
-            onChange={(e) => set("code", e.target.value)}
-            placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
-            autoComplete="off"
-            autoCapitalize="characters"
-            spellCheck={false}
-            aria-invalid={Boolean(errFor("code"))}
-          />
-          <p className="mt-2 text-xs text-charcoal-600">
-            We email this to you after your job. It&apos;s yours alone and it
-            works once — that&apos;s how this page stays to people we&apos;ve
-            actually worked for. Following the link in that email fills it in
-            for you. Can&apos;t find it? Just reply and ask.
-          </p>
-          <FieldError message={errFor("code")} />
+        {/* The code is already confirmed by this point — show it back rather
+            than asking again, and let them correct it if it's the wrong one. */}
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-100 bg-brand-50 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-brand-700" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+            <div className="min-w-0">
+              <div className="text-xs font-semibold uppercase tracking-wider text-brand-700">
+                Code accepted
+              </div>
+              <div className="break-all font-mono text-sm text-charcoal-700">
+                {form.code}
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setStage("code");
+              setError({ message: "", field: "" });
+            }}
+            className="text-sm font-semibold text-brand-700 underline underline-offset-2 hover:text-brand-800"
+          >
+            Change
+          </button>
         </div>
 
         {/* Rating */}

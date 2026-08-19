@@ -125,6 +125,29 @@ before it goes live anyway. The system degrades to those three facts and says
 so in red at the top of the email, rather than throwing away a review someone
 took the trouble to write.
 
+### What a customer sees
+
+The form doesn't sprawl across the page. There's a single **Add a Review**
+button; pressing it asks for the code and nothing else; and only once the code
+checks out does the review form appear. A customer arriving from the link in
+their email skips the button entirely, with the code already filled in.
+
+The code is checked before they write a word, so nobody types out a review only
+to be turned away at the end. That check is a courtesy, not the gate —
+`/api/review` verifies again and burns the code at submit, so a tampered "yes"
+from the check buys nothing.
+
+### Photos
+
+A review can carry a before-and-after pair. Put the files in `public/reviews/`
+and point at them from `lib/reviews.js` — see `public/reviews/README.md` for
+the shape. Reviews with both halves appear in the **Transformations** strip;
+that whole section is absent until at least one review has a pair, so the page
+never shows an empty gallery.
+
+Photos a customer attaches to their own review are emailed to you and go no
+further. Publishing one is a deliberate step, the same as publishing the words.
+
 ### How a review gets published
 
 1. The customer submits the form. It emails you a review marked *Awaiting Your
@@ -166,10 +189,6 @@ deploy — Netlify only picks up variable changes on a new build:
 
 Netlify Blobs, which records spent review codes, needs no setup: it comes with
 the site.
-
-> **Note:** `.github/workflows/deploy.yml` still deploys to Vercel, left over
-> from an earlier host. If Netlify is the only live site, that workflow should
-> be deleted so a push doesn't publish to two places.
 
 ## Project structure
 
