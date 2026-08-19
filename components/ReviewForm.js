@@ -109,6 +109,13 @@ export default function ReviewForm() {
       setError({ message: "Please upload an image file.", field: "photo" });
       return;
     }
+    // Refuse the truly enormous before trying to decode it. Anything a phone
+    // camera produces is far below this; a file above it is usually a mistake,
+    // and decoding one can lock up the browser on a phone.
+    if (file.size > 25 * 1024 * 1024) {
+      setError({ message: "That photo is too big — 25MB is the limit.", field: "photo" });
+      return;
+    }
     setCompressing(true);
     try {
       const { file: shrunk, dataUrl } = await shrinkImage(file, "review-photo");
