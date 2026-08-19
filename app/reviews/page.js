@@ -30,8 +30,9 @@ export default function ReviewsPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-brand-100">
             Every review on this page comes from a {BUSINESS.serviceAreaShort}{" "}
-            customer with a job code from a finished job. No purchased ratings,
-            no reviews from people we&apos;ve never met.
+            customer, writing with a one-time code we emailed them after their
+            job. No purchased ratings, no reviews from people we&apos;ve never
+            met.
           </p>
 
           {stats.count > 0 ? (
@@ -123,9 +124,9 @@ export default function ReviewsPage() {
               Leave a review
             </h2>
             <p className="mt-4 text-charcoal-600">
-              You&apos;ll need the review code from your invoice. That&apos;s the
-              whole gate — it&apos;s there so this page stays honest, not to make
-              you jump through hoops.
+              You&apos;ll need the code we emailed you after your job. Following
+              the link in that email fills it in for you — the gate is there so
+              this page stays honest, not to make you jump through hoops.
             </p>
           </div>
           <div className="mt-10">
@@ -158,11 +159,11 @@ function EmptyState() {
         {[
           {
             t: "Customers only",
-            d: "A review needs the code we hand out when a job wraps.",
+            d: "Every review needs a one-time code, emailed to one customer after one job.",
           },
           {
             t: "Read by a person",
-            d: "We check every review against our job records before it goes up.",
+            d: "We read every review and match it to the job before it goes up.",
           },
           {
             t: "Posted as written",

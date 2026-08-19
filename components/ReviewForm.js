@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { MAX_RATING, REVIEW_SERVICE_OPTIONS, recentJobMonths } from "@/lib/reviews";
+import { useEffect, useState } from "react";
+import { MAX_RATING, REVIEW_SERVICE_OPTIONS } from "@/lib/reviews";
 import { shrinkImage } from "@/lib/image";
 
 const RATING_WORDS = {
@@ -19,7 +19,6 @@ const initialForm = {
   city: "",
   email: "",
   serviceId: "",
-  jobMonth: "",
   headline: "",
   body: "",
   consent: false,
@@ -37,7 +36,14 @@ export default function ReviewForm() {
   const [error, setError] = useState({ message: "", field: "" });
   const [done, setDone] = useState(false);
 
-  const months = useMemo(() => recentJobMonths(), []);
+  // The code arrives as ?code= on the link in the customer's email, so the
+  // field is filled in before they ever look at it. Read on the client rather
+  // than from searchParams so this page stays statically rendered.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const fromLink = new URLSearchParams(window.location.search).get("code");
+    if (fromLink) setForm((f) => (f.code ? f : { ...f, code: fromLink }));
+  }, []);
 
   function set(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -85,7 +91,6 @@ export default function ReviewForm() {
     if (!/^\S+@\S+\.\S+$/.test(form.email.trim()))
       return { message: "Enter a valid email so we can confirm it's you.", field: "email" };
     if (!form.serviceId) return { message: "Pick the service we did for you.", field: "serviceId" };
-    if (!form.jobMonth) return { message: "Roughly when did we do the work?", field: "jobMonth" };
     if (form.body.trim().length < BODY_MIN)
       return {
         message: `Reviews need at least ${BODY_MIN} characters so they're useful to other customers.`,
@@ -119,7 +124,6 @@ export default function ReviewForm() {
           city: form.city.trim(),
           email: form.email.trim(),
           serviceId: form.serviceId,
-          jobMonth: form.jobMonth,
           headline: form.headline.trim(),
           body: form.body.trim(),
           consent: form.consent,
@@ -178,19 +182,20 @@ export default function ReviewForm() {
           </label>
           <input
             id="review-code"
-            className="input"
+            className="input font-mono tracking-wider"
             value={form.code}
             onChange={(e) => set("code", e.target.value)}
-            placeholder="Enter your code"
+            placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
             autoComplete="off"
             autoCapitalize="characters"
             spellCheck={false}
             aria-invalid={Boolean(errFor("code"))}
           />
           <p className="mt-2 text-xs text-charcoal-600">
-            We hand this out when a job wraps — it&apos;s on your invoice.
-            It&apos;s how we keep this page to people we&apos;ve actually worked
-            for. Lost it? Just ask.
+            We email this to you after your job. It&apos;s yours alone and it
+            works once — that&apos;s how this page stays to people we&apos;ve
+            actually worked for. Following the link in that email fills it in
+            for you. Can&apos;t find it? Just reply and ask.
           </p>
           <FieldError message={errFor("code")} />
         </div>
@@ -300,27 +305,6 @@ export default function ReviewForm() {
           </div>
 
           <div>
-            <label className="label" htmlFor="review-month">
-              When did we do the work?
-            </label>
-            <select
-              id="review-month"
-              className="input"
-              value={form.jobMonth}
-              onChange={(e) => set("jobMonth", e.target.value)}
-              aria-invalid={Boolean(errFor("jobMonth"))}
-            >
-              <option value="">Choose a month…</option>
-              {months.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-            <FieldError message={errFor("jobMonth")} />
-          </div>
-
-          <div className="sm:col-span-2">
             <label className="label" htmlFor="review-service">
               What did we do?
             </label>
@@ -442,8 +426,8 @@ export default function ReviewForm() {
         </button>
 
         <p className="mt-4 text-center text-xs text-charcoal-500">
-          Reviews are read by a person and checked against our job records
-          before they&apos;re published. Nothing goes up automatically.
+          Reviews are read by a person before they&apos;re published. Nothing
+          goes up automatically.
         </p>
       </div>
     </form>

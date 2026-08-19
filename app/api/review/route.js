@@ -1,78 +1,37 @@
 import { escapeHtml } from "@/lib/escape";
 import { createTransport, mailSettings } from "@/lib/mailer";
 import { clampRating, MAX_RATING, reviewServiceName } from "@/lib/reviews";
+import { formatCode, verifyCode } from "@/lib/reviewCodes";
+import { redeemCode, releaseCode, REDEEM } from "@/lib/codeStore";
+import { clientKey, createThrottle } from "@/lib/throttle";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The review code is what separates a customer from a stranger. It is checked
-// here, on the server, and never sent to the browser — the page has no idea
-// what the right answer is, so no amount of poking at the form reveals it.
+// Accepting a review.
 //
-// It lives only in REVIEW_CODE, set in the hosting environment. There is
-// deliberately no default in this file: this repository is public, so any code
-// committed here would be a published password rather than a gate. With the
-// variable unset the form accepts nothing at all — failing closed is the only
+// The gate is a per-job code, issued by /api/review-code and emailed to one
+// named customer. Three things have to hold:
+//
+//   1. It carries our signature, so we know we issued it (lib/reviewCodes.js).
+//   2. It hasn't expired — codes go stale on their own after ~90 days.
+//   3. It hasn't been spent, burned on first use (lib/codeStore.js).
+//
+// Only REVIEW_CODE_SECRET is secret, and it never leaves the server: a code
+// can be checked without the browser learning anything about how. With the
+// secret unset the form accepts nothing at all — failing closed is the only
 // safe way to be misconfigured.
-//
-// Rotating it is a change to that one variable plus a redeploy. Old codes stop
-// working the moment the new deployment goes live.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Customers get the code verbally at a walkthrough or read it off an invoice,
-// so how they type it can't matter: case, spaces, dashes and dots are all
-// stripped before comparing. "two words 2026", "TwoWords2026" and
-// "TWO-WORDS-2026" are one and the same answer.
-function normalizeCode(value) {
-  return String(value || "")
-    .toUpperCase()
-    .replace(/[^A-Z0-9]/g, "");
-}
-
-// Best-effort throttle. Serverless instances are short-lived and there can be
-// several at once, so this won't stop a determined attacker — it stops the
-// realistic case of someone typing guesses into the form. The code's own length
-// does the rest.
-const MAX_FAILURES = 6;
-const FAILURE_WINDOW_MS = 15 * 60 * 1000;
-const failures = new Map();
-
-function recordFailure(key) {
-  const now = Date.now();
-  const recent = (failures.get(key) || []).filter((t) => now - t < FAILURE_WINDOW_MS);
-  recent.push(now);
-  failures.set(key, recent);
-
-  // The map lives as long as the instance does; drop stale keys so a long-lived
-  // one can't grow without bound.
-  if (failures.size > 500) {
-    for (const [k, times] of failures) {
-      if (times.every((t) => now - t >= FAILURE_WINDOW_MS)) failures.delete(k);
-    }
-  }
-}
-
-function isThrottled(key) {
-  const now = Date.now();
-  const recent = (failures.get(key) || []).filter((t) => now - t < FAILURE_WINDOW_MS);
-  if (recent.length === 0) failures.delete(key);
-  else failures.set(key, recent);
-  return recent.length >= MAX_FAILURES;
-}
-
-function clientKey(request) {
-  const fwd = request.headers.get("x-forwarded-for") || "";
-  return fwd.split(",")[0].trim() || request.headers.get("x-real-ip") || "unknown";
-}
+const throttle = createThrottle();
 
 const LIMITS = {
   name: 60,
   city: 60,
   headline: 90,
   email: 120,
-  jobMonth: 40,
   body: 1500,
 };
 
@@ -145,10 +104,20 @@ function buildEmail({ review, submitter, snippet }) {
             <tr>
               <td style="padding:24px 28px;">
                 <div style="padding:14px 16px;background:#fdfbe9;border:1px solid #f9eb8d;border-radius:12px;font-size:13px;color:#6d3c15;">
-                  This is <strong>not live on the site</strong>. Check the name and
-                  the job month against your records first — the review code says
-                  they had it, not that they're the right person.
+                  This is <strong>not live on the site</strong>. Search your inbox
+                  for the code below to see which job it was issued against, and
+                  who you sent it to.
                 </div>
+                ${
+                  submitter.enforced
+                    ? ""
+                    : `<div style="margin-top:10px;padding:14px 16px;background:#fdecec;border:1px solid #f5b5b5;border-radius:12px;font-size:13px;color:#8a1c1c;">
+                  <strong>Single-use couldn't be confirmed.</strong> The code was
+                  ours and unexpired, but the store that marks codes as spent was
+                  unreachable, so we can't rule out that this one was used before.
+                  Worth a closer look before publishing.
+                </div>`
+                }
 
                 <h2 style="font-size:14px;text-transform:uppercase;letter-spacing:0.12em;color:#5e6a7a;margin:24px 0 12px;">Who submitted it</h2>
                 <table style="border-collapse:collapse;width:100%;">
@@ -156,7 +125,7 @@ function buildEmail({ review, submitter, snippet }) {
                   ${row("City", review.city)}
                   ${row("Email", submitter.email)}
                   ${row("Service", review.service)}
-                  ${row("Job month", submitter.jobMonthLabel)}
+                  ${row("Code used", submitter.code)}
                   ${row("Photo", submitter.hasPhoto ? "Attached" : "None")}
                 </table>
 
@@ -200,11 +169,11 @@ function buildEmail({ review, submitter, snippet }) {
 
 export async function POST(request) {
   try {
-    const expected = normalizeCode(process.env.REVIEW_CODE);
-    if (!expected) {
+    const secret = process.env.REVIEW_CODE_SECRET;
+    if (!secret) {
       console.error(
-        "REVIEW_CODE is not set — the review form is refusing every submission. " +
-          "Set it in your hosting environment and redeploy."
+        "REVIEW_CODE_SECRET is not set — the review form is refusing every " +
+          "submission. Set it in your hosting environment and redeploy."
       );
       return fail(
         "Reviews aren't switched on yet — sorry about that. Please try again in a day or two; your words are worth having.",
@@ -214,9 +183,9 @@ export async function POST(request) {
     }
 
     const key = clientKey(request);
-    if (isThrottled(key)) {
+    if (throttle.isThrottled(key)) {
       return fail(
-        "Too many incorrect codes. Wait a few minutes and try again, or email us and we'll sort it out.",
+        "Too many incorrect codes. Wait a few minutes and try again, or reply to the email your code came in and we'll sort it out.",
         "code",
         429
       );
@@ -235,12 +204,18 @@ export async function POST(request) {
 
     // The code is checked before any other field so a stranger learns nothing
     // about what else we want.
-    const supplied = normalizeCode(payload.code);
-    if (!supplied) return fail("Enter the review code we gave you.", "code");
-    if (supplied !== expected) {
-      recordFailure(key);
+    if (!String(payload.code || "").trim()) {
+      return fail("Enter the code from your email.", "code");
+    }
+
+    const check = verifyCode({ code: payload.code, secret });
+    if (!check.ok) {
+      throttle.record(key);
+      // Deliberately one message for malformed, forged and expired alike: a
+      // stranger shouldn't be able to tell "not a real code" from "real but
+      // too old", and a real customer's next step is the same either way.
       return fail(
-        "That code isn't right. It's on your invoice — or just ask us for it.",
+        "That code isn't valid — it may have expired. Reply to the email it came in and we'll send you a fresh one.",
         "code",
         403
       );
@@ -251,7 +226,6 @@ export async function POST(request) {
     const email = trimmed(payload.email, LIMITS.email);
     const headline = trimmed(payload.headline, LIMITS.headline);
     const body = trimmed(payload.body, LIMITS.body);
-    const jobMonth = trimmed(payload.jobMonth, LIMITS.jobMonth);
     const service = reviewServiceName(payload.serviceId);
     const rating = clampRating(payload.rating);
 
@@ -261,7 +235,6 @@ export async function POST(request) {
       return fail("Enter a valid email so we can confirm it's you.", "email");
     }
     if (!service) return fail("Pick the service we did for you.", "serviceId");
-    if (!jobMonth) return fail("Roughly when did we do the work?", "jobMonth");
     if (!Number(payload.rating)) return fail("Pick a star rating.", "rating");
     if (body.length < BODY_MIN) {
       return fail(
@@ -289,12 +262,10 @@ export async function POST(request) {
       );
     }
 
-    // A YYYY-MM from the picker becomes the published date; anything else falls
-    // back to today so the snippet is always pasteable as-is.
-    const isoMonth = /^\d{4}-\d{2}$/.test(jobMonth) ? jobMonth : null;
-    const date = isoMonth
-      ? `${isoMonth}-01`
-      : new Date().toISOString().slice(0, 10);
+    // Reviews are dated when they're written, the way every review site does
+    // it. The code already pins which job this was — the issuing email in your
+    // inbox has the customer and the work.
+    const date = new Date().toISOString().slice(0, 10);
 
     const review = {
       id: `${slugify(name) || "review"}-${date.slice(0, 7)}-${Math.random()
@@ -323,14 +294,35 @@ export async function POST(request) {
       }
     }
 
+    // Burn the code before sending, not after: a compare-and-set is the only
+    // thing that closes the window on two people submitting the same forwarded
+    // code at once.
+    const redemption = await redeemCode(check.nonce, {
+      name,
+      city,
+      email,
+      service,
+      rating,
+    });
+
+    if (redemption.status === REDEEM.SPENT) {
+      const when = redemption.previous?.redeemedAt;
+      console.warn(
+        `Review code reuse attempt${when ? ` (first used ${when})` : ""} by ${email}`
+      );
+      return fail(
+        "This code has already been used. Each one works once — if you've got a second job with us, reply to your last email and we'll send a fresh code.",
+        "code",
+        409
+      );
+    }
+
     const html = buildEmail({
       review,
       submitter: {
         email,
-        jobMonthLabel: isoMonth
-          ? new Date(Number(isoMonth.slice(0, 4)), Number(isoMonth.slice(5, 7)) - 1, 1)
-              .toLocaleDateString("en-US", { month: "long", year: "numeric" })
-          : jobMonth,
+        code: formatCode(check.nonce),
+        enforced: redemption.status === REDEEM.FRESH,
         hasPhoto: Boolean(attachment),
       },
       snippet: reviewSnippet(review),
@@ -346,7 +338,14 @@ export async function POST(request) {
     };
 
     const transporter = createTransport({ user: gmailUser, pass: gmailPass });
-    await transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (err) {
+      // The code is spent but the review never reached us. Give it back so the
+      // customer's next attempt works.
+      if (redemption.status === REDEEM.FRESH) await releaseCode(check.nonce);
+      throw err;
+    }
 
     return Response.json({ ok: true });
   } catch (err) {

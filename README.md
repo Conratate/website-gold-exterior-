@@ -65,7 +65,8 @@ production):
 | `GMAIL_USER`         | The Gmail address that sends quote and review emails.                                            |
 | `GMAIL_APP_PASSWORD` | A Gmail **App Password**, not your account password. Spaces are stripped, so paste it as shown.   |
 | `QUOTE_TO_EMAIL`     | Where quote requests and review submissions land. Defaults to `goldexterior0@gmail.com`.          |
-| `REVIEW_CODE`        | **Required for reviews.** The code a customer needs to submit one. No default — unset means the form accepts nothing. See [Reviews](#reviews). |
+| `REVIEW_CODE_SECRET` | **Required for reviews.** Signs the per-job codes. A long random string. No default — unset means the review form accepts nothing. |
+| `OWNER_CODE`         | **Required for reviews.** Your password for `/reviews/new-code`, where you issue a customer their code. Never given to customers. |
 
 ## Setting up Gmail sending (one-time)
 
@@ -87,39 +88,59 @@ The `/reviews` page has two halves: the reviews that are published, and a form
 for customers to submit new ones. **Nothing a visitor types ever appears on the
 site on its own.**
 
-### How a customer submits one
+### One code per job
 
-They need the **review code** — whatever you set `REVIEW_CODE` to. Hand it out
-when a job wraps: say it at the final walkthrough, print it on the invoice, put
-it in the follow-up email. It's checked on the server and never sent to the
-browser, so it can't be read out of the page source.
+A single shared code has a hole in it — a customer can pass it to a friend who
+never hired us. So each job gets its own code instead, and each one works once.
 
-The check is forgiving about how it's typed — case, spaces, dashes and dots are
-all ignored, so `two words 2026` and `TWO-WORDS-2026` are the same answer. Pick
-a phrase people can remember without writing down. Six wrong guesses from one
-address earns that address a 15-minute timeout.
+After you finish a job, open **`/reviews/new-code`** on your phone, enter your
+`OWNER_CODE`, and fill in the customer's name and email. They get a thank-you
+email with their code and a link that fills it in for them; you get a copy, so
+your inbox is the record of which code went to whom. No ledger to keep.
 
-**There is no default code, and none should ever be committed here.** This
-repository is public, so a code in the source would be a published password
-rather than a gate. With `REVIEW_CODE` unset the form fails closed — it accepts
-nothing and tells the visitor reviews aren't open yet, while logging a loud
-warning server-side. That's the intended behaviour for a misconfiguration.
+A code is three things at once:
 
-**Rotate the code by changing `REVIEW_CODE` in your host's environment
-variables and redeploying.** Old codes stop working as soon as the new
-deployment is live — handy at the turn of the year if your code carries one.
+| | |
+| --- | --- |
+| **Signed** | It carries an HMAC over its own contents, so the server can tell we issued it without looking anything up. Forging one means guessing 40 bits. |
+| **Expiring** | It goes stale on its own — 90 days by default, and you can pick 30 days to a year when you issue it. |
+| **Single-use** | It's burned the moment it's redeemed. Forwarding it to a friend gets them nothing. |
+
+Codes look like `RS41-KP7S-T2EG-TEQZ-881V`. They use
+[Crockford base32](https://www.crockford.com/base32.html), so there's no I, L,
+O or U to misread, and typing `O` for `0` still works. Case, spaces and dashes
+are all ignored.
+
+### Where "used once" is recorded
+
+Single-use needs somewhere to write down "this one is spent", and that's
+[Netlify Blobs](https://docs.netlify.com/build/data-and-storage/netlify-blobs/) —
+built into Netlify, nothing to sign up for. The write is a compare-and-set, so
+two people submitting the same code at the same instant can't both get through.
+
+If that store is ever unreachable — an incident, or the site running somewhere
+without it — a review is **not** rejected. The code was still signed, still
+unexpired, and still issued to one named customer, and you read every review
+before it goes live anyway. The system degrades to those three facts and says
+so in red at the top of the email, rather than throwing away a review someone
+took the trouble to write.
 
 ### How a review gets published
 
 1. The customer submits the form. It emails you a review marked *Awaiting Your
-   Approval*, with their email address and the month they say the job happened.
-2. Check the name and the month against your records. The code proves they were
-   given it — not that they're the person you think they are.
+   Approval*, naming the code it came in on.
+2. Search your inbox for that code to see the job it was issued against.
 3. The email ends with a ready-made snippet. Paste it at the top of the
    `REVIEWS` array in `lib/reviews.js` (newest first) and deploy.
 
 That's the whole moderation system: `lib/reviews.js` is the site's record of
 what's public, and it only changes when you change it.
+
+### If a code gets abused
+
+Change `REVIEW_CODE_SECRET` and redeploy. Every code still outstanding stops
+working at once, and you re-issue to anyone who still needs one. That's the
+emergency stop.
 
 ### What the empty page does
 
@@ -129,34 +150,38 @@ pretending. The star ratings on the home and about pages also read from
 invented 5★, and the `aggregateRating` structured data is omitted entirely.
 Both start reporting real numbers the moment you publish one.
 
-## Deploying to a public HTTPS URL
+## Deploying
 
-The simplest path is **[Vercel](https://vercel.com)** (made by the creators of
-Next.js, free tier is plenty for a marketing site):
+The site runs on **[Netlify](https://netlify.com)**, which builds from this
+repo on every push and handles HTTPS automatically.
 
-1. Push this repo to GitHub (the branch is already set up).
-2. Go to <https://vercel.com/new>, import the repo.
-3. In the project's **Settings → Environment Variables**, add:
-   - `GMAIL_USER`
-   - `GMAIL_APP_PASSWORD`
-   - `QUOTE_TO_EMAIL`
-   - `REVIEW_CODE`
-4. Hit **Deploy**. Vercel gives you an HTTPS URL like
-   `gold-exterior.vercel.app` immediately.
-5. In **Settings → Domains**, add `goldexterior.com` and follow the DNS
-   instructions to point your domain at Vercel. HTTPS is automatic.
+Set these under **Site configuration → Environment variables**, then trigger a
+deploy — Netlify only picks up variable changes on a new build:
 
-Other hosts that work out of the box: Netlify, Cloudflare Pages, Render, Fly.io.
+- `GMAIL_USER`
+- `GMAIL_APP_PASSWORD`
+- `QUOTE_TO_EMAIL`
+- `REVIEW_CODE_SECRET`
+- `OWNER_CODE`
+
+Netlify Blobs, which records spent review codes, needs no setup: it comes with
+the site.
+
+> **Note:** `.github/workflows/deploy.yml` still deploys to Vercel, left over
+> from an earlier host. If Netlify is the only live site, that workflow should
+> be deleted so a push doesn't publish to two places.
 
 ## Project structure
 
 ```
 app/
   api/quote/route.js    ← Quote intake → email
-  api/review/route.js   ← Review intake: code check → email
+  api/review/route.js   ← Review intake: verify code, burn it, email
+  api/review-code/route.js ← Owner-only: mint a code and email the customer
   about/page.js
   quote/page.js
   reviews/page.js       ← Published reviews + submission form
+  reviews/new-code/page.js ← Owner-only: issue a customer their code
   services/page.js
   layout.js             ← Site shell + LocalBusiness structured data
   page.js               ← Home
@@ -167,6 +192,7 @@ components/
   Logo.js
   QuoteForm.js          ← Multi-step estimate calculator
   ReviewForm.js         ← Code-gated review submission
+  CodeIssuer.js         ← Owner-only code issuing form
   ServiceAreaGrid.js    ← The cities we cover
   ServiceIcon.js
   Stars.js
@@ -174,6 +200,9 @@ lib/
   services.js           ← Service catalog + pricing logic (single source of truth)
   location.js           ← Where we're based and which cities we serve
   reviews.js            ← Published reviews (edit this to publish one)
+  reviewCodes.js        ← Minting and verifying per-job codes
+  codeStore.js          ← Burning a code so it only works once
+  throttle.js           ← Per-address rate limiting for the code checks
   mailer.js             ← Shared Gmail SMTP transport
   image.js              ← Client-side photo downscaling
   escape.js             ← HTML escaping for outbound email
