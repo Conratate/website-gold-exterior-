@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import Stars from "@/components/Stars";
+import ServiceAreaGrid from "@/components/ServiceAreaGrid";
+import { BUSINESS, WIDER_AREA_NOTE } from "@/lib/location";
+import { MAX_RATING, REVIEWS, ratingStat, reviewStats } from "@/lib/reviews";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -8,6 +12,10 @@ const PREVIEW = calculateTotal({
   "pressure-washing": { surface: "driveway", size: "small" },
   "gutter-cleaning": { stories: "two" },
 });
+
+const RATING = ratingStat();
+const REVIEW_STATS = reviewStats();
+const FEATURED_REVIEWS = REVIEWS.slice(0, 3);
 
 export default function HomePage() {
   return (
@@ -28,7 +36,16 @@ export default function HomePage() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
               lights, gutter cleaning, and car & boat detailing — all from one
-              local team. Get a real quote in under two minutes.
+              local team, based in {BUSINESS.base} and working across{" "}
+              {BUSINESS.serviceArea}. Get a real quote in under two minutes.
+            </p>
+
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-brand-50">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 1114 0c0 5.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              {BUSINESS.base} · Serving {BUSINESS.serviceArea}
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -55,8 +72,12 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Rating</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">5★</dd>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">
+                  {RATING.label}
+                </dt>
+                <dd className="mt-1 font-display text-2xl font-bold text-white">
+                  {RATING.value}
+                </dd>
               </div>
             </dl>
           </div>
@@ -228,7 +249,7 @@ export default function HomePage() {
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { v: "5★", l: "Average rating" },
+                { v: RATING.value, l: RATING.label },
                 { v: "48hr", l: "Typical lead time" },
                 { v: "1", l: "Trusted local team" },
               ].map((s) => (
@@ -239,6 +260,95 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="section">
+        <div className="container-x">
+          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <span className="eyebrow">Reviews</span>
+              <h2 className="heading-lg mt-4 font-display font-extrabold">
+                {REVIEW_STATS.count > 0
+                  ? "What our customers say."
+                  : "Reviews you can actually trust."}
+              </h2>
+              <p className="mt-4 text-charcoal-600">
+                Only customers can leave one. Every review needs the code we hand
+                out when a job wraps, and a person checks it against our records
+                before it goes up — which is also why you won&apos;t find a wall
+                of five stars here before we&apos;ve earned them.
+              </p>
+            </div>
+            <Link href="/reviews" className="btn-outline">
+              {REVIEW_STATS.count > 0 ? "Read all reviews" : "How it works"}
+            </Link>
+          </div>
+
+          {FEATURED_REVIEWS.length > 0 ? (
+            <ul className="mt-12 grid gap-6 md:grid-cols-3">
+              {FEATURED_REVIEWS.map((review) => (
+                <li key={review.id} className="card flex flex-col">
+                  <Stars rating={review.rating} />
+                  <p className="mt-4 flex-1 text-sm leading-relaxed text-charcoal-700">
+                    {review.body}
+                  </p>
+                  <div className="mt-5 border-t border-charcoal-100 pt-4 text-sm">
+                    <span className="font-semibold text-charcoal-900">
+                      {review.name}
+                    </span>
+                    <span className="text-charcoal-500"> · {review.city}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-10 grid gap-6 rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-8 md:grid-cols-[auto_1fr] md:items-center">
+              <div className="flex items-center gap-4">
+                <Stars rating={0} size="h-7 w-7" label="No reviews published yet" />
+                <span className="font-display text-lg font-bold text-charcoal-900">
+                  0 of {MAX_RATING}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-charcoal-600">
+                No published reviews yet — we&apos;re not going to invent any. If
+                we&apos;ve worked for you,{" "}
+                <Link
+                  href="/reviews#leave-a-review"
+                  className="font-semibold text-brand-700 underline underline-offset-2"
+                >
+                  leave the first one
+                </Link>
+                .
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Service area */}
+      <section className="section bg-brand-50/60">
+        <div className="container-x">
+          <div className="max-w-2xl">
+            <span className="eyebrow">Where we work</span>
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
+              Based in {BUSINESS.base}. Working across {BUSINESS.serviceArea}.
+            </h2>
+            <p className="mt-4 text-charcoal-600">
+              We&apos;re a mobile crew, not a storefront — the truck comes to you.
+              These are the cities we run routes through week to week.
+            </p>
+          </div>
+
+          <div className="mt-12">
+            <ServiceAreaGrid />
+          </div>
+
+          <p className="mt-8 max-w-3xl text-sm text-charcoal-600">
+            Don&apos;t see your city? {WIDER_AREA_NOTE} Ask us — if we can get
+            there, we&apos;ll quote it.
+          </p>
         </div>
       </section>
 

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { SERVICES } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import { BUSINESS } from "@/lib/location";
 
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and detailing (car & boat) by Gold Exterior.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and detailing (car & boat) by Gold Exterior — serving the Bay Area from Mountain View.",
 };
 
 export default function ServicesPage() {
@@ -22,7 +23,8 @@ export default function ServicesPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-brand-100">
             Click any service to jump straight to the details — or skip ahead
-            and build your own custom quote.
+            and build your own custom quote. Every one of them is available
+            throughout {BUSINESS.serviceArea}.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">

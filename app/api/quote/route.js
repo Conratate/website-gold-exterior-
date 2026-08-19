@@ -1,5 +1,6 @@
-import nodemailer from "nodemailer";
 import { formatMoney } from "@/lib/services";
+import { escapeHtml } from "@/lib/escape";
+import { createTransport, mailSettings } from "@/lib/mailer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -108,24 +109,12 @@ function buildEmail(payload) {
 </html>`;
 }
 
-function escapeHtml(s) {
-  return String(s)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
 export async function POST(request) {
   try {
-    const gmailUser = process.env.GMAIL_USER;
-    // App passwords are shown as "abcd efgh ijkl mnop" — strip any spaces the
-    // user may have pasted, since SMTP auth fails if they're left in.
-    const gmailPass = (process.env.GMAIL_APP_PASSWORD || "").replace(/\s+/g, "");
-    const toEmail = process.env.QUOTE_TO_EMAIL || "goldexterior0@gmail.com";
+    const { user: gmailUser, pass: gmailPass, to: toEmail, configured } =
+      mailSettings();
 
-    if (!gmailUser || !gmailPass) {
+    if (!configured) {
       return Response.json(
         {
           ok: false,
@@ -162,20 +151,7 @@ export async function POST(request) {
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: gmailUser,
-        pass: gmailPass,
-      },
-      // Fail fast with a readable error instead of hanging until the function
-      // times out, which would surface as a generic error to the customer.
-      connectionTimeout: 20000,
-      greetingTimeout: 15000,
-      socketTimeout: 20000,
-    });
+    const transporter = createTransport({ user: gmailUser, pass: gmailPass });
 
     const subject = `New Gold Exterior quote — ${contact.name} (${services
       .map((s) => s.name)

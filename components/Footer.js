@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import { BUSINESS } from "@/lib/location";
 
 export default function Footer() {
   return (
@@ -12,6 +13,22 @@ export default function Footer() {
             handle the dirty work outside your home so you can enjoy what's
             inside it.
           </p>
+
+          <div className="mt-6 flex items-start gap-3 text-sm text-charcoal-300">
+            <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 flex-none text-gold-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 21s-7-5.5-7-11a7 7 0 1114 0c0 5.5-7 11-7 11z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            <address className="not-italic">
+              <span className="font-semibold text-white">
+                {BUSINESS.base}, {BUSINESS.region}
+              </span>
+              <br />
+              Serving {BUSINESS.serviceArea} — and the rest of{" "}
+              {BUSINESS.regionName} by arrangement.
+            </address>
+          </div>
+
           <Link href="/quote" className="btn-gold mt-6">
             Get a Free Quote
           </Link>
@@ -38,6 +55,7 @@ export default function Footer() {
           <ul className="text-sm">
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/">Home</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services">Services</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/reviews">Reviews</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/about">About Us</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/quote">Get a Quote</Link></li>
           </ul>
@@ -47,7 +65,9 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="container-x flex flex-col items-start justify-between gap-3 py-6 text-xs text-charcoal-400 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Gold Exterior. All rights reserved.</p>
-          <p>goldexterior.com</p>
+          <p>
+            {BUSINESS.site} · {BUSINESS.city}, {BUSINESS.region}
+          </p>
         </div>
       </div>
     </footer>

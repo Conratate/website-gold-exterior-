@@ -1,9 +1,10 @@
 import QuoteForm from "@/components/QuoteForm";
+import { BUSINESS } from "@/lib/location";
 
 export const metadata = {
   title: "Get a Quote",
   description:
-    "Build a custom estimate for pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, or car & boat detailing in under two minutes.",
+    "Build a custom estimate for pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, or car & boat detailing anywhere in the Bay Area — in under two minutes.",
 };
 
 export default function QuotePage() {
@@ -21,6 +22,13 @@ export default function QuotePage() {
             Pick your services, answer a few quick questions, and we'll show
             you a transparent estimate instantly. Submit it and we'll email
             you to confirm the final number.
+          </p>
+          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-brand-50">
+            <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 21s-7-5.5-7-11a7 7 0 1114 0c0 5.5-7 11-7 11z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            {BUSINESS.base} · Serving {BUSINESS.serviceArea}
           </p>
         </div>
       </section>

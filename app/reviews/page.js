@@ -1,0 +1,189 @@
+import Link from "next/link";
+import ReviewForm from "@/components/ReviewForm";
+import Stars from "@/components/Stars";
+import { BUSINESS } from "@/lib/location";
+import {
+  MAX_RATING,
+  REVIEWS,
+  formatReviewDate,
+  reviewStats,
+} from "@/lib/reviews";
+
+export const metadata = {
+  title: "Reviews",
+  description:
+    "Verified reviews from Gold Exterior customers across the Bay Area. Every review comes from someone we've actually worked for.",
+};
+
+const stats = reviewStats();
+
+export default function ReviewsPage() {
+  return (
+    <>
+      <section className="relative overflow-hidden bg-charcoal-950 text-white">
+        <div className="absolute inset-0 bg-hero-gradient" />
+        <div className="absolute inset-0 bg-wave-pattern" />
+        <div className="container-x relative py-14 sm:py-20">
+          <span className="eyebrow-gold">Reviews</span>
+          <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">
+            Reviews from people we&apos;ve actually worked for.
+          </h1>
+          <p className="mt-5 max-w-2xl text-brand-100">
+            Every review on this page comes from a {BUSINESS.serviceAreaShort}{" "}
+            customer with a job code from a finished job. No purchased ratings,
+            no reviews from people we&apos;ve never met.
+          </p>
+
+          {stats.count > 0 ? (
+            <div className="mt-8 inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 backdrop-blur">
+              <Stars
+                rating={stats.average}
+                size="h-6 w-6"
+                label={`${stats.average} out of ${MAX_RATING} stars`}
+              />
+              <span className="font-display text-2xl font-extrabold">
+                {stats.average}
+                <span className="text-base font-semibold text-brand-200">
+                  {" "}
+                  / {MAX_RATING}
+                </span>
+              </span>
+              <span className="text-sm text-brand-100">
+                {stats.count} verified {stats.count === 1 ? "review" : "reviews"}
+              </span>
+            </div>
+          ) : (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="#leave-a-review" className="btn-gold">
+                Leave a Review
+              </Link>
+              <Link href="/quote" className="btn-ghost">
+                Get an Instant Quote
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="section bg-brand-50/60">
+        <div className="container-x">
+          {stats.count > 0 ? (
+            <>
+              <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+                <div className="max-w-2xl">
+                  <span className="eyebrow">What customers say</span>
+                  <h2 className="heading-lg mt-4 font-display font-extrabold">
+                    {stats.count === 1
+                      ? "Our first review."
+                      : `All ${stats.count} of them.`}
+                  </h2>
+                </div>
+                <Link href="#leave-a-review" className="btn-outline">
+                  Leave a review
+                </Link>
+              </div>
+
+              <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {REVIEWS.map((review) => (
+                  <li key={review.id} className="card flex flex-col">
+                    <Stars rating={review.rating} />
+                    {review.headline && (
+                      <h3 className="mt-4 font-display text-lg font-bold text-charcoal-900">
+                        {review.headline}
+                      </h3>
+                    )}
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-charcoal-700">
+                      {review.body}
+                    </p>
+                    <div className="mt-5 border-t border-charcoal-100 pt-4">
+                      <div className="font-semibold text-charcoal-900">
+                        {review.name}
+                      </div>
+                      <div className="mt-0.5 text-xs text-charcoal-500">
+                        {[review.city, review.service, formatReviewDate(review.date)]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <EmptyState />
+          )}
+        </div>
+      </section>
+
+      <section className="section" id="leave-a-review">
+        <div className="container-x">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="eyebrow">For customers</span>
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
+              Leave a review
+            </h2>
+            <p className="mt-4 text-charcoal-600">
+              You&apos;ll need the review code from your invoice. That&apos;s the
+              whole gate — it&apos;s there so this page stays honest, not to make
+              you jump through hoops.
+            </p>
+          </div>
+          <div className="mt-10">
+            <ReviewForm />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// A reviews page with nothing on it is a chance to explain the standard rather
+// than an embarrassment to paper over.
+function EmptyState() {
+  return (
+    <div className="mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-8 text-center shadow-sm sm:p-12">
+      <div className="mx-auto flex justify-center text-charcoal-200">
+        <Stars rating={0} size="h-8 w-8" label="No reviews published yet" />
+      </div>
+      <h2 className="heading-md mt-6 font-display font-extrabold text-charcoal-900">
+        No published reviews yet.
+      </h2>
+      <p className="mx-auto mt-4 max-w-xl text-charcoal-600">
+        We&apos;d rather show you an empty page than fill it with reviews we
+        didn&apos;t earn. When our customers write them, they&apos;ll show up
+        right here — name, city, job and all.
+      </p>
+
+      <div className="mt-8 grid gap-4 text-left sm:grid-cols-3">
+        {[
+          {
+            t: "Customers only",
+            d: "A review needs the code we hand out when a job wraps.",
+          },
+          {
+            t: "Read by a person",
+            d: "We check every review against our job records before it goes up.",
+          },
+          {
+            t: "Posted as written",
+            d: "Good or bad, we don't edit the words or bury the low ones.",
+          },
+        ].map((item) => (
+          <div key={item.t} className="rounded-2xl bg-brand-50 p-5">
+            <div className="font-display font-bold text-charcoal-900">{item.t}</div>
+            <p className="mt-1 text-sm text-charcoal-600">{item.d}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Link href="/quote" className="btn-primary">
+          Get an Instant Quote
+        </Link>
+        <Link href="#leave-a-review" className="btn-outline">
+          I&apos;m a customer — leave a review
+        </Link>
+      </div>
+    </div>
+  );
+}
