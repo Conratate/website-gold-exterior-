@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/services";
+import { formatMoney, formatRange } from "@/lib/services";
 import { escapeHtml } from "@/lib/escape";
 import { createTransport, mailSettings } from "@/lib/mailer";
 
@@ -34,7 +34,7 @@ function buildEmail(payload) {
 
   const totalLine =
     typeof estimate.low === "number" && typeof estimate.high === "number"
-      ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+      ? formatRange(estimate.low, estimate.high)
       : "—";
 
   return `<!doctype html>

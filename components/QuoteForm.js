@@ -5,6 +5,7 @@ import {
   SERVICES,
   calculateTotal,
   formatMoney,
+  formatRange,
   BUNDLE_DISCOUNT_THRESHOLD,
   BUNDLE_DISCOUNT_RATE,
   ROUTING_MINIMUM,
@@ -275,7 +276,7 @@ export default function QuoteForm() {
             )}
           </div>
           <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
-            {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
+            {formatRange(estimate.low, estimate.high)}
           </div>
           {estimate.discountApplied && (
             <p className="mt-1 text-xs font-semibold text-brand-700">
@@ -817,7 +818,7 @@ export default function QuoteForm() {
               </div>
               <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
                 {estimate.low > 0
-                  ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+                  ? formatRange(estimate.low, estimate.high)
                   : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
@@ -841,7 +842,7 @@ export default function QuoteForm() {
                   <li key={b.service} className="flex items-center justify-between py-3 text-sm">
                     <span className="text-charcoal-700">{b.service}</span>
                     <span className="font-semibold text-charcoal-900">
-                      {formatMoney(b.low)} – {formatMoney(b.high)}
+                      {formatRange(b.low, b.high)}
                     </span>
                   </li>
                 ))}
@@ -1076,7 +1077,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
                 >
                   {r.low === r.high
                     ? formatMoney(r.low)
-                    : `${formatMoney(r.low)} – ${formatMoney(r.high)}`}
+                    : formatRange(r.low, r.high)}
                 </div>
               </div>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-charcoal-200/70">
@@ -1123,7 +1124,7 @@ function MobileEstimateBar({ estimate }) {
                 >
                   <span className="min-w-0 text-charcoal-700">{b.service}</span>
                   <span className="flex-none font-semibold tabular-nums text-charcoal-900">
-                    {formatMoney(b.low)} – {formatMoney(b.high)}
+                    {formatRange(b.low, b.high)}
                   </span>
                 </li>
               ))}
@@ -1156,7 +1157,7 @@ function MobileEstimateBar({ estimate }) {
             </div>
             <div className="font-display text-xl font-extrabold tabular-nums text-charcoal-900">
               {has ? (
-                `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+                formatRange(estimate.low, estimate.high)
               ) : (
                 <span className="text-base font-semibold text-charcoal-400">
                   Pick a service to start

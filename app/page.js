@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney, formatRange } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 import Stars from "@/components/Stars";
 import ServiceAreaGrid from "@/components/ServiceAreaGrid";
@@ -131,7 +131,7 @@ export default function HomePage() {
                       )}
                     </div>
                     <div className="mt-1 font-display text-2xl font-extrabold text-white sm:text-3xl">
-                      {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
+                      {formatRange(PREVIEW.low, PREVIEW.high)}
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
                       {PREVIEW.discountApplied
