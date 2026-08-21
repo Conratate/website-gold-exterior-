@@ -1,8 +1,8 @@
 # Gold Exterior — goldexterior.com
 
 A modern Next.js 14 (App Router) marketing site for **Gold Exterior**, a premium
-exterior property services business serving the Bay Area from Rex Manor,
-Mountain View. Built with React, Tailwind CSS, and Gmail-backed quote and
+exterior property services business serving the Bay Area from Mountain View.
+Built with React, Tailwind CSS, and Gmail-backed quote and
 review intake APIs.
 
 ## Features
@@ -66,7 +66,7 @@ production):
 | `GMAIL_APP_PASSWORD` | A Gmail **App Password**, not your account password. Spaces are stripped, so paste it as shown.   |
 | `QUOTE_TO_EMAIL`     | Where quote requests and review submissions land. Defaults to `goldexterior0@gmail.com`.          |
 | `REVIEW_CODE_SECRET` | **Required for reviews.** Signs the per-job codes. A long random string. No default — unset means the review form accepts nothing. |
-| `OWNER_CODE`         | **Required for reviews.** Your password for `/reviews/new-code`, where you issue a customer their code. Never given to customers. |
+| `OWNER_CODE`         | **Required for reviews.** Your password for `/staff`, where you issue a customer their code. Never given to customers. |
 
 ## Setting up Gmail sending (one-time)
 
@@ -93,7 +93,7 @@ site on its own.**
 A single shared code has a hole in it — a customer can pass it to a friend who
 never hired us. So each job gets its own code instead, and each one works once.
 
-After you finish a job, open **`/reviews/new-code`** on your phone, enter your
+After you finish a job, open **`/staff`** on your phone, enter your
 `OWNER_CODE`, and fill in the customer's name and email. They get a thank-you
 email with their code and a link that fills it in for them; you get a copy, so
 your inbox is the record of which code went to whom. No ledger to keep.
@@ -200,7 +200,7 @@ app/
   about/page.js
   quote/page.js
   reviews/page.js       ← Published reviews + submission form
-  reviews/new-code/page.js ← Owner-only: issue a customer their code
+  staff/page.js         ← Staff only: sign in, issue a customer their code
   services/page.js
   layout.js             ← Site shell + LocalBusiness structured data
   page.js               ← Home
@@ -246,7 +246,7 @@ next.config.js
 - We **do not** offer interior cleaning. The site copy reflects that.
 - All quotes are explicitly described as **rough, non-binding estimates** until
   Gold Exterior reviews the photo and address.
-- We're based in **Rex Manor, Mountain View** and serve **the Bay Area**, with
+- We're based in **Mountain View** and serve **the Bay Area**, with
   larger jobs elsewhere in California by arrangement. There's no storefront —
   the site says so rather than implying one.
 - The site never claims a star rating it doesn't have. Ratings and

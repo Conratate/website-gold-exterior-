@@ -21,7 +21,7 @@ export default function Footer() {
             </svg>
             <address className="not-italic">
               <span className="font-semibold text-white">
-                {BUSINESS.base}, {BUSINESS.region}
+                {BUSINESS.base}
               </span>
               <br />
               Serving {BUSINESS.serviceArea} — and the rest of{" "}
@@ -65,8 +65,16 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="container-x flex flex-col items-start justify-between gap-3 py-6 text-xs text-charcoal-400 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Gold Exterior. All rights reserved.</p>
-          <p>
-            {BUSINESS.site} · {BUSINESS.city}, {BUSINESS.region}
+          <p className="flex items-center gap-3">
+            <span>
+              {BUSINESS.site} · {BUSINESS.city}, {BUSINESS.region}
+            </span>
+            <span aria-hidden="true">·</span>
+            {/* For us, not for customers. Password-gated and kept out of search
+                results — this is just so it's findable without typing a URL. */}
+            <Link href="/staff" className="hover:text-charcoal-200">
+              Staff
+            </Link>
           </p>
         </div>
       </div>

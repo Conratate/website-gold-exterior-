@@ -82,9 +82,9 @@ function customerEmail({ name, code, link, job, expiresAt }) {
             </tr>
             <tr>
               <td style="background:#11151b;color:#a8b1bb;padding:18px 28px;font-size:12px;">
-                Gold Exterior · ${escapeHtml(BUSINESS.base)}, ${escapeHtml(
-                  BUSINESS.region
-                )} · Serving ${escapeHtml(BUSINESS.serviceArea)}
+                Gold Exterior · ${escapeHtml(BUSINESS.base)} · Serving ${escapeHtml(
+                  BUSINESS.serviceArea
+                )}
               </td>
             </tr>
           </table>
@@ -160,6 +160,14 @@ export async function POST(request) {
     if (String(payload.ownerCode || "") !== ownerCode) {
       throttle.record(key);
       return fail("That's not the owner password.", "ownerCode", 403);
+    }
+
+    // The staff page checks the password on its own before showing the tool,
+    // so the owner isn't typing a customer's details only to find out they
+    // fat-fingered the password. Same throttle, same comparison — this just
+    // stops before issuing anything.
+    if (payload.verifyOnly === true) {
+      return Response.json({ ok: true });
     }
 
     const name = trimmed(payload.customerName, LIMITS.name);

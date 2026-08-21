@@ -11,6 +11,11 @@ const initial = {
 };
 
 export default function CodeIssuer() {
+  // Password first, tool second. Checking it up front means you find out you
+  // mistyped before filling in a customer's details, not after.
+  const [unlocked, setUnlocked] = useState(false);
+  const [checking, setChecking] = useState(false);
+
   const [form, setForm] = useState(initial);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState({ message: "", field: "" });
@@ -20,6 +25,36 @@ export default function CodeIssuer() {
   function set(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
     setError((e) => (e.field === field ? { message: "", field: "" } : e));
+  }
+
+  async function unlock(e) {
+    e.preventDefault();
+    if (!form.ownerCode.trim()) {
+      setError({ message: "Enter your password.", field: "ownerCode" });
+      return;
+    }
+    setChecking(true);
+    setError({ message: "", field: "" });
+    try {
+      const res = await fetch("/api/review-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ownerCode: form.ownerCode, verifyOnly: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        setError({
+          message: data.error || `Couldn't check that. (${res.status})`,
+          field: "ownerCode",
+        });
+        return;
+      }
+      setUnlocked(true);
+    } catch {
+      setError({ message: "Couldn't reach the site. Try again.", field: "ownerCode" });
+    } finally {
+      setChecking(false);
+    }
   }
 
   async function submit(e) {
@@ -56,6 +91,61 @@ export default function CodeIssuer() {
   }
 
   const errFor = (field) => (error.field === field ? error.message : "");
+
+  if (!unlocked) {
+    return (
+      <form onSubmit={unlock} noValidate className="mx-auto max-w-md">
+        <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-9">
+          <div className="text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-charcoal-900 text-gold-300">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="10" width="16" height="10" rx="2.5" />
+                <path d="M8 10V7a4 4 0 118 0v3" />
+              </svg>
+            </div>
+            <h2 className="mt-5 font-display text-2xl font-extrabold text-charcoal-900">
+              Staff sign in
+            </h2>
+            <p className="mx-auto mt-3 max-w-xs text-sm text-charcoal-600">
+              This page is for Gold Exterior only.
+            </p>
+          </div>
+
+          <div className="mt-7">
+            <label className="sr-only" htmlFor="owner-code">
+              Password
+            </label>
+            <input
+              id="owner-code"
+              type="password"
+              className="input text-center tracking-wider"
+              value={form.ownerCode}
+              onChange={(e) => set("ownerCode", e.target.value)}
+              placeholder="Password"
+              autoComplete="current-password"
+              autoFocus
+              aria-invalid={Boolean(errFor("ownerCode"))}
+            />
+            <FieldError message={errFor("ownerCode")} />
+          </div>
+
+          <button
+            type="submit"
+            disabled={checking}
+            className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {checking ? "Checking…" : "Sign in"}
+          </button>
+
+          {error.message && !error.field && (
+            <p className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+              {error.message}
+            </p>
+          )}
+        </div>
+      </form>
+    );
+  }
 
   if (issued) {
     return (
@@ -122,22 +212,6 @@ export default function CodeIssuer() {
     <form onSubmit={submit} noValidate className="mx-auto max-w-xl">
       <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-8">
         <div>
-          <label className="label" htmlFor="owner-code">
-            Owner password
-          </label>
-          <input
-            id="owner-code"
-            type="password"
-            className="input"
-            value={form.ownerCode}
-            onChange={(e) => set("ownerCode", e.target.value)}
-            autoComplete="current-password"
-            aria-invalid={Boolean(errFor("ownerCode"))}
-          />
-          <FieldError message={errFor("ownerCode")} />
-        </div>
-
-        <div className="mt-5">
           <label className="label" htmlFor="cust-name">
             Customer name
           </label>

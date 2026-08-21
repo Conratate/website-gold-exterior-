@@ -6,7 +6,7 @@ import { ratingStat } from "@/lib/reviews";
 export const metadata = {
   title: "About Us",
   description:
-    "Gold Exterior is a full-service exterior property care company based in Rex Manor, Mountain View, serving the Bay Area — built on craftsmanship, communication, and trust.",
+    "Gold Exterior is a full-service exterior property care company serving the Bay Area from Mountain View — built on craftsmanship, communication, and trust.",
 };
 
 const RATING = ratingStat();
@@ -102,7 +102,7 @@ export default function AboutPage() {
               Gold Exterior started where most great service businesses do:
               with a single truck, a single crew, and a long list of frustrated
               homeowners tired of unreliable contractors — right here in{" "}
-              {BUSINESS.neighborhood}, {BUSINESS.city}.
+              {BUSINESS.city}.
             </p>
             <p>
               We built our reputation one driveway, one storefront, one gutter at
@@ -151,8 +151,8 @@ export default function AboutPage() {
               {BUSINESS.base} — and everywhere our routes reach.
             </h2>
             <p className="mt-4 text-charcoal-600">
-              We run out of {BUSINESS.neighborhood} in {BUSINESS.city} and cover{" "}
-              {BUSINESS.serviceArea} week to week. There&apos;s no shop to visit;
+              We run out of {BUSINESS.city} and cover {BUSINESS.serviceArea}{" "}
+              week to week. There&apos;s no shop to visit;
               the truck comes to you.
             </p>
           </div>
