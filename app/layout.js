@@ -1,21 +1,32 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { localBusinessSchema } from "@/lib/location";
+import { aggregateRatingSchema } from "@/lib/reviews";
+import { publishedReviews } from "@/lib/publishedReviews";
 
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
   title: {
-    default: "Gold Exterior — Premium Exterior Property Services",
+    default: "Gold Exterior — Premium Exterior Property Services in the Bay Area",
     template: "%s · Gold Exterior",
   },
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing. Professional exterior property services with instant online quotes.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing across the Bay Area. Based in Mountain View, with instant online quotes.",
+  keywords: [
+    "pressure washing Bay Area",
+    "gutter cleaning Mountain View",
+    "graffiti removal Bay Area",
+    "commercial cleaning Peninsula",
+    "holiday lights installation South Bay",
+  ],
   openGraph: {
-    title: "Gold Exterior — Premium Exterior Property Services",
+    title: "Gold Exterior — Premium Exterior Property Services in the Bay Area",
     description:
-      "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing. Get an instant online quote.",
+      "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car & boat detailing across the Bay Area. Get an instant online quote.",
     url: "https://goldexterior.com",
     siteName: "Gold Exterior",
+    locale: "en_US",
     type: "website",
   },
 };
@@ -26,7 +37,9 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const aggregateRating = aggregateRatingSchema(await publishedReviews());
+
   return (
     <html lang="en">
       <head>
@@ -38,6 +51,16 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen bg-white text-charcoal-900 antialiased">
+        {/* Tells search engines the cities we cover, so we surface on local
+            "near me" searches instead of only on our own name. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(
+              localBusinessSchema({ aggregateRating })
+            ),
+          }}
+        />
         <Navbar />
         <main>{children}</main>
         <Footer />

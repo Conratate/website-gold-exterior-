@@ -5,11 +5,13 @@ import {
   SERVICES,
   calculateTotal,
   formatMoney,
+  formatRange,
   BUNDLE_DISCOUNT_THRESHOLD,
   BUNDLE_DISCOUNT_RATE,
   ROUTING_MINIMUM,
 } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
+import { shrinkImage } from "@/lib/image";
 
 const STEPS = [
   { id: "services", label: "Services" },
@@ -274,7 +276,7 @@ export default function QuoteForm() {
             )}
           </div>
           <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
-            {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
+            {formatRange(estimate.low, estimate.high)}
           </div>
           {estimate.discountApplied && (
             <p className="mt-1 text-xs font-semibold text-brand-700">
@@ -816,7 +818,7 @@ export default function QuoteForm() {
               </div>
               <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
                 {estimate.low > 0
-                  ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+                  ? formatRange(estimate.low, estimate.high)
                   : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
@@ -840,7 +842,7 @@ export default function QuoteForm() {
                   <li key={b.service} className="flex items-center justify-between py-3 text-sm">
                     <span className="text-charcoal-700">{b.service}</span>
                     <span className="font-semibold text-charcoal-900">
-                      {formatMoney(b.low)} – {formatMoney(b.high)}
+                      {formatRange(b.low, b.high)}
                     </span>
                   </li>
                 ))}
@@ -885,51 +887,6 @@ function Field({ label, error, children, className = "" }) {
       {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
     </div>
   );
-}
-
-// Phone photos are routinely 3–10 MB, which exceeds the request body limit on
-// serverless hosts and makes the upload fail before it reaches our API. Draw
-// the image to a canvas at a sane size and re-encode it as JPEG so the request
-// stays small and fast without a visible quality drop for estimating work.
-const MAX_EDGE = 1600;
-const JPEG_QUALITY = 0.75;
-
-function shrinkImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("read-failed"));
-    reader.onload = () => {
-      const img = new Image();
-      img.onerror = () => reject(new Error("decode-failed"));
-      img.onload = () => {
-        const scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
-        const w = Math.max(1, Math.round(img.width * scale));
-        const h = Math.max(1, Math.round(img.height * scale));
-
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return reject(new Error("no-canvas"));
-        ctx.drawImage(img, 0, 0, w, h);
-
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) return reject(new Error("encode-failed"));
-            const name = (file.name || "job-photo").replace(/\.[^.]+$/, "") + ".jpg";
-            resolve({
-              file: new File([blob], name, { type: "image/jpeg" }),
-              dataUrl: canvas.toDataURL("image/jpeg", JPEG_QUALITY),
-            });
-          },
-          "image/jpeg",
-          JPEG_QUALITY
-        );
-      };
-      img.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
 }
 
 // Inline tier finder: the customer enters rough measurements and we place
@@ -1120,7 +1077,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
                 >
                   {r.low === r.high
                     ? formatMoney(r.low)
-                    : `${formatMoney(r.low)} – ${formatMoney(r.high)}`}
+                    : formatRange(r.low, r.high)}
                 </div>
               </div>
               <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-charcoal-200/70">
@@ -1167,7 +1124,7 @@ function MobileEstimateBar({ estimate }) {
                 >
                   <span className="min-w-0 text-charcoal-700">{b.service}</span>
                   <span className="flex-none font-semibold tabular-nums text-charcoal-900">
-                    {formatMoney(b.low)} – {formatMoney(b.high)}
+                    {formatRange(b.low, b.high)}
                   </span>
                 </li>
               ))}
@@ -1200,7 +1157,7 @@ function MobileEstimateBar({ estimate }) {
             </div>
             <div className="font-display text-xl font-extrabold tabular-nums text-charcoal-900">
               {has ? (
-                `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+                formatRange(estimate.low, estimate.high)
               ) : (
                 <span className="text-base font-semibold text-charcoal-400">
                   Pick a service to start

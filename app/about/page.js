@@ -1,10 +1,16 @@
 import Link from "next/link";
+import ServiceAreaGrid from "@/components/ServiceAreaGrid";
+import { BUSINESS, WIDER_AREA_NOTE } from "@/lib/location";
+import { ratingStat } from "@/lib/reviews";
+import { publishedReviews } from "@/lib/publishedReviews";
 
 export const metadata = {
   title: "About Us",
   description:
-    "Gold Exterior is a full-service exterior property care company built on craftsmanship, communication, and trust.",
+    "Gold Exterior is a full-service exterior property care company serving the Bay Area from Mountain View — built on craftsmanship, communication, and trust.",
 };
+
+export const revalidate = 60;
 
 const VALUES = [
   {
@@ -25,10 +31,12 @@ const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
   { y: "Year 1", t: "Expanded into gutter cleaning and detailing" },
   { y: "Year 2", t: "Launched holiday lighting service" },
-  { y: "Today", t: "Serving homeowners across the region" },
+  { y: "Today", t: "Serving homeowners and businesses across the Bay Area" },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const RATING = ratingStat(await publishedReviews());
+
   return (
     <>
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
@@ -46,6 +54,13 @@ export default function AboutPage() {
               looking great. One trusted local team. Six premium services.
               Zero compromise.
             </p>
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-brand-50">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 1114 0c0 5.5-7 11-7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              {BUSINESS.base} · Serving {BUSINESS.serviceArea}
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/quote" className="btn-gold">
                 Get an Instant Quote
@@ -59,7 +74,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { v: "5★", l: "Customer rating" },
+                { v: RATING.value, l: RATING.label },
                 { v: "6", l: "Premium services" },
               ].map((s) => (
                 <div
@@ -89,7 +104,8 @@ export default function AboutPage() {
             <p>
               Gold Exterior started where most great service businesses do:
               with a single truck, a single crew, and a long list of frustrated
-              homeowners tired of unreliable contractors.
+              homeowners tired of unreliable contractors — right here in{" "}
+              {BUSINESS.city}.
             </p>
             <p>
               We built our reputation one driveway, one storefront, one gutter at
@@ -133,7 +149,29 @@ export default function AboutPage() {
       <section className="section">
         <div className="container-x">
           <div className="max-w-2xl">
-            <span className="eyebrow">Where we are</span>
+            <span className="eyebrow">Where we work</span>
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
+              {BUSINESS.base} — and everywhere our routes reach.
+            </h2>
+            <p className="mt-4 text-charcoal-600">
+              We run out of {BUSINESS.city} and cover {BUSINESS.serviceArea}{" "}
+              week to week. There&apos;s no shop to visit;
+              the truck comes to you.
+            </p>
+          </div>
+
+          <div className="mt-12">
+            <ServiceAreaGrid />
+          </div>
+
+          <p className="mt-8 max-w-3xl text-sm text-charcoal-600">{WIDER_AREA_NOTE}</p>
+        </div>
+      </section>
+
+      <section className="section bg-brand-50/60">
+        <div className="container-x">
+          <div className="max-w-2xl">
+            <span className="eyebrow">How we got here</span>
             <h2 className="heading-lg mt-4 font-display font-extrabold">
               Growing the right way.
             </h2>

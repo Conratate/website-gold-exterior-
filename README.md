@@ -1,36 +1,43 @@
 # Gold Exterior — goldexterior.com
 
 A modern Next.js 14 (App Router) marketing site for **Gold Exterior**, a premium
-exterior property services business. Built with React, Tailwind CSS, and a
-Resend-powered quote intake API.
+exterior property services business serving the Bay Area from Mountain View.
+Built with React, Tailwind CSS, and Gmail-backed quote and
+review intake APIs.
 
 ## Features
 
-- **Home, Services, About Us, Get a Quote** — clean, mobile-first layout with a
-  professional blue/gold/charcoal palette.
-- **Five service pages** (anchored sections on `/services`):
-  - Pressure Washing (driveways, siding, decks)
-  - Pool Cleaning
-  - Junk Removal
+- **Home, Services, Reviews, About Us, Get a Quote** — clean, mobile-first
+  layout with a professional blue/gold/charcoal palette.
+- **Six services** (anchored sections on `/services`):
+  - Pressure Washing (driveways, siding, fences)
+  - Commercial Cleaning
+  - Graffiti Removal
   - Holiday Lights Installation
   - Gutter Cleaning
+  - Detailing (car & boat)
 - **Multi-step Estimate Calculator** at `/quote` with:
   - Service checklist (multi-select)
-  - Service-specific dynamic questions (e.g., pool type & size, junk truck size)
+  - Service-specific dynamic questions (e.g. surface & size, boat length)
   - Required contact fields (name, address, phone, email)
   - Optional photo upload
   - **Live, instant price estimate** that updates as the user fills the form
   - Review screen before submission
 - **`/api/quote` API route** that emails a structured HTML summary (with the
   attached photo and reply-to set to the customer) to your business address
-  using [Resend](https://resend.com).
+  over Gmail SMTP.
+- **Reviews page** at `/reviews` with a customer-only submission form — see
+  [Reviews](#reviews) below.
+- **Service area** — the cities we cover live in `lib/location.js` and feed the
+  home page, the about page, the footer and the `LocalBusiness` structured data
+  that puts us in local search results.
 
 ## Tech stack
 
 - [Next.js 14](https://nextjs.org/) (App Router, JavaScript)
 - [React 18](https://react.dev/)
 - [Tailwind CSS 3](https://tailwindcss.com/)
-- [Resend](https://resend.com) for transactional email
+- [Nodemailer](https://nodemailer.com/) over Gmail SMTP for transactional email
 
 ## Getting started locally
 
@@ -53,65 +60,182 @@ Open <http://localhost:3000>.
 Set these in `.env.local` (and in your hosting provider's dashboard for
 production):
 
-| Variable          | Description                                                                                          |
-| ----------------- | ---------------------------------------------------------------------------------------------------- |
-| `RESEND_API_KEY`  | Your Resend API key. Create one at <https://resend.com/api-keys>.                                    |
-| `QUOTE_TO_EMAIL`  | The business email that should receive quote requests (e.g. `owner@goldexterior.com`).               |
-| `QUOTE_FROM_EMAIL`| The verified sender address, e.g. `"Gold Exterior Quotes <quotes@goldexterior.com>"`. The domain must be verified in Resend. |
+| Variable             | Description                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------- |
+| `GMAIL_USER`         | The Gmail address that sends quote and review emails.                                            |
+| `GMAIL_APP_PASSWORD` | A Gmail **App Password**, not your account password. Spaces are stripped, so paste it as shown.   |
+| `QUOTE_TO_EMAIL`     | Where quote requests and review submissions land. Defaults to `goldexterior0@gmail.com`.          |
+| `REVIEW_CODE_SECRET` | **Required for reviews.** Signs the per-job codes. A long random string. No default — unset means the review form accepts nothing. |
+| `OWNER_CODE`         | **Required for reviews.** Your password for `/staff`, where you issue a customer their code. Never given to customers. |
 
-## Setting up Resend (one-time)
+## Setting up Gmail sending (one-time)
 
-1. Sign up at <https://resend.com> and create an account.
-2. **Add your domain** (`goldexterior.com`) under **Domains** and add the DNS
-   records Resend gives you (SPF, DKIM, and optionally DMARC) at your DNS host.
-3. Wait for verification (usually a few minutes).
-4. Go to **API Keys → Create API Key** with "Sending access" and copy it into
-   `RESEND_API_KEY`.
-5. Pick a sender on your verified domain and put it in `QUOTE_FROM_EMAIL` (e.g.
-   `quotes@goldexterior.com`). Set `QUOTE_TO_EMAIL` to wherever you want to
-   receive leads.
+1. Turn on **2-Step Verification** for the Gmail account at
+   <https://myaccount.google.com/security>.
+2. Create an App Password at <https://myaccount.google.com/apppasswords>
+   (pick "Mail" / "Other"). Google shows it as four groups of four letters.
+3. Put the address in `GMAIL_USER` and the app password in
+   `GMAIL_APP_PASSWORD`. You can leave the spaces in — they're stripped before
+   the SMTP handshake.
+4. Set `QUOTE_TO_EMAIL` to wherever you want to receive leads and reviews.
 
-That's it — your form submissions will be delivered as styled HTML emails with
-the customer's photo attached, and replying directly will reach the customer
-because `replyTo` is set to their email.
+Replying to either email reaches the customer directly, because `replyTo` is
+set to their address.
 
-## Deploying to a public HTTPS URL
+## Reviews
 
-The simplest path is **[Vercel](https://vercel.com)** (made by the creators of
-Next.js, free tier is plenty for a marketing site):
+The `/reviews` page has two halves: the reviews that are published, and a form
+for customers to submit new ones. **Nothing a visitor types ever appears on the
+site on its own.**
 
-1. Push this repo to GitHub (the branch is already set up).
-2. Go to <https://vercel.com/new>, import the repo.
-3. In the project's **Settings → Environment Variables**, add:
-   - `RESEND_API_KEY`
-   - `QUOTE_TO_EMAIL`
-   - `QUOTE_FROM_EMAIL`
-4. Hit **Deploy**. Vercel gives you an HTTPS URL like
-   `gold-exterior.vercel.app` immediately.
-5. In **Settings → Domains**, add `goldexterior.com` and follow the DNS
-   instructions to point your domain at Vercel. HTTPS is automatic.
+### One code per job
 
-Other hosts that work out of the box: Netlify, Cloudflare Pages, Render, Fly.io.
+A single shared code has a hole in it — a customer can pass it to a friend who
+never hired us. So each job gets its own code instead, and each one works once.
+
+After you finish a job, open **`/staff`** on your phone, enter your
+`OWNER_CODE`, and fill in the customer's name and email. They get a thank-you
+email with their code and a link that fills it in for them; you get a copy, so
+your inbox is the record of which code went to whom. No ledger to keep.
+
+A code is three things at once:
+
+| | |
+| --- | --- |
+| **Signed** | It carries an HMAC over its own contents, so the server can tell we issued it without looking anything up. Forging one means guessing 40 bits. |
+| **Expiring** | It goes stale on its own — 90 days by default, and you can pick 30 days to a year when you issue it. |
+| **Single-use** | It's burned the moment it's redeemed. Forwarding it to a friend gets them nothing. |
+
+Codes look like `RS41-KP7S-T2EG-TEQZ-881V`. They use
+[Crockford base32](https://www.crockford.com/base32.html), so there's no I, L,
+O or U to misread, and typing `O` for `0` still works. Case, spaces and dashes
+are all ignored.
+
+### Where "used once" is recorded
+
+Single-use needs somewhere to write down "this one is spent", and that's
+[Netlify Blobs](https://docs.netlify.com/build/data-and-storage/netlify-blobs/) —
+built into Netlify, nothing to sign up for. The write is a compare-and-set, so
+two people submitting the same code at the same instant can't both get through.
+
+If that store is ever unreachable — an incident, or the site running somewhere
+without it — a review is **not** rejected. The code was still signed, still
+unexpired, and still issued to one named customer, and you read every review
+before it goes live anyway. The system degrades to those three facts and says
+so in red at the top of the email, rather than throwing away a review someone
+took the trouble to write.
+
+### What a customer sees
+
+The form doesn't sprawl across the page. There's a single **Add a Review**
+button; pressing it asks for the code and nothing else; and only once the code
+checks out does the review form appear. A customer arriving from the link in
+their email skips the button entirely, with the code already filled in.
+
+The code is checked before they write a word, so nobody types out a review only
+to be turned away at the end. That check is a courtesy, not the gate —
+`/api/review` verifies again and burns the code at submit, so a tampered "yes"
+from the check buys nothing.
+
+### Photos
+
+A review can carry a before-and-after pair. Put the files in `public/reviews/`
+and point at them from `lib/reviews.js` — see `public/reviews/README.md` for
+the shape. Reviews with both halves appear in the **Transformations** strip;
+that whole section is absent until at least one review has a pair, so the page
+never shows an empty gallery.
+
+Photos a customer attaches to their own review are emailed to you and go no
+further. Publishing one is a deliberate step, the same as publishing the words.
+
+### How a review gets published
+
+Sign in to `/staff` and press **Publish**. It's on the site immediately — the
+pages that show reviews are refreshed the moment one moves, rather than waiting
+out their cache.
+
+The **Reviews** tab lists what's waiting and what's live. **Delete** discards a
+submission; **Take down** returns a published review to the waiting list rather
+than destroying it, so a misclick can't lose a customer's words.
+
+You still get the email — that's what tells you a review arrived, and it
+carries a paste-ready snippet as a fallback. Anything committed to the
+`REVIEWS` array in `lib/reviews.js` also shows, so the file remains a fine way
+to seed the page.
+
+Nothing publishes itself either way. A submission sits in the waiting list
+until you act on it.
+
+### If a code gets abused
+
+Change `REVIEW_CODE_SECRET` and redeploy. Every code still outstanding stops
+working at once, and you re-issue to anyone who still needs one. That's the
+emergency stop.
+
+### What the empty page does
+
+With no published reviews, `/reviews` explains the standard instead of
+pretending. The star ratings on the home and about pages also read from
+`lib/reviews.js` — with zero reviews they show the service area rather than an
+invented 5★, and the `aggregateRating` structured data is omitted entirely.
+Both start reporting real numbers the moment you publish one.
+
+## Deploying
+
+The site runs on **[Netlify](https://netlify.com)**, which builds from this
+repo on every push and handles HTTPS automatically.
+
+Set these under **Site configuration → Environment variables**, then trigger a
+deploy — Netlify only picks up variable changes on a new build:
+
+- `GMAIL_USER`
+- `GMAIL_APP_PASSWORD`
+- `QUOTE_TO_EMAIL`
+- `REVIEW_CODE_SECRET`
+- `OWNER_CODE`
+
+Netlify Blobs, which records spent review codes, needs no setup: it comes with
+the site.
 
 ## Project structure
 
 ```
 app/
-  api/quote/route.js   ← Resend-powered email API
+  api/quote/route.js    ← Quote intake → email
+  api/review/route.js   ← Review intake: verify code, burn it, email
+  api/review-code/route.js ← Staff only: mint a code and email the customer
+  api/staff/reviews/route.js ← Staff only: list, publish, take down, delete
   about/page.js
   quote/page.js
+  reviews/page.js       ← Published reviews + submission form
+  staff/page.js         ← Staff only: sign in, issue a customer their code
   services/page.js
-  layout.js            ← Site shell
-  page.js              ← Home
-  globals.css          ← Tailwind + design tokens
+  layout.js             ← Site shell + LocalBusiness structured data
+  page.js               ← Home
+  globals.css           ← Tailwind + design tokens
 components/
   Footer.js
   Navbar.js
   Logo.js
-  QuoteForm.js         ← Multi-step estimate calculator
+  QuoteForm.js          ← Multi-step estimate calculator
+  ReviewForm.js         ← Code-gated review submission
+  ReviewDesk.js         ← Staff only: publish and take down reviews
+  CodeIssuer.js         ← Owner-only code issuing form
+  ServiceAreaGrid.js    ← The cities we cover
   ServiceIcon.js
+  Stars.js
 lib/
-  services.js          ← Service catalog + pricing logic (single source of truth)
+  services.js           ← Service catalog + pricing logic (single source of truth)
+  location.js           ← Where we're based and which cities we serve
+  reviews.js            ← Seed reviews committed to the repo
+  reviewStore.js        ← Submitted reviews, and publishing them
+  publishedReviews.js   ← What's live right now: stored + seeded
+  reviewCodes.js        ← Minting and verifying per-job codes
+  codeStore.js          ← Burning a code so it only works once
+  throttle.js           ← Per-address rate limiting for the code checks
+  mailer.js             ← Shared Gmail SMTP transport
+  image.js              ← Client-side photo downscaling
+  escape.js             ← HTML escaping for outbound email
 tailwind.config.js
 next.config.js
 ```
@@ -124,9 +248,17 @@ next.config.js
 - **Colors** are defined in `tailwind.config.js` under `theme.extend.colors`
   (`brand`, `gold`, `charcoal`).
 - **Copy** lives in each page file under `app/`.
+- **Service area** (the city chips, the "where we work" copy, the structured
+  data) lives in `lib/location.js`. Add a city there and it appears everywhere.
+- **Published reviews** live in `lib/reviews.js`. See [Reviews](#reviews).
 
 ## Notes
 
 - We **do not** offer interior cleaning. The site copy reflects that.
 - All quotes are explicitly described as **rough, non-binding estimates** until
   Gold Exterior reviews the photo and address.
+- We're based in **Mountain View** and serve **the Bay Area**, with
+  larger jobs elsewhere in California by arrangement. There's no storefront —
+  the site says so rather than implying one.
+- The site never claims a star rating it doesn't have. Ratings and
+  `aggregateRating` structured data are derived from `lib/reviews.js`.
