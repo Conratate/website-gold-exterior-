@@ -2,6 +2,7 @@ import Link from "next/link";
 import ServiceAreaGrid from "@/components/ServiceAreaGrid";
 import { BUSINESS, WIDER_AREA_NOTE } from "@/lib/location";
 import { ratingStat } from "@/lib/reviews";
+import { publishedReviews } from "@/lib/publishedReviews";
 
 export const metadata = {
   title: "About Us",
@@ -9,7 +10,7 @@ export const metadata = {
     "Gold Exterior is a full-service exterior property care company serving the Bay Area from Mountain View — built on craftsmanship, communication, and trust.",
 };
 
-const RATING = ratingStat();
+export const revalidate = 60;
 
 const VALUES = [
   {
@@ -33,7 +34,9 @@ const TIMELINE = [
   { y: "Today", t: "Serving homeowners and businesses across the Bay Area" },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const RATING = ratingStat(await publishedReviews());
+
   return (
     <>
       <section className="relative overflow-hidden bg-charcoal-950 text-white">

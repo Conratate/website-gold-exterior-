@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ReviewDesk from "./ReviewDesk";
 
 const initial = {
   ownerCode: "",
@@ -15,6 +16,7 @@ export default function CodeIssuer() {
   // mistyped before filling in a customer's details, not after.
   const [unlocked, setUnlocked] = useState(false);
   const [checking, setChecking] = useState(false);
+  const [tab, setTab] = useState("reviews"); // reviews | send
 
   const [form, setForm] = useState(initial);
   const [sending, setSending] = useState(false);
@@ -208,8 +210,43 @@ export default function CodeIssuer() {
     );
   }
 
+  const tabs = [
+    { id: "reviews", label: "Reviews" },
+    { id: "send", label: "Send a code" },
+  ];
+
+  const nav = (
+    <div className="mx-auto mb-8 flex max-w-xl gap-2 rounded-full border border-charcoal-200 bg-white p-1">
+      {tabs.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          onClick={() => setTab(t.id)}
+          aria-current={tab === t.id ? "page" : undefined}
+          className={`min-h-[44px] flex-1 rounded-full px-4 text-sm font-semibold transition ${
+            tab === t.id
+              ? "bg-brand-600 text-white shadow-sm"
+              : "text-charcoal-600 hover:text-charcoal-900"
+          }`}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (tab === "reviews") {
+    return (
+      <div className="mx-auto max-w-xl">
+        {nav}
+        <ReviewDesk ownerCode={form.ownerCode} />
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={submit} noValidate className="mx-auto max-w-xl">
+      {nav}
       <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-8">
         <div>
           <label className="label" htmlFor="cust-name">

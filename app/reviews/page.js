@@ -10,6 +10,7 @@ import {
   reviewStats,
   transformations,
 } from "@/lib/reviews";
+import { listPublished } from "@/lib/reviewStore";
 
 export const metadata = {
   title: "Reviews",
@@ -17,10 +18,21 @@ export const metadata = {
     "Verified reviews from Gold Exterior customers across the Bay Area. Every review comes from someone we've actually worked for.",
 };
 
-const stats = reviewStats();
-const TRANSFORMATIONS = transformations();
+// Reviews are published from the staff page, so this can't be baked in at
+// build time any more. Rebuilding once a minute is invisible to a reader and
+// means a review you publish is live before you've put your phone away.
+export const revalidate = 60;
 
-export default function ReviewsPage() {
+export default async function ReviewsPage() {
+  // Anything committed to lib/reviews.js still shows, so the file remains a
+  // perfectly good way to seed the page. If the store can't be reached we fall
+  // back to that rather than telling a visitor the page is broken.
+  const stored = await listPublished();
+  const reviews = [...(stored || []), ...REVIEWS];
+
+  const stats = reviewStats(reviews);
+  const TRANSFORMATIONS = transformations(reviews);
+
   return (
     <>
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
@@ -88,7 +100,7 @@ export default function ReviewsPage() {
               </div>
 
               <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {REVIEWS.map((review) => (
+                {reviews.map((review) => (
                   <li key={review.id} className="card flex flex-col">
                     {review.photos?.before && review.photos?.after && (
                       <Transformation photos={review.photos} className="mb-5" />

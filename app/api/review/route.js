@@ -3,6 +3,7 @@ import { createTransport, mailSettings } from "@/lib/mailer";
 import { clampRating, MAX_RATING, reviewServiceName } from "@/lib/reviews";
 import { formatCode, verifyCode } from "@/lib/reviewCodes";
 import { redeemCode, releaseCode, REDEEM } from "@/lib/codeStore";
+import { saveSubmission } from "@/lib/reviewStore";
 import { clientKey, createThrottle } from "@/lib/throttle";
 
 export const runtime = "nodejs";
@@ -336,6 +337,12 @@ export async function POST(request) {
       html,
       ...(attachment ? { attachments: [attachment] } : {}),
     };
+
+    // Keep the review so the staff page can publish it with a button. A
+    // failure here is logged and swallowed: the email below is the thing that
+    // actually delivers the review, and losing one-tap publishing is not worth
+    // losing the review itself.
+    await saveSubmission(review);
 
     const transporter = createTransport({ user: gmailUser, pass: gmailPass });
     try {

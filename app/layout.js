@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { localBusinessSchema } from "@/lib/location";
 import { aggregateRatingSchema } from "@/lib/reviews";
+import { publishedReviews } from "@/lib/publishedReviews";
 
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
@@ -36,7 +37,9 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const aggregateRating = aggregateRatingSchema(await publishedReviews());
+
   return (
     <html lang="en">
       <head>
@@ -54,7 +57,7 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(
-              localBusinessSchema({ aggregateRating: aggregateRatingSchema() })
+              localBusinessSchema({ aggregateRating })
             ),
           }}
         />

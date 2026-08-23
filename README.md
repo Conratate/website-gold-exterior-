@@ -150,14 +150,21 @@ further. Publishing one is a deliberate step, the same as publishing the words.
 
 ### How a review gets published
 
-1. The customer submits the form. It emails you a review marked *Awaiting Your
-   Approval*, naming the code it came in on.
-2. Search your inbox for that code to see the job it was issued against.
-3. The email ends with a ready-made snippet. Paste it at the top of the
-   `REVIEWS` array in `lib/reviews.js` (newest first) and deploy.
+Sign in to `/staff` and press **Publish**. It's on the site immediately — the
+pages that show reviews are refreshed the moment one moves, rather than waiting
+out their cache.
 
-That's the whole moderation system: `lib/reviews.js` is the site's record of
-what's public, and it only changes when you change it.
+The **Reviews** tab lists what's waiting and what's live. **Delete** discards a
+submission; **Take down** returns a published review to the waiting list rather
+than destroying it, so a misclick can't lose a customer's words.
+
+You still get the email — that's what tells you a review arrived, and it
+carries a paste-ready snippet as a fallback. Anything committed to the
+`REVIEWS` array in `lib/reviews.js` also shows, so the file remains a fine way
+to seed the page.
+
+Nothing publishes itself either way. A submission sits in the waiting list
+until you act on it.
 
 ### If a code gets abused
 
@@ -196,7 +203,8 @@ the site.
 app/
   api/quote/route.js    ← Quote intake → email
   api/review/route.js   ← Review intake: verify code, burn it, email
-  api/review-code/route.js ← Owner-only: mint a code and email the customer
+  api/review-code/route.js ← Staff only: mint a code and email the customer
+  api/staff/reviews/route.js ← Staff only: list, publish, take down, delete
   about/page.js
   quote/page.js
   reviews/page.js       ← Published reviews + submission form
@@ -211,6 +219,7 @@ components/
   Logo.js
   QuoteForm.js          ← Multi-step estimate calculator
   ReviewForm.js         ← Code-gated review submission
+  ReviewDesk.js         ← Staff only: publish and take down reviews
   CodeIssuer.js         ← Owner-only code issuing form
   ServiceAreaGrid.js    ← The cities we cover
   ServiceIcon.js
@@ -218,7 +227,9 @@ components/
 lib/
   services.js           ← Service catalog + pricing logic (single source of truth)
   location.js           ← Where we're based and which cities we serve
-  reviews.js            ← Published reviews (edit this to publish one)
+  reviews.js            ← Seed reviews committed to the repo
+  reviewStore.js        ← Submitted reviews, and publishing them
+  publishedReviews.js   ← What's live right now: stored + seeded
   reviewCodes.js        ← Minting and verifying per-job codes
   codeStore.js          ← Burning a code so it only works once
   throttle.js           ← Per-address rate limiting for the code checks

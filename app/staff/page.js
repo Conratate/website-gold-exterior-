@@ -15,12 +15,11 @@ export default function NewCodePage() {
         <div className="container-x relative py-12 sm:py-16">
           <span className="eyebrow-gold">Staff</span>
           <h1 className="heading-lg mt-4 max-w-2xl font-display font-extrabold">
-            Send a customer their review code.
+            Reviews and codes.
           </h1>
           <p className="mt-4 max-w-xl text-sm text-brand-100">
-            One code, one customer, one use. They get an email with a link that
-            fills it in for them; you get a copy so you always know which code
-            went where.
+            Publish the reviews waiting on you, and send a finished customer
+            their code. Nothing here is reachable without your password.
           </p>
         </div>
       </section>

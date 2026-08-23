@@ -4,7 +4,8 @@ import ServiceIcon from "@/components/ServiceIcon";
 import Stars from "@/components/Stars";
 import ServiceAreaGrid from "@/components/ServiceAreaGrid";
 import { BUSINESS, WIDER_AREA_NOTE } from "@/lib/location";
-import { MAX_RATING, REVIEWS, ratingStat, reviewStats } from "@/lib/reviews";
+import { MAX_RATING, ratingStat, reviewStats } from "@/lib/reviews";
+import { publishedReviews } from "@/lib/publishedReviews";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -13,11 +14,14 @@ const PREVIEW = calculateTotal({
   "gutter-cleaning": { stories: "two" },
 });
 
-const RATING = ratingStat();
-const REVIEW_STATS = reviewStats();
-const FEATURED_REVIEWS = REVIEWS.slice(0, 3);
+export const revalidate = 60;
 
-export default function HomePage() {
+export default async function HomePage() {
+  const reviews = await publishedReviews();
+  const RATING = ratingStat(reviews);
+  const REVIEW_STATS = reviewStats(reviews);
+  const FEATURED_REVIEWS = reviews.slice(0, 3);
+
   return (
     <>
       {/* Hero */}
