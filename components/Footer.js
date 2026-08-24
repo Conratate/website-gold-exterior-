@@ -40,6 +40,7 @@ export default function Footer() {
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services">Services</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/about">About Us</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/quote">Get a Quote</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/review">Leave a Review</Link></li>
           </ul>
         </div>
       </div>
