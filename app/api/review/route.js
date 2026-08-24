@@ -110,7 +110,11 @@ export async function POST(request) {
   try {
     const gmailUser = process.env.GMAIL_USER;
     const gmailPass = (process.env.GMAIL_APP_PASSWORD || "").replace(/\s+/g, "");
-    const toEmail = process.env.QUOTE_TO_EMAIL || "goldexterior0@gmail.com";
+    // Reviews can be split into their own inbox later without touching quotes.
+    const toEmail =
+      process.env.REVIEW_TO_EMAIL ||
+      process.env.QUOTE_TO_EMAIL ||
+      "goldexterior0@gmail.com";
 
     if (!gmailUser || !gmailPass) {
       return Response.json(
@@ -122,6 +126,36 @@ export async function POST(request) {
     const r = await request.json().catch(() => null);
     if (!r) {
       return Response.json({ ok: false, error: "Invalid submission." }, { status: 400 });
+    }
+
+    // Hidden field no human ever sees. Bots fill every input they find, so a
+    // value here means automation — accept it so the bot moves on, but send
+    // nothing.
+    if (r.website) return Response.json({ ok: true });
+
+    // Access codes live only on the server; a code shipped in the browser
+    // bundle would be readable by anyone viewing source. Several may be valid
+    // at once so rotating a code never locks out a customer still holding the
+    // previous one. With none configured the form stays open — the real
+    // safeguard is that nothing publishes without the owner pasting it in.
+    const codes = (process.env.REVIEW_ACCESS_CODES || "")
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    if (codes.length) {
+      const given = String(r.accessCode || "").trim().toLowerCase().replace(/\s+/g, "");
+      const ok = codes.some((c) => c.replace(/\s+/g, "") === given);
+      if (!ok) {
+        return Response.json(
+          {
+            ok: false,
+            code: "BAD_CODE",
+            error:
+              "That review code doesn't match. Check the code we sent you — or reply to our email and we'll resend it.",
+          },
+          { status: 403 }
+        );
+      }
     }
     if (!r.name || !r.email || !r.serviceName) {
       return Response.json(

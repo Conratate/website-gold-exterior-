@@ -5,6 +5,8 @@ import { SERVICES } from "@/lib/services";
 import { REVIEW_DIMENSIONS, averageOf, starLabel } from "@/lib/reviews";
 
 const initial = {
+  accessCode: "",
+  website: "", // honeypot — real people never see this
   name: "",
   email: "",
   serviceId: "",
@@ -23,10 +25,14 @@ export default function ReviewForm() {
   // Let a follow-up email deep-link straight to the right service.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const presel = new URLSearchParams(window.location.search).get("service");
-    if (presel && SERVICES.some((s) => s.id === presel)) {
-      setForm((f) => ({ ...f, serviceId: presel }));
-    }
+    const params = new URLSearchParams(window.location.search);
+    const presel = params.get("service");
+    const code = params.get("code");
+    setForm((f) => ({
+      ...f,
+      ...(presel && SERVICES.some((s) => s.id === presel) ? { serviceId: presel } : {}),
+      ...(code ? { accessCode: code } : {}),
+    }));
   }, []);
 
   const overall = useMemo(() => averageOf(ratings), [ratings]);
@@ -68,6 +74,11 @@ export default function ReviewForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) {
+        if (data.code === "BAD_CODE") {
+          setErrors({ accessCode: data.error });
+          setSubmitting(false);
+          return;
+        }
         throw new Error(data.error || `Couldn't send your review. (error ${res.status})`);
       }
       setState({ status: "success", message: "" });
@@ -112,9 +123,45 @@ export default function ReviewForm() {
   return (
     <form
       onSubmit={submit}
-      className="mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
+      className="relative mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
     >
-      {/* Ratings first — it's the part people actually came to do */}
+      <div className="mb-8 rounded-2xl border border-brand-200 bg-brand-50/60 p-4 sm:p-5">
+        <label className="label" htmlFor="rv-code">
+          Your review code
+        </label>
+        <input
+          id="rv-code"
+          className="input max-w-xs"
+          value={form.accessCode}
+          onChange={(e) => set("accessCode", e.target.value)}
+          placeholder="e.g. GOLD2026"
+          autoComplete="off"
+          autoCapitalize="characters"
+        />
+        <p className="mt-2 text-xs text-charcoal-600">
+          We send this with your invoice or follow-up message. It keeps reviews
+          to people we&apos;ve actually worked for. Not sure? Reply to any email
+          from us and we&apos;ll resend it.
+        </p>
+        {errors.accessCode && (
+          <p className="mt-2 text-sm font-medium text-red-600">{errors.accessCode}</p>
+        )}
+      </div>
+
+      {/* Honeypot: hidden from people, irresistible to bots */}
+      <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label htmlFor="rv-website">Website</label>
+        <input
+          id="rv-website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={form.website}
+          onChange={(e) => set("website", e.target.value)}
+        />
+      </div>
+
+      {/* Ratings — the part people actually came to do */}
       <fieldset>
         <legend className="heading-md font-display font-bold text-charcoal-900">
           How did we do?
