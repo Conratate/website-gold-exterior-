@@ -128,11 +128,6 @@ export async function POST(request) {
       return Response.json({ ok: false, error: "Invalid submission." }, { status: 400 });
     }
 
-    // Hidden field no human ever sees. Bots fill every input they find, so a
-    // value here means automation — accept it so the bot moves on, but send
-    // nothing.
-    if (r.website) return Response.json({ ok: true });
-
     // Access codes live only on the server; a code shipped in the browser
     // bundle would be readable by anyone viewing source. Several may be valid
     // at once so rotating a code never locks out a customer still holding the

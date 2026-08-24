@@ -6,7 +6,6 @@ import { REVIEW_DIMENSIONS, averageOf, starLabel } from "@/lib/reviews";
 
 const initial = {
   accessCode: "",
-  website: "", // honeypot — real people never see this
   name: "",
   email: "",
   serviceId: "",
@@ -129,7 +128,7 @@ export default function ReviewForm() {
   return (
     <form
       onSubmit={submit}
-      className="relative mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
+      className="mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
     >
       {codeFromLink && !editingCode && !errors.accessCode ? (
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 sm:px-5">
@@ -160,6 +159,13 @@ export default function ReviewForm() {
             placeholder="e.g. GOLD2026"
             autoComplete="off"
             autoCapitalize="characters"
+            autoCorrect="off"
+            spellCheck={false}
+            /* Password managers otherwise offer saved logins here, which is
+               confusing for a short code that isn't a password. */
+            data-lpignore="true"
+            data-1p-ignore="true"
+            data-form-type="other"
           />
           <p className="mt-2 text-xs text-charcoal-600">
             We send this with your invoice or follow-up message. It keeps
@@ -171,19 +177,6 @@ export default function ReviewForm() {
           )}
         </div>
       )}
-
-      {/* Honeypot: hidden from people, irresistible to bots */}
-      <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="rv-website">Website</label>
-        <input
-          id="rv-website"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={form.website}
-          onChange={(e) => set("website", e.target.value)}
-        />
-      </div>
 
       {/* Ratings — the part people actually came to do */}
       <fieldset>
