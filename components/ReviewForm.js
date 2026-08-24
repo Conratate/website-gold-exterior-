@@ -21,6 +21,10 @@ export default function ReviewForm() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [state, setState] = useState({ status: "idle", message: "" });
+  // A code carried in the link is confirmed rather than shown as an empty
+  // box — most customers should never have to type one.
+  const [codeFromLink, setCodeFromLink] = useState(false);
+  const [editingCode, setEditingCode] = useState(false);
 
   // Let a follow-up email deep-link straight to the right service.
   useEffect(() => {
@@ -33,6 +37,7 @@ export default function ReviewForm() {
       ...(presel && SERVICES.some((s) => s.id === presel) ? { serviceId: presel } : {}),
       ...(code ? { accessCode: code } : {}),
     }));
+    if (code) setCodeFromLink(true);
   }, []);
 
   const overall = useMemo(() => averageOf(ratings), [ratings]);
@@ -76,6 +81,7 @@ export default function ReviewForm() {
       if (!res.ok || !data.ok) {
         if (data.code === "BAD_CODE") {
           setErrors({ accessCode: data.error });
+          setEditingCode(true);
           setSubmitting(false);
           return;
         }
@@ -125,28 +131,46 @@ export default function ReviewForm() {
       onSubmit={submit}
       className="relative mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
     >
-      <div className="mb-8 rounded-2xl border border-brand-200 bg-brand-50/60 p-4 sm:p-5">
-        <label className="label" htmlFor="rv-code">
-          Your review code
-        </label>
-        <input
-          id="rv-code"
-          className="input max-w-xs"
-          value={form.accessCode}
-          onChange={(e) => set("accessCode", e.target.value)}
-          placeholder="e.g. GOLD2026"
-          autoComplete="off"
-          autoCapitalize="characters"
-        />
-        <p className="mt-2 text-xs text-charcoal-600">
-          We send this with your invoice or follow-up message. It keeps reviews
-          to people we&apos;ve actually worked for. Not sure? Reply to any email
-          from us and we&apos;ll resend it.
-        </p>
-        {errors.accessCode && (
-          <p className="mt-2 text-sm font-medium text-red-600">{errors.accessCode}</p>
-        )}
-      </div>
+      {codeFromLink && !editingCode && !errors.accessCode ? (
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 sm:px-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-green-800">
+            <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+            Review code applied — nothing to type
+          </div>
+          <button
+            type="button"
+            onClick={() => setEditingCode(true)}
+            className="text-xs font-semibold text-green-800 underline underline-offset-2"
+          >
+            Enter a different code
+          </button>
+        </div>
+      ) : (
+        <div className="mb-8 rounded-2xl border border-brand-200 bg-brand-50/60 p-4 sm:p-5">
+          <label className="label" htmlFor="rv-code">
+            Your review code
+          </label>
+          <input
+            id="rv-code"
+            className="input max-w-xs"
+            value={form.accessCode}
+            onChange={(e) => set("accessCode", e.target.value)}
+            placeholder="e.g. GOLD2026"
+            autoComplete="off"
+            autoCapitalize="characters"
+          />
+          <p className="mt-2 text-xs text-charcoal-600">
+            We send this with your invoice or follow-up message. It keeps
+            reviews to people we&apos;ve actually worked for. Not sure? Reply to
+            any email from us and we&apos;ll resend it.
+          </p>
+          {errors.accessCode && (
+            <p className="mt-2 text-sm font-medium text-red-600">{errors.accessCode}</p>
+          )}
+        </div>
+      )}
 
       {/* Honeypot: hidden from people, irresistible to bots */}
       <div aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden">
