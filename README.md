@@ -21,6 +21,12 @@ Resend-powered quote intake API.
   - Optional photo upload
   - **Live, instant price estimate** that updates as the user fills the form
   - Review screen before submission
+- **Leave a Review** at `/review` — a short form the customer fills out after a
+  job: their name, which service, an overall star rating, and per-part star
+  ratings (professionalism, quality of work, on time, communication, cleanup,
+  value) plus a written review and a publish-consent checkbox. It emails the
+  owner a styled summary with the stars in the subject line, and flags any
+  review scoring 3 or below so it can be followed up on.
 - **`/api/quote` API route** that emails a structured HTML summary (with the
   attached photo and reply-to set to the customer) to your business address
   using [Resend](https://resend.com).
@@ -57,6 +63,7 @@ production):
 | ----------------- | ---------------------------------------------------------------------------------------------------- |
 | `RESEND_API_KEY`  | Your Resend API key. Create one at <https://resend.com/api-keys>.                                    |
 | `QUOTE_TO_EMAIL`  | The business email that should receive quote requests (e.g. `owner@goldexterior.com`).               |
+| `REVIEW_TO_EMAIL`| Where customer reviews are delivered. Optional — falls back to `QUOTE_TO_EMAIL`.                     |
 | `QUOTE_FROM_EMAIL`| The verified sender address, e.g. `"Gold Exterior Quotes <quotes@goldexterior.com>"`. The domain must be verified in Resend. |
 
 ## Setting up Resend (one-time)
@@ -97,7 +104,9 @@ Other hosts that work out of the box: Netlify, Cloudflare Pages, Render, Fly.io.
 
 ```
 app/
-  api/quote/route.js   ← Resend-powered email API
+  api/quote/route.js   ← quote email API
+  api/review/route.js  ← customer review email API
+  review/page.js
   about/page.js
   quote/page.js
   services/page.js
@@ -106,12 +115,14 @@ app/
   globals.css          ← Tailwind + design tokens
 components/
   Footer.js
+  ReviewForm.js        ← Star-rating review form
   Navbar.js
   Logo.js
   QuoteForm.js         ← Multi-step estimate calculator
   ServiceIcon.js
 lib/
   services.js          ← Service catalog + pricing logic (single source of truth)
+  reviews.js           ← Review rating categories + star helpers
 tailwind.config.js
 next.config.js
 ```

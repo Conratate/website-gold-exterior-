@@ -171,9 +171,12 @@ export default function AboutPage() {
                   back the same day.
                 </p>
               </div>
-              <div className="flex justify-start lg:justify-end">
+              <div className="flex flex-wrap justify-start gap-3 lg:justify-end">
                 <Link href="/quote" className="btn-gold">
                   Get My Free Quote
+                </Link>
+                <Link href="/review" className="btn-ghost">
+                  Leave a Review
                 </Link>
               </div>
             </div>
