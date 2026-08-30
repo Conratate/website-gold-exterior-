@@ -18,7 +18,7 @@ export default function ServicesPage() {
         <div className="container-x relative py-14 sm:py-20 lg:py-24">
           <span className="eyebrow-gold">Our Services</span>
           <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">
-            Six professional services. One easy phone call.
+            Seven professional services. One easy phone call.
           </h1>
           <p className="mt-5 max-w-2xl text-brand-100">
             Click any service to jump straight to the details — or skip ahead

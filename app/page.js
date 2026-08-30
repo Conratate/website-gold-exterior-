@@ -27,8 +27,8 @@ export default function HomePage() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
-              lights, gutter cleaning, and car & boat detailing — all from one
-              local team. Get a real quote in under two minutes.
+              lights, gutter cleaning, weed removal and car & boat detailing — all
+              from one local team. Get a real quote in under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -135,7 +135,7 @@ export default function HomePage() {
             <div className="max-w-2xl">
               <span className="eyebrow">What we do</span>
               <h2 className="heading-lg mt-4 font-display font-extrabold">
-                Six services. One team you can trust.
+                Seven services. One team you can trust.
               </h2>
               <p className="mt-4 text-charcoal-600">
                 Whether you need a one-time deep clean or a recurring service,
