@@ -27,7 +27,7 @@ export default function HomePage() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
-              lights, gutter cleaning, weed removal and car & boat detailing — all
+              lights, gutter cleaning, weed removal and car detailing — all
               from one local team. Get a real quote in under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
