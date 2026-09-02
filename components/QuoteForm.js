@@ -143,8 +143,7 @@ export default function QuoteForm() {
       for (const svc of selectedServices) {
         const svcAnswers = answers[svc.id] || {};
         for (const q of svc.questions) {
-          // Conditional questions (e.g. boat length only applies once
-          // "vehicle" is answered "boat") don't block progress while hidden.
+          // A question hidden by its own showIf doesn't block progress.
           if (q.showIf && !q.showIf(svcAnswers)) continue;
           const val = svcAnswers[q.id];
           if (q.type === "checkbox") {
@@ -205,9 +204,8 @@ export default function QuoteForm() {
       const payload = {
         services: selectedServices.map((s) => {
           const svcAnswers = answers[s.id] || {};
-          // Drop stale values from a since-changed conditional branch (e.g.
-          // boat length left over after switching back to car) so the
-          // internal quote email only reflects the customer's final answers.
+          // Drop values left behind by a since-changed conditional branch so
+          // the internal quote email reflects only the customer's final answers.
           const visible = {};
           for (const q of s.questions) {
             if (q.showIf && !q.showIf(svcAnswers)) continue;
@@ -420,8 +418,7 @@ export default function QuoteForm() {
 
                   <div className="mt-5 space-y-5">
                     {svc.questions.map((q) => {
-                      // Conditional follow-up questions (e.g. boat length only
-                      // once "vehicle" is set to boat) stay hidden until relevant.
+                      // Conditional follow-ups stay hidden until relevant.
                       if (q.showIf && !q.showIf(answers[svc.id] || {})) return null;
                       const errKey = `${svc.id}.${q.id}`;
                       const cur = answers[svc.id] && answers[svc.id][q.id];
@@ -704,9 +701,8 @@ export default function QuoteForm() {
                           {s.questions
                             .map((q) => {
                               const svcAnswers = answers[s.id] || {};
-                              // Skip stale answers left over from a since-changed
-                              // conditional branch (e.g. boat length after
-                              // switching back to car).
+                              // Skip answers left over from a since-changed
+                              // conditional branch.
                               if (q.showIf && !q.showIf(svcAnswers)) return null;
                               const v = svcAnswers[q.id];
                               if (!v) return null;

@@ -27,7 +27,7 @@ export default function Footer() {
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#detailing">Detailing</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#detailing">Car Detailing</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#weed-removal">Weed &amp; Debris Removal</Link></li>
           </ul>
         </div>
