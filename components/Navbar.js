@@ -30,6 +30,12 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          <a
+            href="tel:+16509433124"
+            className="text-sm font-semibold text-charcoal-700 transition hover:text-brand-700"
+          >
+            (650) 943-3124
+          </a>
           <Link href="/quote" className="btn-primary">
             Get a Quote
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -63,6 +69,12 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href="tel:+16509433124"
+              className="rounded-lg px-3 py-3 text-base font-semibold text-brand-700 hover:bg-brand-50"
+            >
+              Call (650) 943-3124
+            </a>
             <Link
               href="/quote"
               onClick={() => setOpen(false)}

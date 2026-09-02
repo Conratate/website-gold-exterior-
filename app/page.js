@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 
 // The hero preview mirrors a real quote so the advertised figure can never
@@ -28,7 +28,8 @@ export default function HomePage() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
               Pressure washing, commercial cleaning, graffiti removal, holiday
               lights, gutter cleaning, weed removal and car detailing — all
-              from one local team. Get a real quote in under two minutes.
+              from one local team in Santa Clara County. Get a real quote in
+              under two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -42,11 +43,18 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-gold-300/30 bg-gold-400/10 px-4 py-2 text-sm font-medium text-gold-100">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="mt-6 inline-flex max-w-md items-start gap-3 rounded-2xl border border-gold-300/40 bg-gold-400/15 px-5 py-4">
+              <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
               </svg>
-              Bundle services on one quote and save automatically.
+              <div>
+                <div className="font-display text-lg font-extrabold text-gold-100">
+                  {LAUNCH_OFFER.headline}
+                </div>
+                <div className="mt-0.5 text-sm text-gold-100/80">
+                  {LAUNCH_OFFER.detail}
+                </div>
+              </div>
             </div>
 
             <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">
@@ -55,8 +63,15 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Rating</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">5★</dd>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Call us</dt>
+                <dd className="mt-1">
+                  <a
+                    href="tel:+16509433124"
+                    className="whitespace-nowrap font-display text-xl font-bold text-white hover:text-gold-300 sm:text-2xl"
+                  >
+                    (650) 943-3124
+                  </a>
+                </dd>
               </div>
             </dl>
           </div>
@@ -228,7 +243,7 @@ export default function HomePage() {
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { v: "5★", l: "Average rating" },
+                { v: "Santa Clara", l: "County we serve" },
                 { v: "48hr", l: "Typical lead time" },
                 { v: "1", l: "Trusted local team" },
               ].map((s) => (

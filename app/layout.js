@@ -9,11 +9,11 @@ export const metadata = {
     template: "%s · Gold Exterior",
   },
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Professional exterior property services with instant online quotes.",
+    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, weed removal and car detailing across Santa Clara County. Professional exterior property services with instant online quotes.",
   openGraph: {
     title: "Gold Exterior — Premium Exterior Property Services",
     description:
-      "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing. Get an instant online quote.",
+      "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning and car detailing in Santa Clara County. Get an instant online quote.",
     url: "https://goldexterior.com",
     siteName: "Gold Exterior",
     type: "website",

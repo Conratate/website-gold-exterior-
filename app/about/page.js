@@ -25,7 +25,7 @@ const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
   { y: "Year 1", t: "Expanded into gutter cleaning and detailing" },
   { y: "Year 2", t: "Launched holiday lighting service" },
-  { y: "Today", t: "Serving homeowners across the region" },
+  { y: "Today", t: "Serving homeowners across Santa Clara County" },
 ];
 
 export default function AboutPage() {
@@ -59,7 +59,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="grid grid-cols-2 gap-4">
               {[
-                { v: "5★", l: "Customer rating" },
+                { v: "Santa Clara", l: "County we serve" },
                 { v: "7", l: "Premium services" },
               ].map((s) => (
                 <div
