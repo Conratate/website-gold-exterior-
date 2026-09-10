@@ -5,6 +5,8 @@ import {
   SERVICES,
   calculateTotal,
   formatMoney,
+  BUNDLE_DISCOUNT_THRESHOLD,
+  BUNDLE_DISCOUNT_RATE,
   ROUTING_MINIMUM,
 } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
@@ -259,12 +261,24 @@ export default function QuoteForm() {
         </h2>
         <p className="mt-3 text-charcoal-600">{submitState.message}</p>
         <div className="mt-6 rounded-2xl bg-brand-50 p-5 text-left">
-          <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
-            Your estimate
+          <div className="flex items-center justify-between">
+            <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+              Your estimate
+            </div>
+            {estimate.discountApplied && (
+              <span className="rounded-full bg-gold-400 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-charcoal-900">
+                {estimate.discountLabel} applied
+              </span>
+            )}
           </div>
           <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
             {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
           </div>
+          {estimate.discountApplied && (
+            <p className="mt-1 text-xs font-semibold text-brand-700">
+              Includes {Math.round(estimate.discountRate * 100)}% off — {estimate.discountLabel.toLowerCase()}.
+            </p>
+          )}
           <p className="mt-2 text-xs text-charcoal-500">
             Final pricing confirmed after our team reviews your photo and address.
           </p>
@@ -786,8 +800,15 @@ export default function QuoteForm() {
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative">
-              <div className="text-xs font-semibold uppercase tracking-widest text-brand-200">
-                Estimated price
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-xs font-semibold uppercase tracking-widest text-brand-200">
+                  Estimated price
+                </div>
+                {estimate.discountApplied && (
+                  <span className="rounded-full bg-gold-400 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                    {Math.round(estimate.discountRate * 100)}% {estimate.discountLabel}
+                  </span>
+                )}
               </div>
               <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
                 {estimate.low > 0
@@ -795,8 +816,11 @@ export default function QuoteForm() {
                   : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
-                Live estimate based on your selections. Final pricing confirmed
-                after our team reviews your photo &amp; address.
+                {estimate.discountApplied
+                  ? `Live estimate — ${estimate.discountLabel.toLowerCase()} already applied. Final pricing confirmed after our team reviews your photo & address.`
+                  : estimate.high > 0
+                    ? `Bundle $${BUNDLE_DISCOUNT_THRESHOLD}+ in services and save ${Math.round(BUNDLE_DISCOUNT_RATE * 100)}% automatically.`
+                    : "Live estimate based on your selections. Final pricing confirmed after our team reviews your photo & address."}
               </p>
             </div>
           </div>
@@ -1144,6 +1168,11 @@ function MobileEstimateBar({ estimate }) {
                 </li>
               ))}
           </ul>
+          {estimate.discountApplied && (
+            <p className="mt-2 text-xs font-semibold text-brand-700">
+              {estimate.discountLabel} of {Math.round(estimate.discountRate * 100)}% already applied.
+            </p>
+          )}
         </div>
       )}
 
@@ -1155,9 +1184,16 @@ function MobileEstimateBar({ estimate }) {
           aria-expanded={open}
         >
           <div className="min-w-0">
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-charcoal-500">
-              Estimated price
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-charcoal-500">
+                Estimated price
+              </span>
+              {estimate.discountApplied && (
+                <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                  −{Math.round(estimate.discountRate * 100)}%
+                </span>
+              )}
+            </div>
             <div className="font-display text-xl font-extrabold tabular-nums text-charcoal-900">
               {has ? (
                 `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`

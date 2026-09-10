@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES, calculateTotal, formatMoney } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 
 // The hero preview mirrors a real quote so the advertised figure can never
@@ -41,6 +41,20 @@ export default function HomePage() {
               <Link href="/services" className="btn-ghost">
                 Explore Services
               </Link>
+            </div>
+
+            <div className="mt-6 inline-flex max-w-md items-start gap-3 rounded-2xl border border-gold-300/40 bg-gold-400/15 px-5 py-4">
+              <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 flex-none text-gold-300" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+              </svg>
+              <div>
+                <div className="font-display text-lg font-extrabold text-gold-100">
+                  {LAUNCH_OFFER.headline}
+                </div>
+                <div className="mt-0.5 text-sm text-gold-100/80">
+                  {LAUNCH_OFFER.detail}
+                </div>
+              </div>
             </div>
 
             <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">
@@ -100,14 +114,23 @@ export default function HomePage() {
                     <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
                   </Link>
                   <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-4 sm:p-5">
-                    <div className="text-xs uppercase tracking-widest text-gold-200">
-                      Estimated price
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-xs uppercase tracking-widest text-gold-200">
+                        Estimated price
+                      </div>
+                      {PREVIEW.discountApplied && (
+                        <span className="rounded-full bg-gold-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal-900">
+                          −{Math.round(PREVIEW.discountRate * 100)}%
+                        </span>
+                      )}
                     </div>
                     <div className="mt-1 font-display text-2xl font-extrabold text-white sm:text-3xl">
                       {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
                     </div>
                     <div className="mt-1 text-xs text-brand-100">
-                      Final quote confirmed after photo review.
+                      {PREVIEW.discountApplied
+                        ? `${PREVIEW.discountLabel} applied. Final quote confirmed after photo review.`
+                        : "Final quote confirmed after photo review."}
                     </div>
                   </div>
                   <Link href="/quote" className="btn-gold w-full">
