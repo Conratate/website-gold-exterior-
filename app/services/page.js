@@ -5,7 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export const metadata = {
   title: "Services",
   description:
-    "Mobile car detailing, headlight restoration, pressure washing, yard cleanup and more by Gold Exterior, serving Santa Clara County.",
+    "Pressure washing, holiday lights, yard cleanup, mobile car detailing and more by Gold Exterior, serving Santa Clara County.",
 };
 
 export default function ServicesPage() {

@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { palette } from "@/lib/theme";
 
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
@@ -9,11 +10,11 @@ export const metadata = {
     template: "%s · Gold Exterior",
   },
   description:
-    "Mobile car detailing, headlight restoration, pressure washing, yard cleanup and holiday lights across Santa Clara County. Instant online quotes.",
+    "Pressure washing, holiday lights, yard cleanup and mobile car detailing across Santa Clara County. Instant online quotes.",
   openGraph: {
     title: "Gold Exterior — Premium Exterior Property Services",
     description:
-      "Mobile car detailing and exterior cleaning in Santa Clara County. Get an instant online quote.",
+      "Exterior cleaning and mobile car detailing in Santa Clara County. Get an instant online quote.",
     url: "https://goldexterior.com",
     siteName: "Gold Exterior",
     type: "website",
@@ -21,7 +22,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#11244f",
+  themeColor: palette.themeColor,
   width: "device-width",
   initialScale: 1,
 };

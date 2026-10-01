@@ -5,8 +5,8 @@ import ServiceIcon from "@/components/ServiceIcon";
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
 const PREVIEW = calculateTotal({
-  detailing: { package: "pro" },
-  "headlight-restoration": { condition: "yellowed" },
+  "pressure-washing": { surface: "driveway", size: "small" },
+  "holiday-lights": { tier: "basic" },
 });
 
 export default function HomePage() {
@@ -18,9 +18,9 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-wave-pattern" />
         <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:py-32 lg:grid-cols-2">
           <div>
-            <span className="eyebrow-gold">Mobile Detailing &amp; Exterior Cleaning</span>
+            <span className="eyebrow-gold">Exterior Cleaning &amp; Mobile Detailing</span>
             <h1 className="heading-xl mt-6 font-display font-extrabold">
-              Your car and home,{" "}
+              Your home and car,{" "}
               <span className="bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent">
                 done right.
               </span>
@@ -87,7 +87,7 @@ export default function HomePage() {
                 </div>
                 <div className="mt-5 space-y-3 sm:mt-6 sm:space-y-4">
                   <Link
-                    href="/quote?service=detailing"
+                    href="/quote?service=pressure-washing"
                     className="group block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-gold-300/50 hover:bg-white/10"
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -96,19 +96,19 @@ export default function HomePage() {
                         Quote this →
                       </span>
                     </div>
-                    <div className="mt-1 font-semibold">Car Detailing · Pro Package</div>
+                    <div className="mt-1 font-semibold">Pressure Washing · Driveway (2-Car)</div>
                   </Link>
                   <Link
-                    href="/quote?service=headlight-restoration"
+                    href="/quote?service=holiday-lights"
                     className="group block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-gold-300/50 hover:bg-white/10"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="text-xs text-brand-200">Add-on</div>
+                      <div className="text-xs text-brand-200">Service</div>
                       <span className="text-xs font-semibold text-gold-200 opacity-0 transition group-hover:opacity-100">
                         Quote this →
                       </span>
                     </div>
-                    <div className="mt-1 font-semibold">Headlight Restoration</div>
+                    <div className="mt-1 font-semibold">Holiday Lights · Basic Eaves</div>
                   </Link>
                   <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-4 sm:p-5">
                     <div className="flex items-center justify-between gap-2">

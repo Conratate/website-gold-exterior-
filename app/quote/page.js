@@ -3,7 +3,7 @@ import QuoteForm from "@/components/QuoteForm";
 export const metadata = {
   title: "Get a Quote",
   description:
-    "Build a custom estimate for car detailing, pressure washing, yard cleanup and more in under two minutes.",
+    "Build a custom estimate for pressure washing, holiday lights, yard cleanup, car detailing and more in under two minutes.",
 };
 
 export default function QuotePage() {

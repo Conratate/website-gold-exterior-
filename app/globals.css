@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: #f7faff;
+    --background: #ffffff;
     --foreground: #11151b;
   }
 
@@ -159,5 +159,5 @@
 
 /* Reusable wave divider */
 .wave-divider {
-  background: linear-gradient(180deg, transparent 0%, rgba(56, 141, 245, 0.08) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(242, 196, 36, 0.08) 100%);
 }

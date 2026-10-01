@@ -7,13 +7,13 @@ Resend-powered quote intake API.
 ## Features
 
 - **Home, Services, About Us, Get a Quote** — clean, mobile-first layout with a
-  professional blue/gold/charcoal palette.
+  black/gold palette (swap palettes in `lib/theme.js`).
 - **Service sections** on `/services`, all driven by `lib/services.js`:
+  - Pressure Washing
+  - Holiday Lights Installation
+  - Weed & Junk Removal
   - Car Detailing
   - Headlight Restoration
-  - Pressure Washing
-  - Weed & Junk Removal
-  - Holiday Lights Installation
   - Commercial Cleaning
   - Graffiti Removal
 - **Add-ons** (`ADD_ONS` in `lib/services.js`) only appear in the quote builder

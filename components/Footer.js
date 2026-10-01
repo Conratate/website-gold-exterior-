@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="md:col-span-2">
           <Logo className="text-white [&_span:last-child]:text-white" />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-charcoal-300">
-            Mobile car detailing and exterior cleaning from one local team.
+            Exterior cleaning and mobile car detailing from one local team.
           </p>
           <div className="mt-5 space-y-1 text-sm">
             <a
