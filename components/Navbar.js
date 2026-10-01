@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-charcoal-100 bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-charcoal-950/85 backdrop-blur-md">
       <nav className="container-x flex items-center justify-between py-4">
         <Link href="/" className="flex min-h-[44px] items-center" aria-label="Gold Exterior home">
           <Logo />
@@ -25,14 +25,14 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-semibold text-charcoal-700 transition hover:text-brand-700"
+              className="text-sm font-semibold text-charcoal-200 transition hover:text-gold-400"
             >
               {item.label}
             </Link>
           ))}
           <a
             href="tel:+16509433124"
-            className="text-sm font-semibold text-charcoal-700 transition hover:text-brand-700"
+            className="text-sm font-semibold text-charcoal-200 transition hover:text-gold-400"
           >
             (650) 943-3124
           </a>
@@ -48,7 +48,7 @@ export default function Navbar() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="grid h-11 w-11 place-items-center rounded-lg border border-charcoal-200 text-charcoal-700 md:hidden"
+          className="grid h-11 w-11 place-items-center rounded-lg border border-white/15 text-charcoal-200 md:hidden"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
@@ -57,21 +57,21 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-charcoal-100 bg-white md:hidden">
+        <div className="border-t border-white/10 bg-charcoal-900 md:hidden">
           <div className="container-x flex flex-col gap-1 py-4">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-semibold text-charcoal-800 hover:bg-brand-50 hover:text-brand-700"
+                className="rounded-lg px-3 py-3 text-base font-semibold text-charcoal-100 hover:bg-white/5 hover:text-gold-400"
               >
                 {item.label}
               </Link>
             ))}
             <a
               href="tel:+16509433124"
-              className="rounded-lg px-3 py-3 text-base font-semibold text-brand-700 hover:bg-brand-50"
+              className="rounded-lg px-3 py-3 text-base font-semibold text-gold-400 hover:bg-white/5"
             >
               Call (650) 943-3124
             </a>

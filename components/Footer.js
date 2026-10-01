@@ -1,16 +1,15 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import { SERVICES } from "@/lib/services";
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-charcoal-100 bg-charcoal-950 text-charcoal-200">
+    <footer className="mt-20 border-t border-white/10 bg-charcoal-950 text-charcoal-200">
       <div className="container-x grid gap-12 py-16 md:grid-cols-4">
         <div className="md:col-span-2">
           <Logo className="text-white [&_span:last-child]:text-white" />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-charcoal-300">
-            Gold Exterior is a full-service exterior property care company. We
-            handle the dirty work outside your home so you can enjoy what's
-            inside it.
+            Exterior cleaning and mobile car detailing from one local team.
           </p>
           <div className="mt-5 space-y-1 text-sm">
             <a
@@ -34,13 +33,13 @@ export default function Footer() {
             Services
           </h4>
           <ul className="text-sm">
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#pressure-washing">Pressure Washing</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#commercial-cleaning">Commercial Cleaning</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#graffiti-removal">Graffiti Removal</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#holiday-lights">Holiday Lights</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#gutter-cleaning">Gutter Cleaning</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#detailing">Car Detailing</Link></li>
-            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services#weed-removal">Weed &amp; Debris Removal</Link></li>
+            {SERVICES.map((s) => (
+              <li key={s.id}>
+                <Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href={`/services#${s.id}`}>
+                  {s.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 

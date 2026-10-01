@@ -51,6 +51,12 @@ const ICONS = {
       <circle cx="16.5" cy="17" r="1.5" />
     </>
   ),
+  headlight: (
+    <>
+      <path d="M14 5c-4 0-7 3-7 7s3 7 7 7c2 0 3-3 3-7s-1-7-3-7Z" />
+      <path d="M3 8h3M2 12h4M3 16h3" />
+    </>
+  ),
   sprout: (
     <>
       <path d="M12 21v-8" />

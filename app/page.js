@@ -6,7 +6,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 // drift out of sync with the pricing engine.
 const PREVIEW = calculateTotal({
   "pressure-washing": { surface: "driveway", size: "small" },
-  "gutter-cleaning": { stories: "two" },
+  "holiday-lights": { tier: "basic" },
 });
 
 export default function HomePage() {
@@ -18,18 +18,15 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-wave-pattern" />
         <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:py-32 lg:grid-cols-2">
           <div>
-            <span className="eyebrow-gold">Premium Exterior Services</span>
+            <span className="eyebrow-gold">Exterior Cleaning &amp; Mobile Detailing</span>
             <h1 className="heading-xl mt-6 font-display font-extrabold">
-              The outside of your home,{" "}
+              Your home and car,{" "}
               <span className="bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent">
                 done right.
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-brand-50/90">
-              Pressure washing, commercial cleaning, graffiti removal, holiday
-              lights, gutter cleaning, weed removal and car detailing — all
-              from one local team in Santa Clara County. Get a real quote in
-              under two minutes.
+              We come to you. Santa Clara County. Real quote in two minutes.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/quote" className="btn-gold">
@@ -102,16 +99,16 @@ export default function HomePage() {
                     <div className="mt-1 font-semibold">Pressure Washing · Driveway (2-Car)</div>
                   </Link>
                   <Link
-                    href="/quote?service=gutter-cleaning"
+                    href="/quote?service=holiday-lights"
                     className="group block rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-gold-300/50 hover:bg-white/10"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="text-xs text-brand-200">Add-on</div>
+                      <div className="text-xs text-brand-200">Service</div>
                       <span className="text-xs font-semibold text-gold-200 opacity-0 transition group-hover:opacity-100">
                         Quote this →
                       </span>
                     </div>
-                    <div className="mt-1 font-semibold">Gutter Cleaning · 2-Story</div>
+                    <div className="mt-1 font-semibold">Holiday Lights · Basic Eaves</div>
                   </Link>
                   <div className="rounded-xl border border-gold-300/40 bg-gold-300/10 p-4 sm:p-5">
                     <div className="flex items-center justify-between gap-2">
@@ -150,13 +147,8 @@ export default function HomePage() {
             <div className="max-w-2xl">
               <span className="eyebrow">What we do</span>
               <h2 className="heading-lg mt-4 font-display font-extrabold">
-                Seven services. One team you can trust.
+                One team for all of it.
               </h2>
-              <p className="mt-4 text-charcoal-600">
-                Whether you need a one-time deep clean or a recurring service,
-                Gold Exterior delivers a consistently premium experience —
-                without the hassle of juggling multiple contractors.
-              </p>
             </div>
             <Link href="/services" className="btn-outline">
               See all services
@@ -166,25 +158,16 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service) => (
               <Link key={service.id} href={`/services#${service.id}`} className="card group">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700 transition group-hover:bg-brand-600 group-hover:text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 text-gold-400 transition group-hover:bg-gold-400 group-hover:text-charcoal-900">
                   <ServiceIcon name={service.icon} className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 font-display text-xl font-bold text-charcoal-900">
+                <h3 className="mt-5 font-display text-xl font-bold text-white">
                   {service.name}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal-600">
+                <p className="mt-2 text-sm leading-relaxed text-charcoal-300">
                   {service.tagline}
                 </p>
-                {service.sub && (
-                  <ul className="mt-4 space-y-1 text-xs font-medium text-charcoal-500">
-                    {service.sub.map((s) => (
-                      <li key={s} className="flex items-center gap-2">
-                        <span className="h-1 w-1 rounded-full bg-brand-500" /> {s}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
+                <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-gold-400">
                   Learn more
                   <svg viewBox="0 0 24 24" className="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />
@@ -197,32 +180,27 @@ export default function HomePage() {
       </section>
 
       {/* Why us */}
-      <section className="section bg-brand-50/60">
+      <section className="section bg-white/5">
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="eyebrow">Why Gold Exterior</span>
             <h2 className="heading-lg mt-4 font-display font-extrabold">
-              Premium isn't a price tag — it's a process.
+              Why people pick us.
             </h2>
-            <p className="mt-4 text-charcoal-600">
-              From the moment you submit your quote to the final walkthrough,
-              every step is built around clarity, communication and
-              craftsmanship.
-            </p>
 
             <ul className="mt-8 space-y-5">
               {[
                 {
                   t: "Real, instant pricing",
-                  d: "Skip the back-and-forth. Get a transparent estimate the moment you finish our calculator.",
+                  d: "See your price before you book.",
                 },
                 {
-                  t: "One trusted team for everything",
-                  d: "Bundle services and let one trusted crew handle it all — no scheduling chaos.",
+                  t: "We come to you",
+                  d: "Your driveway, your schedule.",
                 },
                 {
                   t: "Guaranteed satisfaction",
-                  d: "If it isn't right, we'll come back and make it right. Period.",
+                  d: "Not right? We come back and fix it.",
                 },
               ].map((f) => (
                 <li key={f.t} className="flex gap-4">
@@ -232,8 +210,8 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-display text-lg font-bold text-charcoal-900">{f.t}</h3>
-                    <p className="mt-1 text-sm text-charcoal-600">{f.d}</p>
+                    <h3 className="font-display text-lg font-bold text-white">{f.t}</h3>
+                    <p className="mt-1 text-sm text-charcoal-300">{f.d}</p>
                   </div>
                 </li>
               ))}
@@ -247,9 +225,9 @@ export default function HomePage() {
                 { v: "48hr", l: "Typical lead time" },
                 { v: "1", l: "Trusted local team" },
               ].map((s) => (
-                <div key={s.l} className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm">
-                  <div className="font-display text-3xl font-extrabold text-brand-700">{s.v}</div>
-                  <div className="mt-1 text-sm text-charcoal-600">{s.l}</div>
+                <div key={s.l} className="rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm">
+                  <div className="font-display text-3xl font-extrabold text-gold-400">{s.v}</div>
+                  <div className="mt-1 text-sm text-charcoal-300">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -260,18 +238,14 @@ export default function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-x">
-          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative grid gap-8 lg:grid-cols-[2fr_1fr] lg:items-center">
               <div>
                 <h2 className="heading-lg font-display font-extrabold">
-                  Ready for your free, no-obligation quote?
+                  Ready for your free quote?
                 </h2>
-                <p className="mt-3 max-w-xl text-brand-100">
-                  Tell us what you need, snap a photo, and we'll have your
-                  pricing in your inbox before the day is out.
-                </p>
               </div>
               <div className="flex justify-start lg:justify-end">
                 <Link href="/quote" className="btn-gold">

@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   SERVICES,
+  ADD_ONS,
+  ADD_ON_RATE,
+  ALL_SERVICES,
   calculateTotal,
   formatMoney,
   BUNDLE_DISCOUNT_THRESHOLD,
@@ -50,9 +53,10 @@ export default function QuoteForm() {
   }, []);
 
   const selectedServices = useMemo(
-    () => SERVICES.filter((s) => selectedIds.includes(s.id)),
+    () => ALL_SERVICES.filter((s) => selectedIds.includes(s.id)),
     [selectedIds]
   );
+  const hasMainService = selectedServices.some((s) => !s.addOn);
 
   // Live estimate that updates as the form changes
   const estimate = useMemo(() => {
@@ -63,16 +67,23 @@ export default function QuoteForm() {
 
   function toggleService(id) {
     setSelectedIds((prev) => {
-      if (prev.includes(id)) {
-        // also strip its answers
+      let nextIds = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+      // Add-ons can't stand alone — drop them once no real service is left.
+      if (!nextIds.some((x) => SERVICES.find((s) => s.id === x))) {
+        nextIds = [];
+      }
+      const removed = prev.filter((x) => !nextIds.includes(x));
+      if (removed.length) {
+        // also strip their answers
         setAnswers((a) => {
           const n = { ...a };
-          delete n[id];
+          for (const r of removed) delete n[r];
           return n;
         });
-        return prev.filter((x) => x !== id);
       }
-      return [...prev, id];
+      return nextIds;
     });
   }
 
@@ -250,19 +261,19 @@ export default function QuoteForm() {
   // ───────────────────────── Success state
   if (submitState.status === "success") {
     return (
-      <div className="mx-auto max-w-2xl rounded-3xl border border-brand-100 bg-white p-10 text-center shadow-glow">
+      <div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-charcoal-900 p-10 text-center shadow-glow">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gold-400 text-charcoal-900 shadow-gold">
           <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="mt-6 font-display text-3xl font-extrabold text-charcoal-900">
+        <h2 className="mt-6 font-display text-3xl font-extrabold text-white">
           Quote request received
         </h2>
-        <p className="mt-3 text-charcoal-600">{submitState.message}</p>
-        <div className="mt-6 rounded-2xl bg-brand-50 p-5 text-left">
+        <p className="mt-3 text-charcoal-300">{submitState.message}</p>
+        <div className="mt-6 rounded-2xl bg-white/5 p-5 text-left">
           <div className="flex items-center justify-between">
-            <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+            <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
               Your estimate
             </div>
             {estimate.discountApplied && (
@@ -271,15 +282,15 @@ export default function QuoteForm() {
               </span>
             )}
           </div>
-          <div className="mt-1 font-display text-3xl font-extrabold text-charcoal-900">
+          <div className="mt-1 font-display text-3xl font-extrabold text-white">
             {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
           </div>
           {estimate.discountApplied && (
-            <p className="mt-1 text-xs font-semibold text-brand-700">
+            <p className="mt-1 text-xs font-semibold text-gold-400">
               Includes {Math.round(estimate.discountRate * 100)}% off — {estimate.discountLabel.toLowerCase()}.
             </p>
           )}
-          <p className="mt-2 text-xs text-charcoal-500">
+          <p className="mt-2 text-xs text-charcoal-400">
             Final pricing confirmed after our team reviews your photo and address.
           </p>
         </div>
@@ -290,7 +301,7 @@ export default function QuoteForm() {
   return (
     <div className="grid gap-8 pb-24 lg:grid-cols-[1.6fr_1fr] lg:pb-0">
       {/* Form column */}
-      <div className="rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10">
+      <div className="rounded-3xl border border-white/10 bg-charcoal-900 p-6 shadow-sm sm:p-10">
         {/* Progress */}
         <ol className="mb-8 grid grid-cols-5 gap-2 text-[11px] font-semibold uppercase tracking-wider">
           {STEPS.map((s, i) => {
@@ -301,10 +312,10 @@ export default function QuoteForm() {
                 <div
                   className={`grid h-9 w-9 place-items-center rounded-full border transition ${
                     active
-                      ? "border-brand-600 bg-brand-600 text-white"
+                      ? "border-gold-400 bg-gold-400 text-charcoal-900"
                       : done
                         ? "border-gold-400 bg-gold-400 text-charcoal-900"
-                        : "border-charcoal-200 bg-white text-charcoal-400"
+                        : "border-white/15 bg-charcoal-900 text-charcoal-500"
                   }`}
                 >
                   {done ? (
@@ -317,7 +328,7 @@ export default function QuoteForm() {
                 </div>
                 <span
                   className={`mt-2 hidden sm:block ${
-                    active ? "text-brand-700" : done ? "text-charcoal-700" : "text-charcoal-400"
+                    active ? "text-gold-400" : done ? "text-charcoal-200" : "text-charcoal-500"
                   }`}
                 >
                   {s.label}
@@ -330,10 +341,10 @@ export default function QuoteForm() {
         {/* STEP 1: Services */}
         {step === 0 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-2xl font-bold text-white">
               What services do you need?
             </h2>
-            <p className="mt-2 text-sm text-charcoal-600">
+            <p className="mt-2 text-sm text-charcoal-300">
               Pick one or more — bundle as many as you'd like.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -344,8 +355,8 @@ export default function QuoteForm() {
                     key={svc.id}
                     className={`flex cursor-pointer items-start gap-4 rounded-2xl border p-4 transition ${
                       checked
-                        ? "border-brand-500 bg-brand-50 shadow-glow"
-                        : "border-charcoal-200 hover:border-brand-300 hover:bg-brand-50/40"
+                        ? "border-gold-400 bg-white/5 shadow-glow"
+                        : "border-white/15 hover:border-gold-400/60 hover:bg-white/5"
                     }`}
                   >
                     <input
@@ -356,19 +367,19 @@ export default function QuoteForm() {
                     />
                     <div
                       className={`grid h-11 w-11 flex-none place-items-center rounded-xl ${
-                        checked ? "bg-brand-600 text-white" : "bg-brand-50 text-brand-700"
+                        checked ? "bg-gold-400 text-charcoal-900" : "bg-white/5 text-gold-400"
                       }`}
                     >
                       <ServiceIcon name={svc.icon} className="h-5 w-5" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <div className="font-semibold text-charcoal-900">{svc.name}</div>
+                        <div className="font-semibold text-white">{svc.name}</div>
                         <div
                           className={`grid h-5 w-5 place-items-center rounded-full border ${
                             checked
-                              ? "border-brand-600 bg-brand-600 text-white"
-                              : "border-charcoal-300 bg-white text-transparent"
+                              ? "border-gold-400 bg-gold-400 text-charcoal-900"
+                              : "border-white/25 bg-charcoal-900 text-transparent"
                           }`}
                         >
                           <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -376,14 +387,58 @@ export default function QuoteForm() {
                           </svg>
                         </div>
                       </div>
-                      <div className="mt-1 text-xs text-charcoal-600">{svc.tagline}</div>
+                      <div className="mt-1 text-xs text-charcoal-300">{svc.tagline}</div>
                     </div>
                   </label>
                 );
               })}
             </div>
+            {hasMainService && (
+              <div className="mt-8">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
+                  Add-ons · {Math.round(ADD_ON_RATE * 100)}% off with your service
+                </h3>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {ADD_ONS.map((svc) => {
+                    const checked = selectedIds.includes(svc.id);
+                    return (
+                      <label
+                        key={svc.id}
+                        className={`flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed p-3 text-sm transition ${
+                          checked
+                            ? "border-gold-500 bg-gold-400/10"
+                            : "border-white/15 hover:border-gold-400"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={checked}
+                          onChange={() => toggleService(svc.id)}
+                        />
+                        <ServiceIcon name={svc.icon} className="h-5 w-5 flex-none text-charcoal-400" />
+                        <span className="flex-1 font-semibold text-charcoal-100">
+                          + {svc.name}
+                        </span>
+                        <span
+                          className={`grid h-5 w-5 place-items-center rounded-full border ${
+                            checked
+                              ? "border-gold-500 bg-gold-500 text-charcoal-900"
+                              : "border-white/25 bg-charcoal-900 text-transparent"
+                          }`}
+                        >
+                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {errors.services && (
-              <p className="mt-3 text-sm font-medium text-red-600">{errors.services}</p>
+              <p className="mt-3 text-sm font-medium text-red-400">{errors.services}</p>
             )}
           </div>
         )}
@@ -391,26 +446,26 @@ export default function QuoteForm() {
         {/* STEP 2: Details per service */}
         {step === 1 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-2xl font-bold text-white">
               A few quick questions
             </h2>
-            <p className="mt-2 text-sm text-charcoal-600">
+            <p className="mt-2 text-sm text-charcoal-300">
               We use this to calculate your estimate. Pick the closest match —
               we'll confirm before the job.
             </p>
 
             <div className="mt-6 space-y-8">
               {selectedServices.map((svc) => (
-                <div key={svc.id} className="rounded-2xl border border-charcoal-100 bg-charcoal-50/60 p-6">
+                <div key={svc.id} className="rounded-2xl border border-white/10 bg-white/5 p-6">
                   <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-600 text-white">
+                    <div className="grid h-10 w-10 place-items-center rounded-xl bg-gold-400 text-charcoal-900">
                       <ServiceIcon name={svc.icon} className="h-5 w-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
-                        Service
+                      <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
+                        {svc.addOn ? "Add-on" : "Service"}
                       </div>
-                      <div className="font-display text-lg font-bold text-charcoal-900">
+                      <div className="font-display text-lg font-bold text-white">
                         {svc.name}
                       </div>
                     </div>
@@ -459,8 +514,8 @@ export default function QuoteForm() {
                                         key={o.value}
                                         className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
                                           active
-                                            ? "border-brand-500 bg-brand-50 text-brand-800"
-                                            : "border-charcoal-200 bg-white text-charcoal-700 hover:border-brand-300"
+                                            ? "border-gold-400 bg-white/5 text-gold-300"
+                                            : "border-white/15 bg-charcoal-900 text-charcoal-200 hover:border-gold-400/60"
                                         }`}
                                       >
                                         <input
@@ -473,15 +528,15 @@ export default function QuoteForm() {
                                         />
                                         <span
                                           className={`mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full border ${
-                                            active ? "border-brand-600 bg-brand-600" : "border-charcoal-300"
+                                            active ? "border-gold-400 bg-gold-400" : "border-white/25"
                                           }`}
                                         >
-                                          {active && <span className="h-2 w-2 rounded-full bg-white" />}
+                                          {active && <span className="h-2 w-2 rounded-full bg-charcoal-900" />}
                                         </span>
                                         <span>
                                           {o.label}
                                           {hint && (
-                                            <span className="mt-0.5 block text-xs font-normal text-charcoal-500">
+                                            <span className="mt-0.5 block text-xs font-normal text-charcoal-400">
                                               {hint}
                                             </span>
                                           )}
@@ -521,8 +576,8 @@ export default function QuoteForm() {
                                     key={o.value}
                                     className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition ${
                                       active
-                                        ? "border-brand-500 bg-brand-50 text-brand-800"
-                                        : "border-charcoal-200 bg-white text-charcoal-700 hover:border-brand-300"
+                                        ? "border-gold-400 bg-white/5 text-gold-300"
+                                        : "border-white/15 bg-charcoal-900 text-charcoal-200 hover:border-gold-400/60"
                                     }`}
                                   >
                                     <input
@@ -534,8 +589,8 @@ export default function QuoteForm() {
                                     <span
                                       className={`grid h-5 w-5 place-items-center rounded-md border ${
                                         active
-                                          ? "border-brand-600 bg-brand-600 text-white"
-                                          : "border-charcoal-300 text-transparent"
+                                          ? "border-gold-400 bg-gold-400 text-charcoal-900"
+                                          : "border-white/25 text-transparent"
                                       }`}
                                     >
                                       <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -550,7 +605,7 @@ export default function QuoteForm() {
                           )}
 
                           {errors[errKey] && (
-                            <p className="mt-2 text-sm font-medium text-red-600">{errors[errKey]}</p>
+                            <p className="mt-2 text-sm font-medium text-red-400">{errors[errKey]}</p>
                           )}
                         </div>
                       );
@@ -565,10 +620,10 @@ export default function QuoteForm() {
         {/* STEP 3: Contact */}
         {step === 2 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-2xl font-bold text-white">
               Where should we send your quote?
             </h2>
-            <p className="mt-2 text-sm text-charcoal-600">
+            <p className="mt-2 text-sm text-charcoal-300">
               We'll only use this to follow up on your request.
             </p>
 
@@ -623,17 +678,17 @@ export default function QuoteForm() {
         {/* STEP 4: Photo */}
         {step === 3 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-2xl font-bold text-white">
               Add a photo of the job
             </h2>
-            <p className="mt-2 text-sm text-charcoal-600">
+            <p className="mt-2 text-sm text-charcoal-300">
               A picture helps us nail the final price on the first try. Optional,
               but highly recommended.
             </p>
 
-            <label className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-10 text-center transition hover:border-brand-400">
+            <label className="mt-6 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-10 text-center transition hover:border-gold-400/60">
               {compressing ? (
-                <div className="py-6 font-semibold text-brand-700">
+                <div className="py-6 font-semibold text-gold-400">
                   Optimizing your photo…
                 </div>
               ) : photoPreview ? (
@@ -641,19 +696,19 @@ export default function QuoteForm() {
                 <img
                   src={photoPreview}
                   alt="Uploaded preview"
-                  className="max-h-64 w-auto rounded-xl border border-brand-200 shadow-sm"
+                  className="max-h-64 w-auto rounded-xl border border-white/15 shadow-sm"
                 />
               ) : (
                 <>
-                  <div className="grid h-14 w-14 place-items-center rounded-full bg-brand-100 text-brand-700">
+                  <div className="grid h-14 w-14 place-items-center rounded-full bg-white/10 text-gold-400">
                     <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 5v14M5 12h14" />
                     </svg>
                   </div>
-                  <div className="font-semibold text-charcoal-800">
+                  <div className="font-semibold text-charcoal-100">
                     Tap to upload an image
                   </div>
-                  <div className="text-xs text-charcoal-500">
+                  <div className="text-xs text-charcoal-400">
                     JPG, PNG or HEIC · we'll resize it for you
                   </div>
                 </>
@@ -665,13 +720,13 @@ export default function QuoteForm() {
                 className="sr-only"
               />
               {photoPreview && (
-                <span className="text-xs font-semibold text-brand-700">
+                <span className="text-xs font-semibold text-gold-400">
                   Tap again to replace
                 </span>
               )}
             </label>
             {errors.photo && (
-              <p className="mt-3 text-sm font-medium text-red-600">{errors.photo}</p>
+              <p className="mt-3 text-sm font-medium text-red-400">{errors.photo}</p>
             )}
           </div>
         )}
@@ -679,25 +734,25 @@ export default function QuoteForm() {
         {/* STEP 5: Review */}
         {step === 4 && (
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal-900">
+            <h2 className="font-display text-2xl font-bold text-white">
               Review your request
             </h2>
-            <p className="mt-2 text-sm text-charcoal-600">
+            <p className="mt-2 text-sm text-charcoal-300">
               Looks good? We'll fire it off to our team.
             </p>
 
             <div className="mt-6 space-y-5">
-              <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
-                <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+              <div className="rounded-2xl border border-white/10 bg-charcoal-900 p-5">
+                <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                   Services
                 </div>
-                <ul className="mt-2 space-y-2 text-sm text-charcoal-800">
+                <ul className="mt-2 space-y-2 text-sm text-charcoal-100">
                   {selectedServices.map((s) => (
                     <li key={s.id} className="flex items-start gap-2">
-                      <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-brand-500" />
+                      <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-gold-400" />
                       <div>
                         <div className="font-semibold">{s.name}</div>
-                        <div className="text-xs text-charcoal-500">
+                        <div className="text-xs text-charcoal-400">
                           {s.questions
                             .map((q) => {
                               const svcAnswers = answers[s.id] || {};
@@ -725,38 +780,38 @@ export default function QuoteForm() {
                 </ul>
               </div>
 
-              <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
-                <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+              <div className="rounded-2xl border border-white/10 bg-charcoal-900 p-5">
+                <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                   Contact
                 </div>
-                <div className="mt-2 grid gap-1 text-sm text-charcoal-800 sm:grid-cols-2">
-                  <div><span className="text-charcoal-500">Name: </span>{contact.name}</div>
-                  <div><span className="text-charcoal-500">Phone: </span>{contact.phone}</div>
-                  <div className="sm:col-span-2"><span className="text-charcoal-500">Email: </span>{contact.email}</div>
-                  <div className="sm:col-span-2"><span className="text-charcoal-500">Address: </span>{contact.address}</div>
+                <div className="mt-2 grid gap-1 text-sm text-charcoal-100 sm:grid-cols-2">
+                  <div><span className="text-charcoal-400">Name: </span>{contact.name}</div>
+                  <div><span className="text-charcoal-400">Phone: </span>{contact.phone}</div>
+                  <div className="sm:col-span-2"><span className="text-charcoal-400">Email: </span>{contact.email}</div>
+                  <div className="sm:col-span-2"><span className="text-charcoal-400">Address: </span>{contact.address}</div>
                   {contact.notes && (
-                    <div className="sm:col-span-2"><span className="text-charcoal-500">Notes: </span>{contact.notes}</div>
+                    <div className="sm:col-span-2"><span className="text-charcoal-400">Notes: </span>{contact.notes}</div>
                   )}
                 </div>
               </div>
 
               {photoPreview && (
-                <div className="rounded-2xl border border-charcoal-100 bg-white p-5">
-                  <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+                <div className="rounded-2xl border border-white/10 bg-charcoal-900 p-5">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                     Photo
                   </div>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photoPreview}
                     alt="Job preview"
-                    className="mt-2 max-h-48 w-auto rounded-xl border border-charcoal-100"
+                    className="mt-2 max-h-48 w-auto rounded-xl border border-white/10"
                   />
                 </div>
               )}
             </div>
 
             {submitState.status === "error" && (
-              <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              <div className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
                 {submitState.message}
               </div>
             )}
@@ -764,12 +819,12 @@ export default function QuoteForm() {
         )}
 
         {/* Footer / nav buttons */}
-        <div className="mt-10 flex items-center justify-between gap-3 border-t border-charcoal-100 pt-6">
+        <div className="mt-10 flex items-center justify-between gap-3 border-t border-white/10 pt-6">
           <button
             type="button"
             onClick={back}
             disabled={step === 0}
-            className="btn border border-charcoal-200 text-charcoal-700 hover:bg-charcoal-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn border border-white/15 text-charcoal-200 hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Back
           </button>
@@ -795,7 +850,7 @@ export default function QuoteForm() {
 
       {/* Live estimate sidebar */}
       <aside className="hidden self-start lg:sticky lg:top-24 lg:block">
-        <div className="overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-glow">
+        <div className="overflow-hidden rounded-3xl border border-white/10 bg-charcoal-900 shadow-glow">
           <div className="relative bg-charcoal-950 p-6 text-white">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
@@ -827,15 +882,15 @@ export default function QuoteForm() {
 
           <div className="p-6">
             {estimate.breakdown.length === 0 ? (
-              <p className="text-sm text-charcoal-500">
+              <p className="text-sm text-charcoal-400">
                 Pick a service to see your estimate update in real time.
               </p>
             ) : (
-              <ul className="divide-y divide-charcoal-100">
+              <ul className="divide-y divide-white/10">
                 {estimate.breakdown.map((b) => (
                   <li key={b.service} className="flex items-center justify-between py-3 text-sm">
-                    <span className="text-charcoal-700">{b.service}</span>
-                    <span className="font-semibold text-charcoal-900">
+                    <span className="text-charcoal-200">{b.service}</span>
+                    <span className="font-semibold text-white">
                       {formatMoney(b.low)} – {formatMoney(b.high)}
                     </span>
                   </li>
@@ -844,8 +899,8 @@ export default function QuoteForm() {
             )}
 
             {estimate.high > 0 && estimate.high < ROUTING_MINIMUM && (
-              <div className="mt-5 rounded-xl border border-gold-300/60 bg-gold-50 p-4 text-xs text-charcoal-700">
-                <div className="font-semibold text-charcoal-900">
+              <div className="mt-5 rounded-xl border border-gold-300/60 bg-gold-400/10 p-4 text-xs text-charcoal-200">
+                <div className="font-semibold text-white">
                   We&apos;ll pair this with nearby work
                 </div>
                 <p className="mt-1">
@@ -857,9 +912,9 @@ export default function QuoteForm() {
               </div>
             )}
 
-            <div className="mt-5 rounded-xl bg-brand-50 p-4 text-xs text-brand-800">
+            <div className="mt-5 rounded-xl bg-white/5 p-4 text-xs text-gold-300">
               <div className="font-semibold">No surprises, ever.</div>
-              <p className="mt-1 text-brand-700/90">
+              <p className="mt-1 text-charcoal-300">
                 The price you see is the price we'll honor when the job matches
                 what you described.
               </p>
@@ -878,7 +933,7 @@ function Field({ label, error, children, className = "" }) {
     <div className={className}>
       <label className="label">{label}</label>
       {children}
-      {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm font-medium text-red-400">{error}</p>}
     </div>
   );
 }
@@ -951,7 +1006,7 @@ function SizeHelper({ config, options, onApply }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-400 hover:text-gold-300"
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 3L3 21" />
@@ -973,13 +1028,13 @@ function SizeHelper({ config, options, onApply }) {
       </button>
 
       {open && (
-        <div className="mt-3 rounded-xl border border-brand-200 bg-brand-50/60 p-4">
-          <p className="text-xs text-charcoal-600">{config.prompt}</p>
+        <div className="mt-3 rounded-xl border border-white/15 bg-white/5 p-4">
+          <p className="text-xs text-charcoal-300">{config.prompt}</p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
             {isArea ? (
               <>
                 <div>
-                  <label className="block text-xs font-semibold text-charcoal-600">
+                  <label className="block text-xs font-semibold text-charcoal-300">
                     Length (ft)
                   </label>
                   <input
@@ -991,9 +1046,9 @@ function SizeHelper({ config, options, onApply }) {
                     onChange={(e) => setDimA(e.target.value)}
                   />
                 </div>
-                <div className="pb-2 text-sm font-semibold text-charcoal-400">×</div>
+                <div className="pb-2 text-sm font-semibold text-charcoal-500">×</div>
                 <div>
-                  <label className="block text-xs font-semibold text-charcoal-600">
+                  <label className="block text-xs font-semibold text-charcoal-300">
                     Width (ft)
                   </label>
                   <input
@@ -1008,7 +1063,7 @@ function SizeHelper({ config, options, onApply }) {
               </>
             ) : (
               <div>
-                <label className="block text-xs font-semibold text-charcoal-600">
+                <label className="block text-xs font-semibold text-charcoal-300">
                   Total length (ft)
                 </label>
                 <input
@@ -1024,10 +1079,10 @@ function SizeHelper({ config, options, onApply }) {
           </div>
 
           {tier && (
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-brand-200 bg-white px-4 py-3">
-              <div className="text-sm text-charcoal-700">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/15 bg-charcoal-900 px-4 py-3">
+              <div className="text-sm text-charcoal-200">
                 ≈ {Math.round(total).toLocaleString()} {unit} — that&apos;s a{" "}
-                <span className="font-bold text-charcoal-900">{tierLabel}</span>
+                <span className="font-bold text-white">{tierLabel}</span>
               </div>
               <button
                 type="button"
@@ -1035,7 +1090,7 @@ function SizeHelper({ config, options, onApply }) {
                   onApply(tier.value);
                   setOpen(false);
                 }}
-                className="rounded-full bg-brand-600 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-brand-700"
+                className="rounded-full bg-gold-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-charcoal-900 transition hover:bg-gold-300"
               >
                 Use {tierLabel}
               </button>
@@ -1065,12 +1120,12 @@ function PriceLadder({ service, question, answers, current, hints }) {
   const ceiling = Math.max(...rows.map((r) => r.high));
 
   return (
-    <div className="mt-4 rounded-xl border border-charcoal-200 bg-white p-4">
+    <div className="mt-4 rounded-xl border border-white/15 bg-charcoal-900 p-4">
       <div className="flex items-baseline justify-between gap-2">
-        <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+        <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
           Where your job lands
         </h4>
-        <span className="text-[11px] text-charcoal-400">Low to high</span>
+        <span className="text-[11px] text-charcoal-500">Low to high</span>
       </div>
 
       <ul className="mt-3 space-y-1.5">
@@ -1082,7 +1137,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
               className={`rounded-lg border px-3 py-2 transition ${
                 active
                   ? "border-gold-400 bg-gold-400/10"
-                  : "border-transparent bg-charcoal-50"
+                  : "border-transparent bg-white/5"
               }`}
             >
               <div className="flex flex-col gap-1 xs:flex-row xs:items-center xs:justify-between xs:gap-3">
@@ -1091,8 +1146,8 @@ function PriceLadder({ service, question, answers, current, hints }) {
                     <span
                       className={`text-sm ${
                         active
-                          ? "font-bold text-charcoal-900"
-                          : "font-medium text-charcoal-600"
+                          ? "font-bold text-white"
+                          : "font-medium text-charcoal-300"
                       }`}
                     >
                       {r.label}
@@ -1104,14 +1159,14 @@ function PriceLadder({ service, question, answers, current, hints }) {
                     )}
                   </div>
                   {r.hint && (
-                    <div className="mt-0.5 truncate text-xs text-charcoal-500">
+                    <div className="mt-0.5 truncate text-xs text-charcoal-400">
                       {r.hint}
                     </div>
                   )}
                 </div>
                 <div
                   className={`flex-none text-sm tabular-nums ${
-                    active ? "font-bold text-charcoal-900" : "text-charcoal-600"
+                    active ? "font-bold text-white" : "text-charcoal-300"
                   }`}
                 >
                   {r.low === r.high
@@ -1119,10 +1174,10 @@ function PriceLadder({ service, question, answers, current, hints }) {
                     : `${formatMoney(r.low)} – ${formatMoney(r.high)}`}
                 </div>
               </div>
-              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-charcoal-200/70">
+              <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/10">
                 <div
                   className={`h-full rounded-full ${
-                    active ? "bg-gold-400" : "bg-charcoal-300"
+                    active ? "bg-gold-400" : "bg-white/25"
                   }`}
                   style={{ width: `${Math.max(6, (r.high / ceiling) * 100)}%` }}
                 />
@@ -1132,7 +1187,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
         })}
       </ul>
 
-      <p className="mt-3 text-xs text-charcoal-500">
+      <p className="mt-3 text-xs text-charcoal-400">
         Use this to check you picked the right band. We confirm the final
         price in person before any work starts — if your job turns out to sit
         in a different tier, we tell you before we begin, never after.
@@ -1152,8 +1207,8 @@ function MobileEstimateBar({ estimate }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
       {open && has && (
-        <div className="mx-3 mb-1 rounded-2xl border border-charcoal-200 bg-white p-4 shadow-2xl">
-          <ul className="divide-y divide-charcoal-100">
+        <div className="mx-3 mb-1 rounded-2xl border border-white/15 bg-charcoal-900 p-4 shadow-2xl">
+          <ul className="divide-y divide-white/10">
             {estimate.breakdown
               .filter((b) => b.high > 0)
               .map((b) => (
@@ -1161,22 +1216,22 @@ function MobileEstimateBar({ estimate }) {
                   key={b.service}
                   className="flex items-center justify-between gap-3 py-2 text-sm"
                 >
-                  <span className="min-w-0 text-charcoal-700">{b.service}</span>
-                  <span className="flex-none font-semibold tabular-nums text-charcoal-900">
+                  <span className="min-w-0 text-charcoal-200">{b.service}</span>
+                  <span className="flex-none font-semibold tabular-nums text-white">
                     {formatMoney(b.low)} – {formatMoney(b.high)}
                   </span>
                 </li>
               ))}
           </ul>
           {estimate.discountApplied && (
-            <p className="mt-2 text-xs font-semibold text-brand-700">
+            <p className="mt-2 text-xs font-semibold text-gold-400">
               {estimate.discountLabel} of {Math.round(estimate.discountRate * 100)}% already applied.
             </p>
           )}
         </div>
       )}
 
-      <div className="border-t border-charcoal-200 bg-white/95 px-4 py-3 shadow-[0_-4px_20px_rgba(17,21,27,0.08)] backdrop-blur-md">
+      <div className="border-t border-white/15 bg-charcoal-950/95 px-4 py-3 shadow-[0_-4px_20px_rgba(17,21,27,0.08)] backdrop-blur-md">
         <button
           type="button"
           onClick={() => has && setOpen((v) => !v)}
@@ -1185,7 +1240,7 @@ function MobileEstimateBar({ estimate }) {
         >
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-widest text-charcoal-500">
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-charcoal-400">
                 Estimated price
               </span>
               {estimate.discountApplied && (
@@ -1194,11 +1249,11 @@ function MobileEstimateBar({ estimate }) {
                 </span>
               )}
             </div>
-            <div className="font-display text-xl font-extrabold tabular-nums text-charcoal-900">
+            <div className="font-display text-xl font-extrabold tabular-nums text-white">
               {has ? (
                 `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
               ) : (
-                <span className="text-base font-semibold text-charcoal-400">
+                <span className="text-base font-semibold text-charcoal-500">
                   Pick a service to start
                 </span>
               )}
@@ -1206,7 +1261,7 @@ function MobileEstimateBar({ estimate }) {
           </div>
 
           {has && (
-            <span className="flex-none text-xs font-semibold text-brand-700">
+            <span className="flex-none text-xs font-semibold text-gold-400">
               {open ? "Hide" : "Details"}
               <svg
                 viewBox="0 0 24 24"

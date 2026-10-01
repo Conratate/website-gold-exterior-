@@ -5,7 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing by Gold Exterior, serving Santa Clara County.",
+    "Pressure washing, holiday lights, yard cleanup, mobile car detailing and more by Gold Exterior, serving Santa Clara County.",
 };
 
 export default function ServicesPage() {
@@ -18,12 +18,8 @@ export default function ServicesPage() {
         <div className="container-x relative py-14 sm:py-20 lg:py-24">
           <span className="eyebrow-gold">Our Services</span>
           <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">
-            Seven professional services. One easy phone call.
+            What we do.
           </h1>
-          <p className="mt-5 max-w-2xl text-brand-100">
-            Click any service to jump straight to the details — or skip ahead
-            and build your own custom quote.
-          </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             {SERVICES.map((s) => (
@@ -54,19 +50,19 @@ export default function ServicesPage() {
                 <h2 className="heading-lg mt-4 font-display font-extrabold">
                   {service.name}
                 </h2>
-                <p className="mt-3 text-lg text-brand-700">{service.tagline}</p>
-                <p className="mt-5 text-charcoal-600">{service.blurb}</p>
+                <p className="mt-3 text-lg text-gold-400">{service.tagline}</p>
+                <p className="mt-5 text-charcoal-300">{service.blurb}</p>
 
                 {service.sub && (
                   <div className="mt-8">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                       Sub-services
                     </h3>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {service.sub.map((s) => (
                         <span
                           key={s}
-                          className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700"
+                          className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-gold-400"
                         >
                           {s}
                         </span>
@@ -77,7 +73,7 @@ export default function ServicesPage() {
 
                 <ul className="mt-8 space-y-3">
                   {service.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-3 text-sm text-charcoal-700">
+                    <li key={b} className="flex items-start gap-3 text-sm text-charcoal-200">
                       <span className="mt-1 grid h-5 w-5 flex-none place-items-center rounded-full bg-gold-300 text-charcoal-900">
                         <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 13l4 4L19 7" />
@@ -90,20 +86,20 @@ export default function ServicesPage() {
 
                 {service.sizingGuide && (
                   <div className="mt-8">
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                       Sizing guide
                     </h3>
-                    <div className="scroll-x mt-3 rounded-2xl border border-charcoal-100">
-                      <table className="w-full min-w-[420px] border-collapse bg-white text-left text-sm">
+                    <div className="scroll-x mt-3 rounded-2xl border border-white/10">
+                      <table className="w-full min-w-[420px] border-collapse bg-charcoal-900 text-left text-sm">
                         <thead>
-                          <tr className="border-b border-charcoal-100 bg-charcoal-50/70">
-                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                          <tr className="border-b border-white/10 bg-white/5">
+                            <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-400">
                               Tier
                             </th>
                             {service.sizingGuide.columns.map((c) => (
                               <th
                                 key={c}
-                                className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-500"
+                                className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-charcoal-400"
                               >
                                 {c}
                               </th>
@@ -112,12 +108,12 @@ export default function ServicesPage() {
                         </thead>
                         <tbody>
                           {service.sizingGuide.rows.map((row) => (
-                            <tr key={row.tier} className="border-b border-charcoal-100 last:border-0">
-                              <td className="px-4 py-3 font-semibold text-charcoal-900">
+                            <tr key={row.tier} className="border-b border-white/10 last:border-0">
+                              <td className="px-4 py-3 font-semibold text-white">
                                 {row.tier}
                               </td>
                               {row.cells.map((cell, ci) => (
-                                <td key={ci} className="px-4 py-3 text-charcoal-600">
+                                <td key={ci} className="px-4 py-3 text-charcoal-300">
                                   {cell}
                                 </td>
                               ))}
@@ -126,10 +122,8 @@ export default function ServicesPage() {
                         </tbody>
                       </table>
                     </div>
-                    <p className="mt-2 text-xs text-charcoal-500">
-                      Not sure which tier you're in? The quote builder has a
-                      built-in size helper — enter rough measurements and we'll
-                      place you automatically.
+                    <p className="mt-2 text-xs text-charcoal-400">
+                      Not sure? The quote builder can measure it for you.
                     </p>
                   </div>
                 )}
@@ -146,17 +140,17 @@ export default function ServicesPage() {
 
               <div className={i % 2 === 1 ? "lg:order-1" : ""}>
                 <div className="relative">
-                  <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/60 via-brand-100 to-gold-100 blur-2xl" />
-                  <div className="relative overflow-hidden rounded-3xl border border-brand-100 bg-white p-8 shadow-glow">
+                  <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-gold-400/10 via-transparent to-transparent blur-2xl" />
+                  <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-charcoal-900 p-8 shadow-glow">
                     <div className="flex items-center gap-4">
-                      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-brand-600 text-white shadow-glow">
+                      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gold-400 text-charcoal-900 shadow-glow">
                         <ServiceIcon name={service.icon} className="h-7 w-7" />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                        <div className="text-xs font-semibold uppercase tracking-wider text-charcoal-400">
                           Gold Exterior
                         </div>
-                        <div className="font-display text-xl font-bold text-charcoal-900">
+                        <div className="font-display text-xl font-bold text-white">
                           {service.name}
                         </div>
                       </div>
@@ -166,25 +160,24 @@ export default function ServicesPage() {
                       {service.questions.map((q) => (
                         <div
                           key={q.id}
-                          className="rounded-xl border border-charcoal-100 bg-charcoal-50 p-4"
+                          className="rounded-xl border border-white/10 bg-white/5 p-4"
                         >
-                          <div className="text-xs font-semibold uppercase tracking-wider text-charcoal-500">
+                          <div className="text-xs font-semibold uppercase tracking-wider text-charcoal-400">
                             We'll ask
                           </div>
-                          <div className="mt-1 text-sm font-medium text-charcoal-800">
+                          <div className="mt-1 text-sm font-medium text-charcoal-100">
                             {q.label}
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-6 rounded-xl bg-gradient-to-br from-brand-50 to-gold-50 p-5">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-brand-700">
+                    <div className="mt-6 rounded-xl bg-gradient-to-br from-white/5 to-gold-400/10 p-5">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-gold-400">
                         Instant estimate
                       </div>
-                      <div className="mt-1 text-sm text-charcoal-700">
-                        Build your custom quote in under two minutes — no phone
-                        call required.
+                      <div className="mt-1 text-sm text-charcoal-200">
+                        See your price in under two minutes.
                       </div>
                     </div>
                   </div>
@@ -198,16 +191,14 @@ export default function ServicesPage() {
       {/* CTA */}
       <section className="section pt-0">
         <div className="container-x">
-          <div className="rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-10 sm:p-14">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-charcoal-950 p-10 sm:p-14">
             <div className="grid items-center gap-6 lg:grid-cols-[2fr_1fr]">
               <div>
-                <h2 className="heading-lg font-display font-extrabold text-charcoal-900">
+                <h2 className="heading-lg font-display font-extrabold text-white">
                   Don't see what you need?
                 </h2>
-                <p className="mt-3 max-w-2xl text-charcoal-600">
-                  Reach out anyway. If it's exterior, we probably do it — or know
-                  the right local team that does. (We do not offer interior
-                  cleaning.)
+                <p className="mt-3 max-w-2xl text-charcoal-300">
+                  Ask anyway — we'll tell you straight if we can do it.
                 </p>
               </div>
               <div className="flex justify-start lg:justify-end">

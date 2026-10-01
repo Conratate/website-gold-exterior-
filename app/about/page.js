@@ -23,7 +23,7 @@ const VALUES = [
 
 const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
-  { y: "Year 1", t: "Expanded into gutter cleaning and detailing" },
+  { y: "Year 1", t: "Expanded into car detailing" },
   { y: "Year 2", t: "Launched holiday lighting service" },
   { y: "Today", t: "Serving homeowners across Santa Clara County" },
 ];
@@ -43,8 +43,7 @@ export default function AboutPage() {
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
               need a Rolodex of contractors to keep the outside of their home
-              looking great. One trusted local team. Seven premium services.
-              Zero compromise.
+              looking great. One trusted local team. Zero compromise.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/quote" className="btn-gold">
@@ -85,28 +84,26 @@ export default function AboutPage() {
               Built on the work, not the marketing.
             </h2>
           </div>
-          <div className="space-y-5 text-charcoal-700">
+          <div className="space-y-5 text-charcoal-200">
             <p>
               Gold Exterior started where most great service businesses do:
               with a single truck, a single crew, and a long list of frustrated
               homeowners tired of unreliable contractors.
             </p>
             <p>
-              We built our reputation one driveway, one storefront, one gutter at
+              We built our reputation one driveway, one storefront, one car at
               a time — by showing up when we said we would, doing the work the
               right way, and standing behind it.
             </p>
             <p>
-              Today, we offer seven tightly focused exterior services so we can
-              be excellent at all of them — not average at twenty. (And no, we
-              don't do interior cleaning. We'll happily refer you to a local
-              pro who does.)
+              Today, we keep our services tightly focused so we can be
+              excellent at all of them — not average at twenty.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="section bg-brand-50/60">
+      <section className="section bg-white/5">
         <div className="container-x">
           <div className="max-w-2xl">
             <span className="eyebrow">What we stand for</span>
@@ -123,7 +120,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <h3 className="mt-5 font-display text-xl font-bold">{v.t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal-600">{v.d}</p>
+                <p className="mt-2 text-sm leading-relaxed text-charcoal-300">{v.d}</p>
               </div>
             ))}
           </div>
@@ -142,12 +139,12 @@ export default function AboutPage() {
             {TIMELINE.map((m) => (
               <li
                 key={m.y}
-                className="relative rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm"
+                className="relative rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm"
               >
-                <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+                <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
                   {m.y}
                 </div>
-                <div className="mt-2 font-display text-lg font-bold text-charcoal-900">
+                <div className="mt-2 font-display text-lg font-bold text-white">
                   {m.t}
                 </div>
               </li>
