@@ -23,7 +23,7 @@ const VALUES = [
 
 const TIMELINE = [
   { y: "Day 1", t: "Locally founded with one truck and a promise" },
-  { y: "Year 1", t: "Expanded into gutter cleaning and detailing" },
+  { y: "Year 1", t: "Expanded into car detailing" },
   { y: "Year 2", t: "Launched holiday lighting service" },
   { y: "Today", t: "Serving homeowners across Santa Clara County" },
 ];
@@ -43,8 +43,7 @@ export default function AboutPage() {
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
               need a Rolodex of contractors to keep the outside of their home
-              looking great. One trusted local team. Seven premium services.
-              Zero compromise.
+              looking great. One trusted local team. Zero compromise.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/quote" className="btn-gold">
@@ -92,15 +91,13 @@ export default function AboutPage() {
               homeowners tired of unreliable contractors.
             </p>
             <p>
-              We built our reputation one driveway, one storefront, one gutter at
+              We built our reputation one driveway, one storefront, one car at
               a time — by showing up when we said we would, doing the work the
               right way, and standing behind it.
             </p>
             <p>
-              Today, we offer seven tightly focused exterior services so we can
-              be excellent at all of them — not average at twenty. (And no, we
-              don't do interior cleaning. We'll happily refer you to a local
-              pro who does.)
+              Today, we keep our services tightly focused so we can be
+              excellent at all of them — not average at twenty.
             </p>
           </div>
         </div>

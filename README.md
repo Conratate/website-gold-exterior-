@@ -8,15 +8,19 @@ Resend-powered quote intake API.
 
 - **Home, Services, About Us, Get a Quote** — clean, mobile-first layout with a
   professional blue/gold/charcoal palette.
-- **Five service pages** (anchored sections on `/services`):
-  - Pressure Washing (driveways, siding, decks)
-  - Pool Cleaning
-  - Junk Removal
+- **Service sections** on `/services`, all driven by `lib/services.js`:
+  - Car Detailing
+  - Headlight Restoration
+  - Pressure Washing
+  - Weed & Junk Removal
   - Holiday Lights Installation
-  - Gutter Cleaning
+  - Commercial Cleaning
+  - Graffiti Removal
+- **Add-ons** (`ADD_ONS` in `lib/services.js`) only appear in the quote builder
+  once a real service is picked, at a discount. Gutter Cleaning lives here.
 - **Multi-step Estimate Calculator** at `/quote` with:
   - Service checklist (multi-select)
-  - Service-specific dynamic questions (e.g., pool type & size, junk truck size)
+  - Service-specific dynamic questions (e.g., detail package, yard size, junk load)
   - Required contact fields (name, address, phone, email)
   - Optional photo upload
   - **Live, instant price estimate** that updates as the user fills the form

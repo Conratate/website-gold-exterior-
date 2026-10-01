@@ -5,7 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, commercial cleaning, graffiti removal, holiday lights, gutter cleaning, and car detailing by Gold Exterior, serving Santa Clara County.",
+    "Mobile car detailing, headlight restoration, pressure washing, yard cleanup and more by Gold Exterior, serving Santa Clara County.",
 };
 
 export default function ServicesPage() {
@@ -18,12 +18,8 @@ export default function ServicesPage() {
         <div className="container-x relative py-14 sm:py-20 lg:py-24">
           <span className="eyebrow-gold">Our Services</span>
           <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">
-            Seven professional services. One easy phone call.
+            What we do.
           </h1>
-          <p className="mt-5 max-w-2xl text-brand-100">
-            Click any service to jump straight to the details — or skip ahead
-            and build your own custom quote.
-          </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             {SERVICES.map((s) => (
@@ -127,9 +123,7 @@ export default function ServicesPage() {
                       </table>
                     </div>
                     <p className="mt-2 text-xs text-charcoal-500">
-                      Not sure which tier you're in? The quote builder has a
-                      built-in size helper — enter rough measurements and we'll
-                      place you automatically.
+                      Not sure? The quote builder can measure it for you.
                     </p>
                   </div>
                 )}
@@ -183,8 +177,7 @@ export default function ServicesPage() {
                         Instant estimate
                       </div>
                       <div className="mt-1 text-sm text-charcoal-700">
-                        Build your custom quote in under two minutes — no phone
-                        call required.
+                        See your price in under two minutes.
                       </div>
                     </div>
                   </div>
@@ -205,9 +198,7 @@ export default function ServicesPage() {
                   Don't see what you need?
                 </h2>
                 <p className="mt-3 max-w-2xl text-charcoal-600">
-                  Reach out anyway. If it's exterior, we probably do it — or know
-                  the right local team that does. (We do not offer interior
-                  cleaning.)
+                  Ask anyway — we'll tell you straight if we can do it.
                 </p>
               </div>
               <div className="flex justify-start lg:justify-end">

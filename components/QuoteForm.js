@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   SERVICES,
+  ADD_ONS,
+  ADD_ON_RATE,
+  ALL_SERVICES,
   calculateTotal,
   formatMoney,
   BUNDLE_DISCOUNT_THRESHOLD,
@@ -50,9 +53,10 @@ export default function QuoteForm() {
   }, []);
 
   const selectedServices = useMemo(
-    () => SERVICES.filter((s) => selectedIds.includes(s.id)),
+    () => ALL_SERVICES.filter((s) => selectedIds.includes(s.id)),
     [selectedIds]
   );
+  const hasMainService = selectedServices.some((s) => !s.addOn);
 
   // Live estimate that updates as the form changes
   const estimate = useMemo(() => {
@@ -63,16 +67,23 @@ export default function QuoteForm() {
 
   function toggleService(id) {
     setSelectedIds((prev) => {
-      if (prev.includes(id)) {
-        // also strip its answers
+      let nextIds = prev.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...prev, id];
+      // Add-ons can't stand alone — drop them once no real service is left.
+      if (!nextIds.some((x) => SERVICES.find((s) => s.id === x))) {
+        nextIds = [];
+      }
+      const removed = prev.filter((x) => !nextIds.includes(x));
+      if (removed.length) {
+        // also strip their answers
         setAnswers((a) => {
           const n = { ...a };
-          delete n[id];
+          for (const r of removed) delete n[r];
           return n;
         });
-        return prev.filter((x) => x !== id);
       }
-      return [...prev, id];
+      return nextIds;
     });
   }
 
@@ -382,6 +393,50 @@ export default function QuoteForm() {
                 );
               })}
             </div>
+            {hasMainService && (
+              <div className="mt-8">
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+                  Add-ons · {Math.round(ADD_ON_RATE * 100)}% off with your service
+                </h3>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {ADD_ONS.map((svc) => {
+                    const checked = selectedIds.includes(svc.id);
+                    return (
+                      <label
+                        key={svc.id}
+                        className={`flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed p-3 text-sm transition ${
+                          checked
+                            ? "border-gold-500 bg-gold-50"
+                            : "border-charcoal-200 hover:border-gold-400"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="sr-only"
+                          checked={checked}
+                          onChange={() => toggleService(svc.id)}
+                        />
+                        <ServiceIcon name={svc.icon} className="h-5 w-5 flex-none text-charcoal-500" />
+                        <span className="flex-1 font-semibold text-charcoal-800">
+                          + {svc.name}
+                        </span>
+                        <span
+                          className={`grid h-5 w-5 place-items-center rounded-full border ${
+                            checked
+                              ? "border-gold-500 bg-gold-500 text-white"
+                              : "border-charcoal-300 bg-white text-transparent"
+                          }`}
+                        >
+                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {errors.services && (
               <p className="mt-3 text-sm font-medium text-red-600">{errors.services}</p>
             )}
@@ -408,7 +463,7 @@ export default function QuoteForm() {
                     </div>
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
-                        Service
+                        {svc.addOn ? "Add-on" : "Service"}
                       </div>
                       <div className="font-display text-lg font-bold text-charcoal-900">
                         {svc.name}
