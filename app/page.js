@@ -121,6 +121,11 @@ export default function HomePage() {
                         </span>
                       )}
                     </div>
+                    {PREVIEW.discountApplied && (
+                      <div className="mt-1 text-sm text-brand-200 line-through">
+                        {formatMoney(PREVIEW.listLow)} – {formatMoney(PREVIEW.listHigh)}
+                      </div>
+                    )}
                     <div className="mt-1 font-display text-2xl font-extrabold text-white sm:text-3xl">
                       {formatMoney(PREVIEW.low)} – {formatMoney(PREVIEW.high)}
                     </div>

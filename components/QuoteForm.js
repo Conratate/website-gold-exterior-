@@ -282,12 +282,18 @@ export default function QuoteForm() {
               </span>
             )}
           </div>
+          {estimate.discountApplied && (
+            <div className="mt-1 text-sm text-charcoal-500 line-through">
+              {formatRange(estimate.listLow, estimate.listHigh)}
+            </div>
+          )}
           <div className="mt-1 font-display text-3xl font-extrabold text-white">
-            {formatMoney(estimate.low)} – {formatMoney(estimate.high)}
+            {formatRange(estimate.low, estimate.high)}
           </div>
           {estimate.discountApplied && (
             <p className="mt-1 text-xs font-semibold text-gold-400">
-              Includes {Math.round(estimate.discountRate * 100)}% off — {estimate.discountLabel.toLowerCase()}.
+              You save {formatRange(estimate.savingsLow, estimate.savingsHigh)} with the{" "}
+              {estimate.discountLabel.toLowerCase()} ({Math.round(estimate.discountRate * 100)}% off).
             </p>
           )}
           <p className="mt-2 text-xs text-charcoal-400">
@@ -865,14 +871,17 @@ export default function QuoteForm() {
                   </span>
                 )}
               </div>
-              <div className="mt-2 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
-                {estimate.low > 0
-                  ? `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
-                  : "—"}
+              {estimate.discountApplied && (
+                <div className="mt-2 text-sm text-charcoal-400 line-through">
+                  {formatRange(estimate.listLow, estimate.listHigh)}
+                </div>
+              )}
+              <div className="mt-1 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
+                {estimate.low > 0 ? formatRange(estimate.low, estimate.high) : "—"}
               </div>
               <p className="mt-2 text-xs text-brand-100">
                 {estimate.discountApplied
-                  ? `Live estimate — ${estimate.discountLabel.toLowerCase()} already applied. Final pricing confirmed after our team reviews your photo & address.`
+                  ? "Final pricing confirmed after our team reviews your photo & address."
                   : estimate.high > 0
                     ? `Bundle $${BUNDLE_DISCOUNT_THRESHOLD}+ in services and save ${Math.round(BUNDLE_DISCOUNT_RATE * 100)}% automatically.`
                     : "Live estimate based on your selections. Final pricing confirmed after our team reviews your photo & address."}
@@ -886,16 +895,7 @@ export default function QuoteForm() {
                 Pick a service to see your estimate update in real time.
               </p>
             ) : (
-              <ul className="divide-y divide-white/10">
-                {estimate.breakdown.map((b) => (
-                  <li key={b.service} className="flex items-center justify-between py-3 text-sm">
-                    <span className="text-charcoal-200">{b.service}</span>
-                    <span className="font-semibold text-white">
-                      {formatMoney(b.low)} – {formatMoney(b.high)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <PriceBreakdown estimate={estimate} />
             )}
 
             {estimate.high > 0 && estimate.high < ROUTING_MINIMUM && (
@@ -924,6 +924,61 @@ export default function QuoteForm() {
       </aside>
 
       <MobileEstimateBar estimate={estimate} />
+    </div>
+  );
+}
+
+function formatRange(low, high) {
+  return low === high ? formatMoney(low) : `${formatMoney(low)} – ${formatMoney(high)}`;
+}
+
+// Service lines, then the discount, then the total — laid out so the
+// customer can check the math: lines add up to the subtotal, and subtotal
+// minus savings is exactly the estimate shown in the price bar.
+function PriceBreakdown({ estimate }) {
+  const lines = estimate.breakdown.filter((b) => b.high > 0);
+  if (lines.length === 0) return null;
+  const rowClass = "flex items-center justify-between gap-3 py-2.5 text-sm";
+  return (
+    <div className="divide-y divide-white/10">
+      {lines.map((b) => (
+        <div key={b.service} className={rowClass}>
+          <span className="min-w-0 text-charcoal-200">{b.service}</span>
+          <span className="flex-none font-semibold tabular-nums text-white">
+            {formatRange(b.low, b.high)}
+          </span>
+        </div>
+      ))}
+      {estimate.discountApplied && (
+        <>
+          {lines.length > 1 && (
+            <div className={rowClass}>
+              <span className="text-charcoal-300">Subtotal</span>
+              <span className="flex-none tabular-nums text-charcoal-200">
+                {formatRange(estimate.listLow, estimate.listHigh)}
+              </span>
+            </div>
+          )}
+          <div className={rowClass}>
+            <span className="min-w-0 text-gold-400">
+              {estimate.discountLabel} ({Math.round(estimate.discountRate * 100)}% off
+              {/* Add-ons are already discounted, so the cut only covers services. */}
+              {lines.some((b) => b.addOn) ? " services" : ""})
+            </span>
+            <span className="flex-none font-semibold tabular-nums text-gold-400">
+              −{formatRange(estimate.savingsLow, estimate.savingsHigh)}
+            </span>
+          </div>
+        </>
+      )}
+      {(estimate.discountApplied || lines.length > 1) && (
+        <div className={rowClass}>
+          <span className="font-semibold text-white">Total</span>
+          <span className="flex-none font-display font-extrabold tabular-nums text-white">
+            {formatRange(estimate.low, estimate.high)}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -1125,7 +1180,7 @@ function PriceLadder({ service, question, answers, current, hints }) {
         <h4 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
           Where your job lands
         </h4>
-        <span className="text-[11px] text-charcoal-500">Low to high</span>
+        <span className="text-[11px] text-charcoal-500">Before discounts</span>
       </div>
 
       <ul className="mt-3 space-y-1.5">
@@ -1208,26 +1263,7 @@ function MobileEstimateBar({ estimate }) {
     <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
       {open && has && (
         <div className="mx-3 mb-1 rounded-2xl border border-white/15 bg-charcoal-900 p-4 shadow-2xl">
-          <ul className="divide-y divide-white/10">
-            {estimate.breakdown
-              .filter((b) => b.high > 0)
-              .map((b) => (
-                <li
-                  key={b.service}
-                  className="flex items-center justify-between gap-3 py-2 text-sm"
-                >
-                  <span className="min-w-0 text-charcoal-200">{b.service}</span>
-                  <span className="flex-none font-semibold tabular-nums text-white">
-                    {formatMoney(b.low)} – {formatMoney(b.high)}
-                  </span>
-                </li>
-              ))}
-          </ul>
-          {estimate.discountApplied && (
-            <p className="mt-2 text-xs font-semibold text-gold-400">
-              {estimate.discountLabel} of {Math.round(estimate.discountRate * 100)}% already applied.
-            </p>
-          )}
+          <PriceBreakdown estimate={estimate} />
         </div>
       )}
 
@@ -1251,13 +1287,21 @@ function MobileEstimateBar({ estimate }) {
             </div>
             <div className="font-display text-xl font-extrabold tabular-nums text-white">
               {has ? (
-                `${formatMoney(estimate.low)} – ${formatMoney(estimate.high)}`
+                formatRange(estimate.low, estimate.high)
               ) : (
                 <span className="text-base font-semibold text-charcoal-500">
                   Pick a service to start
                 </span>
               )}
             </div>
+            {has && estimate.discountApplied && (
+              <div className="text-xs tabular-nums text-charcoal-400">
+                <span className="line-through">
+                  {formatRange(estimate.listLow, estimate.listHigh)}
+                </span>{" "}
+                before {estimate.discountLabel.toLowerCase()}
+              </div>
+            )}
           </div>
 
           {has && (
