@@ -158,16 +158,16 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICES.map((service) => (
               <Link key={service.id} href={`/services#${service.id}`} className="card group">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700 transition group-hover:bg-brand-600 group-hover:text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 text-gold-400 transition group-hover:bg-gold-400 group-hover:text-charcoal-900">
                   <ServiceIcon name={service.icon} className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 font-display text-xl font-bold text-charcoal-900">
+                <h3 className="mt-5 font-display text-xl font-bold text-white">
                   {service.name}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal-600">
+                <p className="mt-2 text-sm leading-relaxed text-charcoal-300">
                   {service.tagline}
                 </p>
-                <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-700">
+                <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-gold-400">
                   Learn more
                   <svg viewBox="0 0 24 24" className="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />
@@ -180,7 +180,7 @@ export default function HomePage() {
       </section>
 
       {/* Why us */}
-      <section className="section bg-brand-50/60">
+      <section className="section bg-white/5">
         <div className="container-x grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="eyebrow">Why Gold Exterior</span>
@@ -210,8 +210,8 @@ export default function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-display text-lg font-bold text-charcoal-900">{f.t}</h3>
-                    <p className="mt-1 text-sm text-charcoal-600">{f.d}</p>
+                    <h3 className="font-display text-lg font-bold text-white">{f.t}</h3>
+                    <p className="mt-1 text-sm text-charcoal-300">{f.d}</p>
                   </div>
                 </li>
               ))}
@@ -225,9 +225,9 @@ export default function HomePage() {
                 { v: "48hr", l: "Typical lead time" },
                 { v: "1", l: "Trusted local team" },
               ].map((s) => (
-                <div key={s.l} className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm">
-                  <div className="font-display text-3xl font-extrabold text-brand-700">{s.v}</div>
-                  <div className="mt-1 text-sm text-charcoal-600">{s.l}</div>
+                <div key={s.l} className="rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm">
+                  <div className="font-display text-3xl font-extrabold text-gold-400">{s.v}</div>
+                  <div className="mt-1 text-sm text-charcoal-300">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
       {/* CTA */}
       <section className="section">
         <div className="container-x">
-          <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
             <div className="relative grid gap-8 lg:grid-cols-[2fr_1fr] lg:items-center">

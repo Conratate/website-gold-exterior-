@@ -7,7 +7,7 @@ Resend-powered quote intake API.
 ## Features
 
 - **Home, Services, About Us, Get a Quote** — clean, mobile-first layout with a
-  black/gold palette (swap palettes in `lib/theme.js`).
+  all-black site with a yellow accent.
 - **Service sections** on `/services`, all driven by `lib/services.js`:
   - Pressure Washing
   - Holiday Lights Installation

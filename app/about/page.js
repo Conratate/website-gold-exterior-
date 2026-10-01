@@ -84,7 +84,7 @@ export default function AboutPage() {
               Built on the work, not the marketing.
             </h2>
           </div>
-          <div className="space-y-5 text-charcoal-700">
+          <div className="space-y-5 text-charcoal-200">
             <p>
               Gold Exterior started where most great service businesses do:
               with a single truck, a single crew, and a long list of frustrated
@@ -103,7 +103,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section bg-brand-50/60">
+      <section className="section bg-white/5">
         <div className="container-x">
           <div className="max-w-2xl">
             <span className="eyebrow">What we stand for</span>
@@ -120,7 +120,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <h3 className="mt-5 font-display text-xl font-bold">{v.t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-charcoal-600">{v.d}</p>
+                <p className="mt-2 text-sm leading-relaxed text-charcoal-300">{v.d}</p>
               </div>
             ))}
           </div>
@@ -139,12 +139,12 @@ export default function AboutPage() {
             {TIMELINE.map((m) => (
               <li
                 key={m.y}
-                className="relative rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm"
+                className="relative rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm"
               >
-                <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+                <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
                   {m.y}
                 </div>
-                <div className="mt-2 font-display text-lg font-bold text-charcoal-900">
+                <div className="mt-2 font-display text-lg font-bold text-white">
                   {m.t}
                 </div>
               </li>

@@ -4,7 +4,7 @@ import { SERVICES } from "@/lib/services";
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-charcoal-100 bg-charcoal-950 text-charcoal-200">
+    <footer className="mt-20 border-t border-white/10 bg-charcoal-950 text-charcoal-200">
       <div className="container-x grid gap-12 py-16 md:grid-cols-4">
         <div className="md:col-span-2">
           <Logo className="text-white [&_span:last-child]:text-white" />

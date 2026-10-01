@@ -96,27 +96,27 @@ export default function ReviewForm() {
 
   if (state.status === "success") {
     return (
-      <div className="mx-auto max-w-2xl rounded-3xl border border-brand-100 bg-white p-8 text-center shadow-glow sm:p-10">
+      <div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-charcoal-900 p-8 text-center shadow-glow sm:p-10">
         <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-gold-400 text-charcoal-900 shadow-gold">
           <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="heading-lg mt-6 font-display font-extrabold text-charcoal-900">
+        <h2 className="heading-lg mt-6 font-display font-extrabold text-white">
           Thank you — that genuinely helps.
         </h2>
-        <p className="mt-3 text-charcoal-600">
+        <p className="mt-3 text-charcoal-300">
           {overall >= 4
             ? "We're glad we got it right. If you'd share the same words with a neighbour, that means more to a local business than any advert we could buy."
             : "We'd rather hear this than not. Someone will read it properly and reach out if there's something we should put right."}
         </p>
-        <div className="mt-6 rounded-2xl bg-brand-50 p-5">
-          <div className="text-xs font-semibold uppercase tracking-widest text-brand-700">
+        <div className="mt-6 rounded-2xl bg-white/5 p-5">
+          <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
             Your rating
           </div>
           <div className="mt-2 flex items-center justify-center gap-3">
             <Stars value={overall} readOnly />
-            <span className="font-display text-2xl font-extrabold text-charcoal-900">
+            <span className="font-display text-2xl font-extrabold text-white">
               {overall.toFixed(1)}
             </span>
           </div>
@@ -128,11 +128,11 @@ export default function ReviewForm() {
   return (
     <form
       onSubmit={submit}
-      className="mx-auto max-w-3xl rounded-3xl border border-charcoal-100 bg-white p-6 shadow-sm sm:p-10"
+      className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-charcoal-900 p-6 shadow-sm sm:p-10"
     >
       {codeFromLink && !editingCode && !errors.accessCode ? (
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 sm:px-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-green-800">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-green-500/30 bg-green-500/10 px-4 py-3 sm:px-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-green-300">
             <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 13l4 4L19 7" />
             </svg>
@@ -141,13 +141,13 @@ export default function ReviewForm() {
           <button
             type="button"
             onClick={() => setEditingCode(true)}
-            className="text-xs font-semibold text-green-800 underline underline-offset-2"
+            className="text-xs font-semibold text-green-300 underline underline-offset-2"
           >
             Enter a different code
           </button>
         </div>
       ) : (
-        <div className="mb-8 rounded-2xl border border-brand-200 bg-brand-50/60 p-4 sm:p-5">
+        <div className="mb-8 rounded-2xl border border-white/15 bg-white/5 p-4 sm:p-5">
           <label className="label" htmlFor="rv-code">
             Your review code
           </label>
@@ -167,23 +167,23 @@ export default function ReviewForm() {
             data-1p-ignore="true"
             data-form-type="other"
           />
-          <p className="mt-2 text-xs text-charcoal-600">
+          <p className="mt-2 text-xs text-charcoal-300">
             We send this with your invoice or follow-up message. It keeps
             reviews to people we&apos;ve actually worked for. Not sure? Reply to
             any email from us and we&apos;ll resend it.
           </p>
           {errors.accessCode && (
-            <p className="mt-2 text-sm font-medium text-red-600">{errors.accessCode}</p>
+            <p className="mt-2 text-sm font-medium text-red-400">{errors.accessCode}</p>
           )}
         </div>
       )}
 
       {/* Ratings — the part people actually came to do */}
       <fieldset>
-        <legend className="heading-md font-display font-bold text-charcoal-900">
+        <legend className="heading-md font-display font-bold text-white">
           How did we do?
         </legend>
-        <p className="mt-2 text-sm text-charcoal-600">
+        <p className="mt-2 text-sm text-charcoal-300">
           Rate whichever categories matter to you — skip any that don&apos;t apply.
         </p>
 
@@ -191,12 +191,12 @@ export default function ReviewForm() {
           {REVIEW_DIMENSIONS.map((d) => (
             <div
               key={d.id}
-              className="rounded-2xl border border-charcoal-100 bg-charcoal-50/60 p-4"
+              className="rounded-2xl border border-white/10 bg-white/5 p-4"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <div className="font-semibold text-charcoal-900">{d.label}</div>
-                  <div className="mt-0.5 text-xs text-charcoal-500">{d.hint}</div>
+                  <div className="font-semibold text-white">{d.label}</div>
+                  <div className="mt-0.5 text-xs text-charcoal-400">{d.hint}</div>
                 </div>
                 <Stars
                   value={ratings[d.id] || 0}
@@ -209,23 +209,23 @@ export default function ReviewForm() {
         </div>
 
         {errors.ratings && (
-          <p className="mt-3 text-sm font-medium text-red-600">{errors.ratings}</p>
+          <p className="mt-3 text-sm font-medium text-red-400">{errors.ratings}</p>
         )}
 
         {overall > 0 && (
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold-300/60 bg-gold-50 px-5 py-4">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold-300/60 bg-gold-400/10 px-5 py-4">
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-500">
+              <div className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                 Overall
               </div>
-              <div className="mt-0.5 text-sm text-charcoal-600">
+              <div className="mt-0.5 text-sm text-charcoal-300">
                 {starLabel(overall)} · averaged from {answered}{" "}
                 {answered === 1 ? "category" : "categories"}
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Stars value={overall} readOnly />
-              <span className="font-display text-2xl font-extrabold tabular-nums text-charcoal-900">
+              <span className="font-display text-2xl font-extrabold tabular-nums text-white">
                 {overall.toFixed(1)}
               </span>
             </div>
@@ -258,7 +258,7 @@ export default function ReviewForm() {
           placeholder="What went well, and anything we could do better next time…"
           maxLength={1500}
         />
-        <div className="mt-1 text-right text-xs text-charcoal-400">
+        <div className="mt-1 text-right text-xs text-charcoal-500">
           {form.body.length}/1500
         </div>
       </div>
@@ -298,24 +298,24 @@ export default function ReviewForm() {
         </Field>
       </div>
 
-      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-charcoal-200 p-4 transition hover:border-brand-300">
+      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-white/15 p-4 transition hover:border-gold-400/60">
         <input
           type="checkbox"
           checked={form.consent}
           onChange={(e) => set("consent", e.target.checked)}
-          className="mt-0.5 h-5 w-5 flex-none accent-brand-600"
+          className="mt-0.5 h-5 w-5 flex-none accent-gold-400"
         />
-        <span className="text-sm text-charcoal-700">
+        <span className="text-sm text-charcoal-200">
           Gold Exterior may publish this review, with my first name and last
           initial, on their website.
-          <span className="mt-0.5 block text-xs text-charcoal-500">
+          <span className="mt-0.5 block text-xs text-charcoal-400">
             Leave this unticked and your feedback stays private — we&apos;ll still read it.
           </span>
         </span>
       </label>
 
       {state.status === "error" && (
-        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mt-5 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
           {state.message}
         </div>
       )}
@@ -352,7 +352,7 @@ function Stars({ value = 0, onChange, readOnly = false, name }) {
           aria-label={`${n} star${n > 1 ? "s" : ""}`}
           aria-pressed={value === n}
           name={name}
-          className="grid h-11 w-11 place-items-center rounded-lg transition hover:bg-gold-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+          className="grid h-11 w-11 place-items-center rounded-lg transition hover:bg-gold-400/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
         >
           <Star filled={shown >= n} className="h-6 w-6" />
         </button>
@@ -365,7 +365,7 @@ function Star({ filled, className }) {
   return (
     <svg
       viewBox="0 0 24 24"
-      className={`${className} ${filled ? "text-gold-400" : "text-charcoal-300"}`}
+      className={`${className} ${filled ? "text-gold-400" : "text-charcoal-600"}`}
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
       strokeWidth="1.8"
@@ -383,7 +383,7 @@ function Field({ label, error, children, className = "" }) {
     <div className={className}>
       <label className="label">{label}</label>
       {children}
-      {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm font-medium text-red-400">{error}</p>}
     </div>
   );
 }

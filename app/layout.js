@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { palette } from "@/lib/theme";
 
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
@@ -22,7 +21,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: palette.themeColor,
+  themeColor: "#0e0d0c",
   width: "device-width",
   initialScale: 1,
 };
@@ -38,7 +37,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-white text-charcoal-900 antialiased">
+      <body className="min-h-screen bg-charcoal-950 text-white antialiased">
         <Navbar />
         <main>{children}</main>
         <Footer />
