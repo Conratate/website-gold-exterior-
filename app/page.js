@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import { CHARITY, charityLine } from "@/lib/promos";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -60,14 +61,9 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Call us</dt>
-                <dd className="mt-1">
-                  <a
-                    href="tel:+16509433124"
-                    className="whitespace-nowrap font-display text-xl font-bold text-white hover:text-gold-300 sm:text-2xl"
-                  >
-                    (650) 943-3124
-                  </a>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Every job</dt>
+                <dd className="mt-1 font-display text-2xl font-bold text-white">
+                  {CHARITY.percent}% to charity
                 </dd>
               </div>
             </dl>
@@ -201,6 +197,10 @@ export default function HomePage() {
                 {
                   t: "Guaranteed satisfaction",
                   d: "Not right? We come back and fix it.",
+                },
+                {
+                  t: "We give back",
+                  d: charityLine(),
                 },
               ].map((f) => (
                 <li key={f.t} className="flex gap-4">
