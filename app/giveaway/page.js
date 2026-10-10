@@ -86,7 +86,7 @@ export default function GiveawayPage() {
             </h2>
             <p className="mt-4 text-charcoal-300">
               It comes out of what we make — your price doesn't go up.
-              {CHARITY.name && ` This year it goes to ${CHARITY.name}.`}
+              {CHARITY.name && ` It goes to ${CHARITY.name}, our local food bank.`}
             </p>
           </div>
           <div>
