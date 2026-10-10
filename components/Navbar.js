@@ -14,7 +14,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-charcoal-950/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 bg-charcoal-950/85 backdrop-blur-md">
       <nav className="container-x flex items-center justify-between py-4">
         <Link href="/" className="flex min-h-[44px] items-center" aria-label="Gold Exterior home">
           <Logo />

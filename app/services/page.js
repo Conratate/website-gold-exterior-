@@ -15,6 +15,7 @@ export default function ServicesPage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-header-fade" />
         <div className="container-x relative py-14 sm:py-20 lg:py-24">
           <span className="eyebrow-gold">Our Services</span>
           <h1 className="heading-xl mt-5 max-w-3xl font-display font-extrabold">

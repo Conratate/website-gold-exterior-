@@ -34,6 +34,7 @@ export default function AboutPage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-header-fade" />
         <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-2">
           <div>
             <span className="eyebrow-gold">About Us</span>
