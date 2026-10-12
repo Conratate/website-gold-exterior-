@@ -275,8 +275,8 @@ export default function QuoteForm() {
         <p className="mt-3 text-charcoal-300">{submitState.message}</p>
         {submitState.giveawayEntry && (
           <p className="mt-4 rounded-2xl border border-gold-300/40 bg-gold-400/15 px-5 py-3 text-sm font-semibold text-gold-100">
-            You're entered to {GIVEAWAY.headline.toLowerCase()}. Winner drawn{" "}
-            {GIVEAWAY.drawingLabel}.
+            You're entered to {GIVEAWAY.headline.toLowerCase()}. Winner is drawn
+            when the countdown on our giveaway page hits zero.
           </p>
         )}
         <div className="mt-6 rounded-2xl bg-white/5 p-5 text-left">

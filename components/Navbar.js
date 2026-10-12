@@ -5,9 +5,9 @@ import { useState } from "react";
 import Logo from "./Logo";
 
 const NAV = [
-  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About Us" },
+  { href: "/charity", label: "Charity" },
 ];
 
 export default function Navbar() {

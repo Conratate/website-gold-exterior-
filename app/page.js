@@ -63,8 +63,13 @@ export default function HomePage() {
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-widest text-brand-200">Every job</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">
-                  {CHARITY.percent}% to charity
+                <dd className="mt-1">
+                  <Link
+                    href="/charity"
+                    className="font-display text-2xl font-bold text-white underline decoration-gold-400/60 underline-offset-4 hover:text-gold-300"
+                  >
+                    {CHARITY.percent}% to charity
+                  </Link>
                 </dd>
               </div>
             </dl>

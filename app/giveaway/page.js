@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { GIVEAWAY, CHARITY } from "@/lib/promos";
 import { formatMoney } from "@/lib/services";
+import Countdown from "@/components/Countdown";
 
 export const metadata = {
-  title: "Free Job Giveaway",
-  description: `Win a free Gold Exterior job worth up to ${formatMoney(
-    GIVEAWAY.prizeValue
-  )}. Get a free quote to enter — no purchase necessary.`,
+  title: "Giveaway",
+  description: `${GIVEAWAY.headline}. Get a free quote to enter — no purchase necessary.`,
 };
 
 const STEPS = [
@@ -20,19 +19,21 @@ const STEPS = [
   },
   {
     t: "Winner drawn",
-    d: `We pick one winner at random on ${GIVEAWAY.drawingLabel}.`,
+    d: "When the countdown hits zero, we pick one winner at random.",
   },
 ];
 
 const RULES = [
   "No purchase necessary. Requesting a free quote is the only way to enter, and you don't have to book or pay for a job to win.",
   "One entry per household. Extra quote requests from the same person, email, phone number or address don't add entries.",
-  `Entries close ${GIVEAWAY.endsLabel} at 11:59 PM Pacific. One winner is picked at random from eligible entries on ${GIVEAWAY.drawingLabel}.`,
+  `Entries close ${GIVEAWAY.endsLabel} at 11:59 PM Pacific, when the countdown ends. One winner is then picked at random from eligible entries.`,
   "Open to residents of Santa Clara County, CA who are 18 or older.",
-  `Prize: one Gold Exterior job of the winner's choice, valued up to ${formatMoney(
+  `Prize: the winner's choice of ${formatMoney(
+    GIVEAWAY.cashValue
+  )} cash, or one Gold Exterior job valued up to ${formatMoney(
     GIVEAWAY.prizeValue
-  )}. If the job costs more, the prize is taken off the total. No cash value, not transferable.`,
-  `The prize must be scheduled and completed by ${GIVEAWAY.redeemByLabel}.`,
+  )} (if the job costs more, the prize comes off the total). Not transferable.`,
+  `Cash is paid by Zelle, Venmo or check within 14 days of the winner confirming. A job prize must be completed by ${GIVEAWAY.redeemByLabel}.`,
   "We'll contact the winner by phone and email. If we can't reach them within 7 days, we draw again.",
   "Odds depend on how many eligible entries we receive.",
 ];
@@ -50,9 +51,12 @@ export default function GiveawayPage() {
             {GIVEAWAY.headline}.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-brand-100">
-            Get a free quote before {GIVEAWAY.endsLabel} and you're in. No
-            purchase needed.
+            Your pick: cash, or a free job. Get a free quote before the timer
+            runs out and you're in. No purchase needed.
           </p>
+          <div className="mt-8">
+            <Countdown />
+          </div>
           <div className="mt-8">
             <Link href="/quote" className="btn-gold">
               Get My Free Quote
@@ -89,6 +93,9 @@ export default function GiveawayPage() {
               It comes out of what we make — your price doesn't go up.
               {CHARITY.name && ` It goes to ${CHARITY.name}, our local food bank.`}
             </p>
+            <Link href="/charity" className="btn-outline mt-6">
+              About our charity
+            </Link>
           </div>
           <div>
             <h2 className="font-display text-lg font-bold text-white">Official rules</h2>
