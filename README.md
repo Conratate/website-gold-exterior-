@@ -125,6 +125,10 @@ next.config.js
 - **Service catalog & pricing** lives in `lib/services.js`. Tweak the `price`
   function on any service to adjust your math. The Home, Services, and Quote
   pages all read from this file.
+- **Giveaway & charity pledge** live in `lib/promos.js`: prize value, entry
+  deadline, drawing date and the charity name. The top banner hides itself
+  after the deadline. Every quote request during the giveaway is an entry, and
+  its email arrives tagged `[Giveaway]`.
 - **Colors** are defined in `tailwind.config.js` under `theme.extend.colors`
   (`brand`, `gold`, `charcoal`).
 - **Copy** lives in each page file under `app/`.

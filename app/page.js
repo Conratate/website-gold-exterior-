@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import { CHARITY, charityLine } from "@/lib/promos";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -16,6 +17,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-header-fade" />
         <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:py-32 lg:grid-cols-2">
           <div>
             <span className="eyebrow-gold">Exterior Cleaning &amp; Mobile Detailing</span>
@@ -60,14 +62,14 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Call us</dt>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Every job</dt>
                 <dd className="mt-1">
-                  <a
-                    href="tel:+16509433124"
-                    className="whitespace-nowrap font-display text-xl font-bold text-white hover:text-gold-300 sm:text-2xl"
+                  <Link
+                    href="/charity"
+                    className="font-display text-2xl font-bold text-white underline decoration-gold-400/60 underline-offset-4 hover:text-gold-300"
                   >
-                    (650) 943-3124
-                  </a>
+                    {CHARITY.percent}% to charity
+                  </Link>
                 </dd>
               </div>
             </dl>
@@ -201,6 +203,10 @@ export default function HomePage() {
                 {
                   t: "Guaranteed satisfaction",
                   d: "Not right? We come back and fix it.",
+                },
+                {
+                  t: "We give back",
+                  d: charityLine(),
                 },
               ].map((f) => (
                 <li key={f.t} className="flex gap-4">

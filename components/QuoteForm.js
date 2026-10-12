@@ -13,6 +13,7 @@ import {
   ROUTING_MINIMUM,
 } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
+import { GIVEAWAY, giveawayOpen } from "@/lib/promos";
 
 const STEPS = [
   { id: "services", label: "Services" },
@@ -247,6 +248,7 @@ export default function QuoteForm() {
         status: "success",
         message:
           "Thanks! Your quote request is in. We'll be in touch by email shortly.",
+        giveawayEntry: giveawayOpen(),
       });
     } catch (err) {
       setSubmitState({
@@ -271,6 +273,12 @@ export default function QuoteForm() {
           Quote request received
         </h2>
         <p className="mt-3 text-charcoal-300">{submitState.message}</p>
+        {submitState.giveawayEntry && (
+          <p className="mt-4 rounded-2xl border border-gold-300/40 bg-gold-400/15 px-5 py-3 text-sm font-semibold text-gold-100">
+            You're entered to {GIVEAWAY.headline.toLowerCase()}. Winner is drawn
+            when the countdown on our giveaway page hits zero.
+          </p>
+        )}
         <div className="mt-6 rounded-2xl bg-white/5 p-5 text-left">
           <div className="flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
