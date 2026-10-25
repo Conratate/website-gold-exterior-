@@ -65,8 +65,22 @@ module.exports = {
       backgroundImage: {
         "hero-gradient":
           "linear-gradient(135deg, rgba(10,9,8,0.97) 0%, rgba(23,21,18,0.94) 50%, rgba(43,40,35,0.9) 100%)",
+        // Starts at the header's color so the header runs into each page's
+        // hero with no visible edge.
+        "header-fade":
+          "linear-gradient(to bottom, #0e0d0c 0%, rgba(14,13,12,0) 100%)",
         "wave-pattern":
           "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(242,196,36,0.10) 0, transparent 45%)",
+      },
+      keyframes: {
+        pop: {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "70%": { transform: "scale(1.25)", opacity: "1" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+      },
+      animation: {
+        pop: "pop 300ms ease-out both",
       },
       boxShadow: {
         glow: "0 20px 60px -20px rgba(0, 0, 0, 0.6)",

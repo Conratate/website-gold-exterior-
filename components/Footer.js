@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import { SERVICES } from "@/lib/services";
+import { charityLine } from "@/lib/promos";
 
 export default function Footer() {
   return (
@@ -9,7 +10,8 @@ export default function Footer() {
         <div className="md:col-span-2">
           <Logo className="text-white [&_span:last-child]:text-white" />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-charcoal-300">
-            Exterior cleaning and mobile car detailing from one local team.
+            Exterior cleaning and mobile car detailing from one local team.{" "}
+            {charityLine()}
           </p>
           <div className="mt-5 space-y-1 text-sm">
             <a
@@ -52,6 +54,8 @@ export default function Footer() {
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/services">Services</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/about">About Us</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/quote">Get a Quote</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/giveaway">Giveaway</Link></li>
+            <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/charity">Our Charity</Link></li>
             <li><Link className="-mx-2 inline-flex min-h-[44px] items-center px-2 py-2 hover:text-white" href="/review">Leave a Review</Link></li>
           </ul>
         </div>

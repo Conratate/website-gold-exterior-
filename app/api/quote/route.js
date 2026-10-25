@@ -1,12 +1,13 @@
 import nodemailer from "nodemailer";
 import { formatMoney } from "@/lib/services";
+import { giveawayOpen } from "@/lib/promos";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 // Give the SMTP handshake room to complete on serverless (Hobby allows up to 60s).
 export const maxDuration = 60;
 
-function buildEmail(payload) {
+function buildEmail(payload, giveawayEntry) {
   const { services = [], contact = {}, estimate = {} } = payload || {};
 
   const serviceRows = services
@@ -49,7 +50,11 @@ function buildEmail(payload) {
                 <div style="font-size:24px;font-weight:800;margin-top:6px;">New Quote Request</div>
                 <div style="margin-top:10px;display:inline-block;background:#f2c424;color:#11151b;padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;">
                   Estimate: ${escapeHtml(totalLine)}
-                </div>
+                </div>${
+                  giveawayEntry
+                    ? `<div style="margin-top:10px;font-size:13px;color:#bedffe;">Giveaway entry — one per household, so skip repeats when drawing.</div>`
+                    : ""
+                }
               </td>
             </tr>
             <tr>
@@ -177,10 +182,12 @@ export async function POST(request) {
       socketTimeout: 20000,
     });
 
-    const subject = `New Gold Exterior quote — ${contact.name} (${services
+    // Decided here rather than trusting the visitor's clock.
+    const giveawayEntry = giveawayOpen();
+    const subject = `${giveawayEntry ? "[Giveaway] " : ""}New Gold Exterior quote — ${contact.name} (${services
       .map((s) => s.name)
       .join(", ")})`;
-    const html = buildEmail(payload);
+    const html = buildEmail(payload, giveawayEntry);
 
     const mailOptions = {
       from: `"Gold Exterior Quotes" <${gmailUser}>`,

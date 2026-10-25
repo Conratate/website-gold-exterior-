@@ -5,16 +5,16 @@ import { useState } from "react";
 import Logo from "./Logo";
 
 const NAV = [
-  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About Us" },
+  { href: "/charity", label: "Charity" },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-charcoal-950/85 backdrop-blur-md">
+    <header className="sticky top-0 z-40 bg-charcoal-950/85 backdrop-blur-md">
       <nav className="container-x flex items-center justify-between py-4">
         <Link href="/" className="flex min-h-[44px] items-center" aria-label="Gold Exterior home">
           <Logo />
@@ -44,16 +44,29 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="grid h-11 w-11 place-items-center rounded-lg border border-white/15 text-charcoal-200 md:hidden"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-          </svg>
-        </button>
+        {/* Phones get the number as a one-tap icon instead of in the menu, so
+            it's always reachable without appearing twice. */}
+        <div className="flex items-center gap-2 md:hidden">
+          <a
+            href="tel:+16509433124"
+            aria-label="Call (650) 943-3124"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-white/15 text-gold-400"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.7 2Z" />
+            </svg>
+          </a>
+          <button
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="grid h-11 w-11 place-items-center rounded-lg border border-white/15 text-charcoal-200 md:hidden"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {open ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
       </nav>
 
       {open && (
@@ -69,12 +82,6 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <a
-              href="tel:+16509433124"
-              className="rounded-lg px-3 py-3 text-base font-semibold text-gold-400 hover:bg-white/5"
-            >
-              Call (650) 943-3124
-            </a>
             <Link
               href="/quote"
               onClick={() => setOpen(false)}

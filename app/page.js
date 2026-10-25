@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import { CHARITY, charityLine } from "@/lib/promos";
+import DonationTracker from "@/components/DonationTracker";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -16,6 +18,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-charcoal-950 text-white">
         <div className="absolute inset-0 bg-hero-gradient" />
         <div className="absolute inset-0 bg-wave-pattern" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-header-fade" />
         <div className="container-x relative grid items-center gap-12 py-16 sm:py-24 lg:py-32 lg:grid-cols-2">
           <div>
             <span className="eyebrow-gold">Exterior Cleaning &amp; Mobile Detailing</span>
@@ -60,14 +63,14 @@ export default function HomePage() {
                 <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Call us</dt>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Every job</dt>
                 <dd className="mt-1">
-                  <a
-                    href="tel:+16509433124"
-                    className="whitespace-nowrap font-display text-xl font-bold text-white hover:text-gold-300 sm:text-2xl"
+                  <Link
+                    href="/charity"
+                    className="font-display text-2xl font-bold text-white underline decoration-gold-400/60 underline-offset-4 hover:text-gold-300"
                   >
-                    (650) 943-3124
-                  </a>
+                    {CHARITY.percent}% to charity
+                  </Link>
                 </dd>
               </div>
             </dl>
@@ -202,6 +205,10 @@ export default function HomePage() {
                   t: "Guaranteed satisfaction",
                   d: "Not right? We come back and fix it.",
                 },
+                {
+                  t: "We give back",
+                  d: charityLine(),
+                },
               ].map((f) => (
                 <li key={f.t} className="flex gap-4">
                   <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gold-400 text-charcoal-900 shadow-gold">
@@ -232,6 +239,30 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Charity */}
+      <section className="section">
+        <div className="container-x grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-center">
+          <div>
+            <span className="eyebrow">We give back</span>
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
+              Your job feeds people.
+            </h2>
+            <p className="mt-4 text-charcoal-300">
+              {CHARITY.percent}% of every job goes to {CHARITY.name}, the food
+              bank for our own neighborhoods. It comes out of our cut, not
+              your price.
+            </p>
+            <blockquote className="mt-6 border-l-4 border-gold-400 pl-5 font-display text-xl font-bold text-white">
+              &ldquo;Your clean driveway puts dinner on a neighbor&apos;s table.&rdquo;
+            </blockquote>
+            <Link href="/charity" className="btn-outline mt-8">
+              About our charity
+            </Link>
+          </div>
+          <DonationTracker />
         </div>
       </section>
 

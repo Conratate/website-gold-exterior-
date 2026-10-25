@@ -13,6 +13,7 @@ import {
   ROUTING_MINIMUM,
 } from "@/lib/services";
 import ServiceIcon from "./ServiceIcon";
+import { GIVEAWAY, giveawayOpen } from "@/lib/promos";
 
 const STEPS = [
   { id: "services", label: "Services" },
@@ -247,6 +248,7 @@ export default function QuoteForm() {
         status: "success",
         message:
           "Thanks! Your quote request is in. We'll be in touch by email shortly.",
+        giveawayEntry: giveawayOpen(),
       });
     } catch (err) {
       setSubmitState({
@@ -271,6 +273,12 @@ export default function QuoteForm() {
           Quote request received
         </h2>
         <p className="mt-3 text-charcoal-300">{submitState.message}</p>
+        {submitState.giveawayEntry && (
+          <p className="mt-4 rounded-2xl border border-gold-300/40 bg-gold-400/15 px-5 py-3 text-sm font-semibold text-gold-100">
+            You're entered to {GIVEAWAY.headline.toLowerCase()}. Winner is drawn
+            when the countdown on our giveaway page hits zero.
+          </p>
+        )}
         <div className="mt-6 rounded-2xl bg-white/5 p-5 text-left">
           <div className="flex items-center justify-between">
             <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
@@ -509,6 +517,28 @@ export default function QuoteForm() {
                                   {q.options.map((o) => {
                                     const active = cur === o.value;
                                     const hint = hints && hints[o.value];
+                                    if (o.comingSoon) {
+                                      return (
+                                        <div
+                                          key={o.value}
+                                          aria-disabled="true"
+                                          className="flex cursor-not-allowed items-start gap-3 rounded-xl border border-dashed border-white/10 bg-charcoal-900/60 px-4 py-3 text-sm font-medium text-charcoal-500"
+                                        >
+                                          <span className="mt-0.5 h-5 w-5 flex-none rounded-full border border-white/10" />
+                                          <span>
+                                            <span className="line-through">{o.label}</span>
+                                            <span className="ml-2 rounded-full bg-gold-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-300">
+                                              Coming {o.comingSoon}
+                                            </span>
+                                            {hint && (
+                                              <span className="mt-0.5 block text-xs font-normal line-through">
+                                                {hint}
+                                              </span>
+                                            )}
+                                          </span>
+                                        </div>
+                                      );
+                                    }
                                     return (
                                       <label
                                         key={o.value}
@@ -996,9 +1026,8 @@ function SizeHelper({ config, options, onApply }) {
   const total = isArea ? a * b : a;
 
   const tier = total > 0 ? config.tiers.find((t) => total <= t.max) : null;
-  const tierLabel = tier
-    ? options.find((o) => o.value === tier.value)?.label || tier.value
-    : null;
+  const tierOption = tier ? options.find((o) => o.value === tier.value) : null;
+  const tierLabel = tier ? tierOption?.label || tier.value : null;
   const unit = isArea ? "sq ft" : "linear ft";
 
   return (
@@ -1084,16 +1113,22 @@ function SizeHelper({ config, options, onApply }) {
                 ≈ {Math.round(total).toLocaleString()} {unit} — that&apos;s a{" "}
                 <span className="font-bold text-white">{tierLabel}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  onApply(tier.value);
-                  setOpen(false);
-                }}
-                className="rounded-full bg-gold-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-charcoal-900 transition hover:bg-gold-300"
-              >
-                Use {tierLabel}
-              </button>
+              {tierOption?.comingSoon ? (
+                <span className="text-xs font-semibold text-gold-300">
+                  Jobs this size open up in {tierOption.comingSoon}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onApply(tier.value);
+                    setOpen(false);
+                  }}
+                  className="rounded-full bg-gold-400 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-charcoal-900 transition hover:bg-gold-300"
+                >
+                  Use {tierLabel}
+                </button>
+              )}
             </div>
           )}
         </div>
