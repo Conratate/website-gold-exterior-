@@ -1,7 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import GiveawayBanner from "@/components/GiveawayBanner";
+import CharityBanner from "@/components/CharityBanner";
 
 export const metadata = {
   metadataBase: new URL("https://goldexterior.com"),
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen bg-charcoal-950 text-white antialiased">
-        <GiveawayBanner />
+        <CharityBanner />
         <Navbar />
         <main>{children}</main>
         <Footer />
