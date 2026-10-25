@@ -28,12 +28,10 @@ const RULES = [
   "One entry per household. Extra quote requests from the same person, email, phone number or address don't add entries.",
   `Entries close ${GIVEAWAY.endsLabel} at 11:59 PM Pacific, when the countdown ends. One winner is then picked at random from eligible entries.`,
   "Open to residents of Santa Clara County, CA who are 18 or older.",
-  `Prize: the winner's choice of ${formatMoney(
-    GIVEAWAY.cashValue
-  )} cash, or one Gold Exterior job valued up to ${formatMoney(
+  `Prize: one Gold Exterior job valued up to ${formatMoney(
     GIVEAWAY.prizeValue
-  )} (if the job costs more, the prize comes off the total). Not transferable.`,
-  `Cash is paid by Zelle, Venmo or check within 14 days of the winner confirming. A job prize must be completed by ${GIVEAWAY.redeemByLabel}.`,
+  )} (if the job costs more, the prize comes off the total). No cash alternative. Not transferable.`,
+  `The job must be completed by ${GIVEAWAY.redeemByLabel}.`,
   "We'll contact the winner by phone and email. If we can't reach them within 7 days, we draw again.",
   "Odds depend on how many eligible entries we receive.",
 ];
@@ -51,7 +49,7 @@ export default function GiveawayPage() {
             {GIVEAWAY.headline}.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-brand-100">
-            Your pick: cash, or a free job. Get a free quote before the timer
+            Any service we offer, on us. Get a free quote before the timer
             runs out and you're in. No purchase needed.
           </p>
           <div className="mt-8">

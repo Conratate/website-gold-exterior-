@@ -72,6 +72,16 @@ module.exports = {
         "wave-pattern":
           "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06) 0, transparent 40%), radial-gradient(circle at 80% 60%, rgba(242,196,36,0.10) 0, transparent 45%)",
       },
+      keyframes: {
+        pop: {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "70%": { transform: "scale(1.25)", opacity: "1" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+      },
+      animation: {
+        pop: "pop 300ms ease-out both",
+      },
       boxShadow: {
         glow: "0 20px 60px -20px rgba(0, 0, 0, 0.6)",
         gold: "0 12px 35px -10px rgba(226, 170, 20, 0.55)",

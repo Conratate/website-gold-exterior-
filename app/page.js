@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 import { CHARITY, charityLine } from "@/lib/promos";
+import DonationTracker from "@/components/DonationTracker";
 
 // The hero preview mirrors a real quote so the advertised figure can never
 // drift out of sync with the pricing engine.
@@ -238,6 +239,30 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Charity */}
+      <section className="section">
+        <div className="container-x grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-center">
+          <div>
+            <span className="eyebrow">We give back</span>
+            <h2 className="heading-lg mt-4 font-display font-extrabold">
+              Your job feeds people.
+            </h2>
+            <p className="mt-4 text-charcoal-300">
+              {CHARITY.percent}% of every job goes to {CHARITY.name}, the food
+              bank for our own neighborhoods. It comes out of our cut, not
+              your price.
+            </p>
+            <blockquote className="mt-6 border-l-4 border-gold-400 pl-5 font-display text-xl font-bold text-white">
+              &ldquo;Your clean driveway puts dinner on a neighbor&apos;s table.&rdquo;
+            </blockquote>
+            <Link href="/charity" className="btn-outline mt-8">
+              About our charity
+            </Link>
+          </div>
+          <DonationTracker />
         </div>
       </section>
 

@@ -1,10 +1,20 @@
 import Link from "next/link";
 import { CHARITY } from "@/lib/promos";
+import DonationTracker from "@/components/DonationTracker";
 
 export const metadata = {
   title: "Our Charity",
   description: `${CHARITY.percent}% of every Gold Exterior job goes to ${CHARITY.name}, the food bank for Santa Clara and San Mateo counties.`,
 };
+
+const mealsFor = (job) =>
+  Math.floor(((job * CHARITY.percent) / 100) * CHARITY.mealsPerDollar);
+
+const LINES = [
+  "Your clean driveway puts dinner on a neighbor's table.",
+  `A $300 job here is about ${mealsFor(300)} meals there.`,
+  "Same price to you. More food for families down the street.",
+];
 
 const FACTS = [
   {
@@ -17,7 +27,7 @@ const FACTS = [
   },
   {
     t: "Goes a long way",
-    d: "They say every $1 donated provides enough food for about two meals.",
+    d: `They say every $1 donated provides enough food for about ${CHARITY.mealsPerDollar} meals.`,
   },
 ];
 
@@ -49,6 +59,22 @@ export default function CharityPage() {
       </section>
 
       <section className="section">
+        <div className="container-x grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-start">
+          <DonationTracker />
+          <div className="space-y-6">
+            {LINES.map((line) => (
+              <blockquote
+                key={line}
+                className="border-l-4 border-gold-400 pl-5 font-display text-xl font-bold leading-snug text-white sm:text-2xl"
+              >
+                &ldquo;{line}&rdquo;
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section bg-white/5">
         <div className="container-x grid gap-6 md:grid-cols-3">
           {FACTS.map((f) => (
             <div key={f.t} className="rounded-2xl border border-white/10 bg-charcoal-900 p-6">

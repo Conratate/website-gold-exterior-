@@ -1,6 +1,32 @@
 import Link from "next/link";
 import { SERVICES } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
+import BeforeAfter from "@/components/BeforeAfter";
+import HeadlightArt from "@/components/HeadlightArt";
+
+function Comparison({ data }) {
+  const [before, after] =
+    data.kind === "photo"
+      ? [data.before, data.after].map((src, i) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={src}
+            src={src}
+            alt={`${data.alt}, ${i === 0 ? "before" : "after"}`}
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
+        ))
+      : [<HeadlightArt key="b" foggy />, <HeadlightArt key="a" />];
+  return (
+    <figure className="mb-8">
+      <BeforeAfter before={before} after={after} label={data.alt} />
+      <figcaption className="mt-3 text-center text-xs text-charcoal-400">
+        {data.caption}
+      </figcaption>
+    </figure>
+  );
+}
 
 export const metadata = {
   title: "Services",
@@ -109,12 +135,31 @@ export default function ServicesPage() {
                         </thead>
                         <tbody>
                           {service.sizingGuide.rows.map((row) => (
-                            <tr key={row.tier} className="border-b border-white/10 last:border-0">
+                            <tr
+                              key={row.tier}
+                              className={`border-b border-white/10 last:border-0 ${
+                                row.comingSoon ? "bg-charcoal-950/40" : ""
+                              }`}
+                            >
                               <td className="px-4 py-3 font-semibold text-white">
-                                {row.tier}
+                                {row.comingSoon ? (
+                                  <>
+                                    <span className="text-charcoal-500 line-through">{row.tier}</span>
+                                    <span className="ml-2 whitespace-nowrap rounded-full bg-gold-400/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-300">
+                                      Coming {row.comingSoon}
+                                    </span>
+                                  </>
+                                ) : (
+                                  row.tier
+                                )}
                               </td>
                               {row.cells.map((cell, ci) => (
-                                <td key={ci} className="px-4 py-3 text-charcoal-300">
+                                <td
+                                  key={ci}
+                                  className={`px-4 py-3 ${
+                                    row.comingSoon ? "text-charcoal-500 line-through" : "text-charcoal-300"
+                                  }`}
+                                >
                                   {cell}
                                 </td>
                               ))}
@@ -140,6 +185,7 @@ export default function ServicesPage() {
               </div>
 
               <div className={i % 2 === 1 ? "lg:order-1" : ""}>
+                {service.beforeAfter && <Comparison data={service.beforeAfter} />}
                 <div className="relative">
                   <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-gold-400/10 via-transparent to-transparent blur-2xl" />
                   <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-charcoal-900 p-8 shadow-glow">

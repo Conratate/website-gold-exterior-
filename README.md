@@ -126,9 +126,19 @@ next.config.js
   function on any service to adjust your math. The Home, Services, and Quote
   pages all read from this file.
 - **Giveaway & charity pledge** live in `lib/promos.js`: prize value, entry
-  deadline, drawing date and the charity name. The top banner hides itself
-  after the deadline. Every quote request during the giveaway is an entry, and
-  its email arrives tagged `[Giveaway]`.
+  deadline, drawing date, the charity name and percent, and the donation
+  tracker's numbers. The top banner hides itself after the deadline. Every
+  quote request during the giveaway is an entry, and its email arrives tagged
+  `[Giveaway]`.
+- **Donation tracker** (home and `/charity`) shows `CHARITY.donated` against
+  `CHARITY.goal`. Only raise `donated` after a donation has actually gone
+  through — it's shown publicly as money already given.
+- **Before/after sliders** come from `beforeAfter` on a service in
+  `lib/services.js`. Photos live in `public/images/`. The headlight one is a
+  drawing until there are real photos: swap it to `kind: "photo"` with
+  `before`/`after` paths.
+- **Coming-soon tiers**: add `comingSoon: "2027"` to an option (and its sizing
+  guide row) to show it crossed out and unbookable.
 - **Colors** are defined in `tailwind.config.js` under `theme.extend.colors`
   (`brand`, `gold`, `charcoal`).
 - **Copy** lives in each page file under `app/`.
