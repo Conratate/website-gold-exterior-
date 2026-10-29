@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CHARITY } from "@/lib/promos";
+import { CHARITY, mealsForJob } from "@/lib/promos";
 
 const MIN_JOB = 50;
 const MAX_JOB = 2000;
@@ -21,9 +21,9 @@ const dollars = (n) =>
 export default function DonationTracker() {
   const [job, setJob] = useState(300);
   const give = Math.round(job * CHARITY.percent) / 100;
-  const meals = Math.floor(give * CHARITY.mealsPerDollar);
-  // One bowl per dollar keeps the grid readable at the top of the slider.
-  const bowls = Math.floor(give);
+  const meals = mealsForJob(job);
+  // Two meals a bowl keeps the grid readable at the top of the slider.
+  const bowls = Math.floor(meals / 2);
 
   const raisedPct = Math.min(100, (CHARITY.donated / CHARITY.goal) * 100);
   const yoursPct = Math.min(100 - raisedPct, Math.max(0.75, (give / CHARITY.goal) * 100));
@@ -154,9 +154,10 @@ export default function DonationTracker() {
           ))}
         </div>
         <p className="mt-3 text-xs text-charcoal-400">
-          Every bowl is about {CHARITY.mealsPerDollar} meals, using{" "}
-          {CHARITY.name}&apos;s own estimate of {CHARITY.mealsPerDollar} meals per $1. It
-          comes out of our cut, so your price doesn&apos;t go up.
+          Every bowl is 2 meals, and every ${CHARITY.jobDollarsPerMeal} of your job counts
+          as one. That&apos;s on the low side of {CHARITY.name}&apos;s own estimate of{" "}
+          {CHARITY.mealsPerDollar} meals per $1 donated. It comes out of our cut, so your
+          price doesn&apos;t go up.
         </p>
       </div>
     </div>

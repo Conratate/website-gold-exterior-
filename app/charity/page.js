@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CHARITY } from "@/lib/promos";
+import { CHARITY, mealsForJob } from "@/lib/promos";
 import DonationTracker from "@/components/DonationTracker";
 
 export const metadata = {
@@ -7,12 +7,9 @@ export const metadata = {
   description: `${CHARITY.percent}% of every Gold Exterior job goes to ${CHARITY.name}, the food bank for Santa Clara and San Mateo counties.`,
 };
 
-const mealsFor = (job) =>
-  Math.floor(((job * CHARITY.percent) / 100) * CHARITY.mealsPerDollar);
-
 const LINES = [
   "Your clean driveway puts dinner on a neighbor's table.",
-  `A $300 job here is about ${mealsFor(300)} meals there.`,
+  `A $300 job here is about ${mealsForJob(300)} meals there.`,
   "Same price to you. More food for families down the street.",
 ];
 
@@ -27,7 +24,7 @@ const FACTS = [
   },
   {
     t: "Goes a long way",
-    d: `They say every $1 donated provides enough food for about ${CHARITY.mealsPerDollar} meals.`,
+    d: `Every $${CHARITY.jobDollarsPerMeal} of your job counts as one meal. That's on the low side: ${CHARITY.name} says every $1 donated provides about ${CHARITY.mealsPerDollar} meals.`,
   },
 ];
 
