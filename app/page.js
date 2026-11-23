@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER } from "@/lib/services";
+import { SERVICES, calculateTotal, formatMoney, LAUNCH_OFFER, startingPrice } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 import { CHARITY, charityLine } from "@/lib/promos";
 import DonationTracker from "@/components/DonationTracker";
@@ -170,7 +170,10 @@ export default function HomePage() {
                 <p className="mt-2 text-sm leading-relaxed text-charcoal-300">
                   {service.tagline}
                 </p>
-                <div className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-gold-400">
+                <div className="mt-4 font-display text-lg font-bold text-white">
+                  From {formatMoney(startingPrice(service))}
+                </div>
+                <div className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-gold-400">
                   Learn more
                   <svg viewBox="0 0 24 24" className="h-4 w-4 transition group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M13 6l6 6-6 6" />

@@ -2,22 +2,51 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GiveawayBanner from "@/components/GiveawayBanner";
+import { SERVICES } from "@/lib/services";
+import { SITE_URL, BUSINESS } from "@/lib/site";
+
+const TITLE = "Gold Exterior — Pressure Washing, Holiday Lights & Mobile Detailing in San Jose";
+const DESCRIPTION = `Pressure washing, holiday light installation, yard cleanup and mobile car detailing in ${BUSINESS.cities
+  .slice(0, 4)
+  .join(", ")} and across Santa Clara County. See your price instantly online.`;
 
 export const metadata = {
-  metadataBase: new URL("https://goldexterior.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Gold Exterior — Premium Exterior Property Services",
+    default: TITLE,
     template: "%s · Gold Exterior",
   },
-  description:
-    "Pressure washing, holiday lights, yard cleanup and mobile car detailing across Santa Clara County. Instant online quotes.",
+  description: DESCRIPTION,
   openGraph: {
-    title: "Gold Exterior — Premium Exterior Property Services",
-    description:
-      "Exterior cleaning and mobile car detailing in Santa Clara County. Get an instant online quote.",
-    url: "https://goldexterior.com",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
     siteName: "Gold Exterior",
     type: "website",
+  },
+};
+
+// Tells Google this is a local service business and where it works, so it
+// can show up for "pressure washing near me" style searches. A mobile
+// business lists the area it serves instead of a street address.
+const LOCAL_BUSINESS = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  name: BUSINESS.name,
+  url: SITE_URL,
+  telephone: BUSINESS.phone,
+  priceRange: "$$",
+  areaServed: [
+    ...BUSINESS.cities.map((name) => ({ "@type": "City", name })),
+    { "@type": "AdministrativeArea", name: "Santa Clara County, CA" },
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services",
+    itemListElement: SERVICES.map((s) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: s.name },
+    })),
   },
 };
 
@@ -39,6 +68,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen bg-charcoal-950 text-white antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(LOCAL_BUSINESS) }}
+        />
         <GiveawayBanner />
         <Navbar />
         <main>{children}</main>

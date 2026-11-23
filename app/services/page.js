@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SERVICES } from "@/lib/services";
+import { SERVICES, formatMoney, startingPrice } from "@/lib/services";
 import ServiceIcon from "@/components/ServiceIcon";
 import BeforeAfter from "@/components/BeforeAfter";
 import HeadlightArt from "@/components/HeadlightArt";
@@ -31,7 +31,7 @@ function Comparison({ data }) {
 export const metadata = {
   title: "Services",
   description:
-    "Pressure washing, holiday lights, yard cleanup, mobile car detailing and more by Gold Exterior, serving Santa Clara County.",
+    "Pressure washing, holiday lights, yard cleanup, mobile car detailing and more in San Jose, Santa Clara, Sunnyvale and across Santa Clara County. Prices listed up front.",
 };
 
 export default function ServicesPage() {
@@ -78,6 +78,9 @@ export default function ServicesPage() {
                   {service.name}
                 </h2>
                 <p className="mt-3 text-lg text-gold-400">{service.tagline}</p>
+                <p className="mt-2 font-display text-xl font-bold text-white">
+                  From {formatMoney(startingPrice(service))}
+                </p>
                 <p className="mt-5 text-charcoal-300">{service.blurb}</p>
 
                 {service.sub && (
