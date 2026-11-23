@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CHARITY } from "@/lib/promos";
 
 export const metadata = {
   title: "About Us",
@@ -13,19 +14,12 @@ const VALUES = [
   },
   {
     t: "Transparency",
-    d: "Real prices, real timelines, real photos. No surprises, no upsells, no high-pressure sales.",
+    d: "Real prices up front. No surprises, no upsells, no high-pressure sales.",
   },
   {
     t: "Reliability",
-    d: "We show up on time, in uniform, and with the equipment we promised. Every single visit.",
+    d: "We show up when we said we would, with everything the job needs. Every single visit.",
   },
-];
-
-const TIMELINE = [
-  { y: "Day 1", t: "Locally founded with one truck and a promise" },
-  { y: "Year 1", t: "Expanded into car detailing" },
-  { y: "Year 2", t: "Launched holiday lighting service" },
-  { y: "Today", t: "Serving homeowners across Santa Clara County" },
 ];
 
 export default function AboutPage() {
@@ -44,7 +38,7 @@ export default function AboutPage() {
             <p className="mt-5 max-w-xl text-brand-100">
               Gold Exterior was founded on a simple idea: homeowners shouldn't
               need a Rolodex of contractors to keep the outside of their home
-              looking great. One trusted local team. Zero compromise.
+              looking great. One local crew, start to finish.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/quote" className="btn-gold">
@@ -87,18 +81,18 @@ export default function AboutPage() {
           </div>
           <div className="space-y-5 text-charcoal-200">
             <p>
-              Gold Exterior started where most great service businesses do:
-              with a single truck, a single crew, and a long list of frustrated
-              homeowners tired of unreliable contractors.
+              Gold Exterior is two people, one van and a lot of elbow grease.
+              No call center, no subcontractors — the people who quote your job
+              are the people who show up and do it.
             </p>
             <p>
-              We built our reputation one driveway, one storefront, one car at
-              a time — by showing up when we said we would, doing the work the
-              right way, and standing behind it.
+              We&apos;re new, and we know that means we have to earn every
+              customer. So we price up front, show up when we say we will, and
+              come back if something isn&apos;t right.
             </p>
             <p>
-              Today, we keep our services tightly focused so we can be
-              excellent at all of them — not average at twenty.
+              And {CHARITY.percent}% of every job goes to {CHARITY.name}, so
+              your clean driveway feeds a family down the street too.
             </p>
           </div>
         </div>
@@ -130,32 +124,6 @@ export default function AboutPage() {
 
       <section className="section">
         <div className="container-x">
-          <div className="max-w-2xl">
-            <span className="eyebrow">Where we are</span>
-            <h2 className="heading-lg mt-4 font-display font-extrabold">
-              Growing the right way.
-            </h2>
-          </div>
-          <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {TIMELINE.map((m) => (
-              <li
-                key={m.y}
-                className="relative rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm"
-              >
-                <div className="text-xs font-semibold uppercase tracking-widest text-gold-400">
-                  {m.y}
-                </div>
-                <div className="mt-2 font-display text-lg font-bold text-white">
-                  {m.t}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="section pt-0">
-        <div className="container-x">
           <div className="relative overflow-hidden rounded-3xl bg-charcoal-950 px-6 py-12 text-white sm:px-16 sm:py-16">
             <div className="absolute inset-0 bg-hero-gradient" />
             <div className="absolute inset-0 bg-wave-pattern" />
@@ -165,8 +133,7 @@ export default function AboutPage() {
                   Let's make your home look its best.
                 </h2>
                 <p className="mt-3 max-w-xl text-brand-100">
-                  Tell us what you need and we'll handle the rest. Most quotes
-                  back the same day.
+                  Tell us what you need and see your price before you book.
                 </p>
               </div>
               <div className="flex justify-start lg:justify-end">

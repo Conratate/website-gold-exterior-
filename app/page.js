@@ -59,8 +59,8 @@ export default function HomePage() {
 
             <dl className="mt-12 grid max-w-lg grid-cols-2 gap-6 border-t border-white/15 pt-8">
               <div>
-                <dt className="text-xs uppercase tracking-widest text-brand-200">Avg. response</dt>
-                <dd className="mt-1 font-display text-2xl font-bold text-white">&lt; 2hr</dd>
+                <dt className="text-xs uppercase tracking-widest text-brand-200">Your quote</dt>
+                <dd className="mt-1 font-display text-2xl font-bold text-white">Free &amp; instant</dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-widest text-brand-200">Every job</dt>
@@ -229,8 +229,9 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { v: "Santa Clara", l: "County we serve" },
-                { v: "48hr", l: "Typical lead time" },
-                { v: "1", l: "Trusted local team" },
+                { v: String(SERVICES.length), l: "Services, one call" },
+                { v: "$0", l: "To get a quote" },
+                { v: `${CHARITY.percent}%`, l: "Of every job to charity" },
               ].map((s) => (
                 <div key={s.l} className="rounded-2xl border border-white/10 bg-charcoal-900 p-6 shadow-sm">
                   <div className="font-display text-3xl font-extrabold text-gold-400">{s.v}</div>
