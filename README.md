@@ -10,6 +10,7 @@ Resend-powered quote intake API.
   all-black site with a yellow accent.
 - **Service sections** on `/services`, all driven by `lib/services.js`:
   - Pressure Washing
+  - Gutter Cleaning
   - Holiday Lights Installation
   - Weed & Junk Removal
   - Car Detailing
@@ -17,7 +18,7 @@ Resend-powered quote intake API.
   - Commercial Cleaning
   - Graffiti Removal
 - **Add-ons** (`ADD_ONS` in `lib/services.js`) only appear in the quote builder
-  once a real service is picked, at a discount. Gutter Cleaning lives here.
+  once a real service is picked, at a discount. Currently empty.
 - **Multi-step Estimate Calculator** at `/quote` with:
   - Service checklist (multi-select)
   - Service-specific dynamic questions (e.g., detail package, yard size, junk load)

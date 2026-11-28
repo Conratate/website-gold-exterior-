@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SERVICES } from "@/lib/services";
 
 export const metadata = {
   title: "About Us",
@@ -60,7 +61,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-4">
               {[
                 { v: "Santa Clara", l: "County we serve" },
-                { v: "7", l: "Premium services" },
+                { v: String(SERVICES.length), l: "Premium services" },
               ].map((s) => (
                 <div
                   key={s.l}
