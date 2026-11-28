@@ -401,7 +401,7 @@ export default function QuoteForm() {
                 );
               })}
             </div>
-            {hasMainService && (
+            {hasMainService && ADD_ONS.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-400">
                   Add-ons · {Math.round(ADD_ON_RATE * 100)}% off with your service

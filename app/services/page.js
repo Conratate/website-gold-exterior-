@@ -168,9 +168,11 @@ export default function ServicesPage() {
                         </tbody>
                       </table>
                     </div>
-                    <p className="mt-2 text-xs text-charcoal-400">
-                      Not sure? The quote builder can measure it for you.
-                    </p>
+                    {service.questions.some((q) => q.sizer) && (
+                      <p className="mt-2 text-xs text-charcoal-400">
+                        Not sure? The quote builder can measure it for you.
+                      </p>
+                    )}
                   </div>
                 )}
 
